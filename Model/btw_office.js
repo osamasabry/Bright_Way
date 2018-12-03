@@ -6,6 +6,7 @@ var Btw_OfficeSchema = mongoose.Schema({
         Office_Name           :String,
         Office_Phone          :String,
 		Office_Address        :String,
+		Office_Is_Active      :Number,
 
 });
 

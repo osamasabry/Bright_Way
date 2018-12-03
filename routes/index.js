@@ -36,167 +36,148 @@ router.post('/login', type,function(req, res, next) {
 });
 
 
-/****************User****************/
-router.post('/addUser', type,function(req, res) {
-    var AddUser = async (function (){
-        UserController.addUser(req,res);
+/****************Setup ****************/
+
+router.get('/getPaymentMethods', type,function(req, res) {
+    var GetPaymentMethods= async (function (){
+        await (SetUpController.getPaymentMethods(req,res));
     });
-    AddUser();
+    GetPaymentMethods();
+});
+
+router.get('/getSystemSettings', type,function(req, res) {
+    var GetSystemSettings= async (function (){
+        await (SetUpController.getSystemSettings(req,res));
+    });
+    GetSystemSettings();
+});
+
+router.get('/getRoomTypes', type,function(req, res) {
+    var GetRoomTypes= async (function (){
+        await (SetUpController.getRoomTypes(req,res));
+    });
+    GetRoomTypes();
+});
+
+router.get('/getRoomViews', type,function(req, res) {
+    var GetRoomViews= async (function (){
+        await (SetUpController.getRoomViews(req,res));
+    });
+    GetRoomViews();
 });
 
 
-router.post('/editUser', type,function(req, res) {
-    var EditUser = async (function (){
-        await (UserController.editUser(req,res));
+/****************Office****************/
+
+
+router.post('/addOffice', type,function(req, res) {
+    var AddOffice = async (function (){
+        OfficeController.addOffice(req,res);
     });
-    EditUser();
-});
-
-router.get('/getAllUsers', type,function(req, res) {
-    var GetAllUsers= async (function (){
-        await (UserController.getAllUsers(req,res));
-    });
-    GetAllUsers();
-});
-
-router.get('/getActiveUsers', type,function(req, res) {
-    var GetActiveUsers= async (function (){
-        await (UserController.getActiveUsers(req,res));
-    });
-    GetActiveUsers();
-});
-
-/****************Tag****************/
-
-
-router.post('/addTag', type,function(req, res) {
-    var AddTag = async (function (){
-        TagController.addTag(req,res);
-    });
-    AddTag();
+    AddOffice();
 });
 
 
-router.post('/editTag', type,function(req, res) {
-    var EditTag = async (function (){
-        await (TagController.editTag(req,res));
+router.post('/editOffice', type,function(req, res) {
+    var EditOffice = async (function (){
+        await (OfficeController.editOffice(req,res));
     });
-    EditTag();
+    EditOffice();
 });
 
-router.get('/getAllTags', type,function(req, res) {
-    var GetAllTags= async (function (){
-        await (TagController.getAllTags(req,res));
+router.get('/getAllOffice', type,function(req, res) {
+    var GetAllOffice= async (function (){
+        await (OfficeController.getAllOffice(req,res));
     });
-    GetAllTags();
+    GetAllOffice();
 });
 
-router.get('/getActiveTags', type,function(req, res) {
-    var GetActiveTags= async (function (){
-        await (TagController.getActiveTags(req,res));
+router.get('/getActiveOffice', type,function(req, res) {
+    var GetActiveOffice= async (function (){
+        await (OfficeController.getActiveOffice(req,res));
     });
-    GetActiveTags();
+    GetActiveOffice();
 });
 
-/****************Category****************/
-
-router.post('/addCategory', type,function(req, res) {
-    var AddCategory = async (function (){
-        CategoryController.addCategory(req,res);
+router.get('/getOfficeByID', type,function(req, res) {
+    var GetOfficeByID= async (function (){
+        await (OfficeController.getOfficeByID(req,res));
     });
-    AddCategory();
-});
-
-
-router.post('/editCategory', type,function(req, res) {
-    var EditCategory = async (function (){
-        await (CategoryController.editCategory(req,res));
-    });
-    EditCategory();
-});
-
-router.get('/getCategories', type,function(req, res) {
-    var GetAllCategories= async (function (){
-        await (CategoryController.getAllCategories(req,res));
-    });
-    GetAllCategories();
-});
-
-router.get('/getActiveCategories', type,function(req, res) {
-    var GetActiveCategories= async (function (){
-        await (CategoryController.getActiveCategories(req,res));
-    });
-    GetActiveCategories();
+    GetOfficeByID();
 });
 
 
-/****************Posts****************/
+/****************Customer****************/
 
-router.post('/addPost', type,function(req, res) {
-    var AddPost = async (function (){
-        PostController.addPost(req,res);
+router.post('/addCustomer', type,function(req, res) {
+    var AddCustomer = async (function (){
+        CustomerController.addCustomer(req,res);
     });
-    AddPost();
+    AddCustomer();
 });
 
-router.post('/editPosts', type,function(req, res) {
-    var EditPost = async (function (){
-        await (PostController.editPost(req,res));
+
+router.post('/editCustomer', type,function(req, res) {
+    var EditCustomer = async (function (){
+        await (CustomerController.editCustomer(req,res));
     });
-    EditPost();
+    EditCustomer();
 });
 
-router.get('/getPosts', type,function(req, res) {
-    var GetAllPosts= async (function (){
-        await (PostController.getAllPosts(req,res));
+router.get('/getAllCustomer', type,function(req, res) {
+    var GetAllCustomer= async (function (){
+        await (CustomerController.getAllCustomer(req,res));
     });
-    GetAllPosts();
+    GetAllCustomer();
 });
 
-router.get('/getActivePosts', type,function(req, res) {
-    var GetActivePosts= async (function (){
-        await (PostController.getActivePosts(req,res));
+
+/****************Employee****************/
+
+router.post('/addEmployee', type,function(req, res) {
+    var AddEmployee = async (function (){
+        EmployeeController.addEmployee(req,res);
     });
-    GetActivePosts();
+    AddEmployee();
 });
 
-router.get('/getPostByID', type,function(req, res) {
-    var GetPostByID= async (function (){
-        await (PostController.getPostByID(req,res));
+router.post('/editEmployee', type,function(req, res) {
+    var EditEmployee = async (function (){
+        await (EmployeeController.editEmployee(req,res));
     });
-    GetPostByID();
+    EditEmployee();
 });
 
-router.get('/getPostByTitle', type,function(req, res) {
-    var GetPostByTitle= async (function (){
-        await (PostController.getPostByTitle(req,res));
+router.get('/getAllEmployee', type,function(req, res) {
+    var GetAllEmployee= async (function (){
+        await (EmployeeController.getAllEmployee(req,res));
     });
-    GetPostByTitle();
+    GetAllEmployee();
 });
 
 
 /****************Media****************/
 
-router.post('/addMedia', type,function(req, res) {
-    // console.log(req.file);
-    var AddMedia = async (function (){
-        MediaController.addMedia(req,res);
-    });
-    AddMedia();
-});
+// router.post('/addMedia', type,function(req, res) {
+//     // console.log(req.file);
+//     var AddMedia = async (function (){
+//         MediaController.addMedia(req,res);
+//     });
+//     AddMedia();
+// });
 
-router.post('/editMedia', type,function(req, res) {
-    var EditMedia = async (function (){
-        await (MediaController.editMedia(req,res));
-    });
-    EditMedia();
-});
+// router.post('/editMedia', type,function(req, res) {
+//     var EditMedia = async (function (){
+//         await (MediaController.editMedia(req,res));
+//     });
+//     EditMedia();
+// });
 
-router.get('/getMediaByID', type,function(req, res) {
-    var GetMediaByID= async (function (){
-        await (MediaController.getMediaByID(req,res));
-    });
-    GetMediaByID();
-});
+// router.get('/getMediaByID', type,function(req, res) {
+//     var GetMediaByID= async (function (){
+//         await (MediaController.getMediaByID(req,res));
+//     });
+//     GetMediaByID();
+// });
 
 module.exports = router;

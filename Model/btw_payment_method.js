@@ -5,7 +5,7 @@ var Btw_PaymentMethodSchema = mongoose.Schema({
 		PaymentMethod_Code                :Number,
         PaymentMethod_Name                :String,
         PaymentMethod_Description         :String,
-
+        
 });
 
 

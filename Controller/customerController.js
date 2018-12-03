@@ -3,29 +3,24 @@ var Customer = require('../Model/btw_customer');
 
 module.exports = {
 
-	addCategory:function(request,response){
-		Categories.getLastCode(function(err,category){
-			if (category) 
-				insetIntoCategory(category.Category_Code+1);
+	addCustomer:function(request,response){
+		Customer.getLastCode(function(err,customer){
+			if (customer) 
+				insetIntoCustomer(customer.Customer_Code+1);
 			else
-				insetIntoCategory(1);
+				insetIntoCustomer(1);
 		});
 
-		function insetIntoCategory(GetNextId){
-			var newCategory = new Categories();
-			newCategory.Category_Code     		 	    	= GetNextId;
-			newCategory.Category_Name 	     	 			= request.body.name;
-			newCategory.Category_Description   	 			= request.body.desc;
-			newCategory.Category_MetaTitle	 				= request.body.meta_title;
-			newCategory.Category_FocusKeyWord   	    	= request.body.focus_keyword;
-			newCategory.Category_KeyeordsList   	 		= request.body.keyeords_list ;
-			newCategory.Category_FeaturedImage_Media_ID 	= request.body.featured_image_media_id;
-			newCategory.Category_URL   						= request.body.url;
-       		newCategory.Category_ParentCategory_Category_ID = request.body.parent_category;
-       		newCategory.Category_Status 				  	= 1;
-
-
-			newCategory.save(function(error, doneadd){
+		function insetIntoCustomer(GetNextId){
+			var newCustomer = new Customer();
+			newCustomer.Customer_Code     		 	= GetNextId;
+			newCustomer.Customer_Name 	     	 	= request.body.Customer_Name;
+			newCustomer.Customer_Phone   	 		= request.body.Customer_Phone;
+			newCustomer.Customer_Job	 			= request.body.Customer_Job;
+			newCustomer.Customer_Address   	    	= request.body.Customer_Address;
+			newCustomer.Customer_NationalID   	    = request.body.Customer_NationalID;
+			
+			newCustomer.save(function(error, doneadd){
 				if(error){
 					return response.send({
 						message: error
@@ -40,20 +35,16 @@ module.exports = {
 		}
 	},
 
-	editCategory:function(request,response){
+	editCustomer:function(request,response){
 		var newvalues = { $set: {
-				Category_Name 						: request.body.name,
-				Category_Description 				: request.body.desc,
-				Category_MetaTitle 					: request.body.meta_title,
-				Category_FocusKeyWord 				: request.body.focus_keyword,
-				Category_KeyeordsList 				: request.body.keyeords_list,
-				Category_FeaturedImage_Media_ID 	: request.body.featured_image_media_id,
-				Category_URL 						: request.body.url,
-				Category_ParentCategory_Category_ID : request.body.parent_category,
-				Category_IsActive 					: request.body.status,
+				Customer_Name 				: request.body.Customer_Name,
+				Customer_Phone 				: request.body.Customer_Phone,
+				Customer_Job 				: request.body.Customer_Job,
+				Customer_Address 			: request.body.Customer_Address,
+				Customer_NationalID 		: request.body.Customer_NationalID,
 			} };
-		var myquery = { Category_Code: request.body.row_id }; 
-		Categories.findOneAndUpdate( myquery,newvalues, function(err, field) {
+		var myquery = { Customer_Code: request.body.Customer_Code }; 
+		Customer.findOneAndUpdate( myquery,newvalues, function(err, field) {
     	    if (err){
     	    	return response.send({
 					message: 'Error'
@@ -61,7 +52,7 @@ module.exports = {
     	    }
             if (!field) {
             	return response.send({
-					message: 'Category not exists'
+					message: 'Customer not exists'
 				});
             } else {
                 return response.send({
@@ -71,35 +62,19 @@ module.exports = {
 		})
 	},
 
-	getAllCategories:function(request,response){
-		Categories.find({})
-		.populate({ path: 'Media', select: 'Media_Code Media_Title' })
-		.lean()
-		.exec(function(err, Category) {
+	getAllCustomer:function(request,response){
+		Customer.find({})
+		.exec(function(err, customer) {
 		    if (err){
 		    	response.send({message: 'Error'});
 		    }
-	        if (Category) {
+	        if (customer) {
 	        	
-	            response.send(Category);
+	            response.send(customer);
 	        } 
-    	}).sort({Category_Code:-1}).limit(20)
+    	}).sort({Customer_Code:-1}).limit(20)
 	},
 
-	getActiveCategories:function(request,response){
-		Categories.find({Category_IsActive:1})
-		.populate({ path: 'Media', select: 'Media_Code Media_Title' })
-		.lean()
-		.exec(function(err, field) {
-		    if (err){
-		    	response.send({message: 'Error'});
-		    }
-	        if (field) {
-	        	
-	            response.send(field);
-	        } 
-    	});
-	}
 }
 
 

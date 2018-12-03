@@ -1,74 +1,32 @@
 var Employee = require('../Model/btw_employee');
 var Office = require('../Model/btw_office');
 
-// var shell = require('shelljs');
-// var UrlResizeImage =[];
-// var multer=require('multer');
-// var upload=multer({dest:'uploads/'});
-// var path = require('path'),
-//      fs = require('fs');
-// var tinify = require("tinify");
-// tinify.key = "JCtv2CQ646psz31PcLRNr4kXWMQSqM6R";
 
 module.exports = {
 
-	addMedia:function(request,response){
-		UrlResizeImage = [];
-		var filename  = request.file.originalname;
-    	var file_name = filename.split('.')[0] ;
-    	var extension = filename.split('.')[1] ;
-    	var date 	  = new Date();
-    	var year  	  = date.getFullYear();
-    	var month     = date.getMonth()+1; 
-    	var dir = path.resolve('./public/images/'+year+'/'+month);
-		if (!fs.existsSync(dir)){
-    		shell.mkdir('-p', dir);
-		}
-
-		var source = tinify.fromFile(request.file.path);
-
-		Medias.getLastCode(function(err,media){
-			if (media){
-				var UrlOriginalImage  =  CompressOrignalImage();
-				UrlResizeImage.push(ResizeOrignalImage(150,150));
-				UrlResizeImage.push(ResizeOrignalImage(565,355));
-				insertIntoMedia(media.Media_Code+1,UrlOriginalImage,UrlResizeImage);
-			} 
-			else{
-				var UrlOriginalImage  =  CompressOrignalImage();
-				UrlResizeImage.push(ResizeOrignalImage(150,150));
-				UrlResizeImage.push(ResizeOrignalImage(565,355));
-				insertIntoMedia(1,UrlOriginalImage,UrlResizeImage);
-			}
+	addEmployee:function(request,response){
+		Employee.getLastCode(function(err,employee){
+			if (employee) 
+				insetIntoEmployee(employee.Employee_Code+1);
+			else
+				insetIntoEmployee(1);
 		});
 
-		function CompressOrignalImage(){
-			// var data = new Promise((resolve, reject) => {
-			    source.toFile(dir+'/'+file_name+'_'+Date.now()+'.'+extension);
-				return dir+'/'+file_name+'_'+Date.now()+'.'+extension;
-			// })
-			 // return data;
-		}
-
-		function ResizeOrignalImage(width,height){
-			// return new Promise((resolve, reject) => {
-				var resized = source.resize({
-				  method: "fit",
-				  width: width,
-				  height: height
-				});
-				resized.toFile(dir+'/'+file_name+width+'x'+height+'_'+Date.now() +'.'+extension);
-				return  dir+'/'+file_name+width+'x'+height+'_'+Date.now() +'.'+extension;
-			// })
-		}
-
-		function insertIntoMedia(GetNextId,UrlOriginalImage,UrlResizeImage){
-			var newMedia = new Medias();
-			newMedia.Media_Code     		 		= GetNextId;
-			newMedia.Media_Type 	     	 		= request.body.type;
-			newMedia.Media_URL   	 				= UrlOriginalImage;
-			newMedia.Media_images_url   	 		= UrlResizeImage;
-			newMedia.save(function(error, doneadd){
+		function insetIntoEmployee(GetNextId){
+			var newEmployee = new Employee();
+			newEmployee.Employee_Code     		 	= GetNextId;
+			newEmployee.Employee_Name 	     	 	= request.body.Employee_Name;
+			newEmployee.Employee_Address   	 		= request.body.Employee_Address;
+			newEmployee.Employee_Phone	 			= request.body.Employee_Phone;
+			newEmployee.Employee_Email   	    	= request.body.Employee_Email;
+			newEmployee.Employee_Password   	    = request.body.Employee_Password;
+			newEmployee.Employee_NationalID   	    = request.body.Employee_NationalID;
+			newEmployee.Employee_Job_Title   	    = request.body.Employee_Job_Title;
+			newEmployee.Employee_Permissions   	    = request.body.Employee_Permissions;
+			newEmployee.Employee_Office_Code   	    = request.body.Employee_Office_Code;
+			newEmployee.Employee_IsActive   	    = 1;
+			
+			newEmployee.save(function(error, doneadd){
 				if(error){
 					return response.send({
 						message: error
@@ -76,24 +34,29 @@ module.exports = {
 				}
 				else{
 					return response.send({
-						message: true,
-						media_id:GetNextId
+						message: true
 					});
 				}
 			});
 		}
 	},
 
-	editMedia:function(request,response){
+	editEmployee:function(request,response){
 		var newvalues = { $set: {
-			Media_Title	 				: request.body.title,
-			Media_Description   		: request.body.desc,
-			Media_DescriptionKeywords   : request.body.desc_keywords,
-			Media_ReplacedText  	    : request.body.replace_text,
-
-		} };
-		var myquery = { Media_Code: request.body.row_id }; 
-		Medias.findOneAndUpdate( myquery,newvalues, function(err, field) {
+				Employee_Name 			: request.body.Employee_Name,
+				Employee_Address 		: request.body.Employee_Address,
+				Employee_Phone 			: request.body.Employee_Phone,
+				Employee_Email 			: request.body.Employee_Email,
+				// Employee_Password 		: request.body.Employee_Password,
+				Employee_NationalID 	: request.body.Employee_NationalID,
+				Employee_Job_Title 		: request.body.Employee_Job_Title,
+				Employee_Permissions 	: request.body.Employee_Permissions,
+				Employee_Office_Code 	: request.body.Employee_Office_Code,
+				Employee_IsActive 		: request.body.Employee_IsActive,
+				
+			} };
+		var myquery = { Employee_Code: request.body.Employee_Code }; 
+		Employee.findOneAndUpdate( myquery,newvalues, function(err, field) {
     	    if (err){
     	    	return response.send({
 					message: 'Error'
@@ -101,7 +64,7 @@ module.exports = {
     	    }
             if (!field) {
             	return response.send({
-					message: 'Media not exists'
+					message: 'Employee not exists'
 				});
             } else {
                 return response.send({
@@ -111,18 +74,21 @@ module.exports = {
 		})
 	},
 
-	getMediaByID:function(request,response){
-		Medias.find({Media_Code:request.query.row_id}, function(err, field) {
+	getAllEmployee:function(request,response){
+		Employee.find({})
+		.populate({ path: 'Office', select: 'Office_Code Office_Name' })
+		.lean()
+		.exec(function(err, employee) {
 		    if (err){
 		    	response.send({message: 'Error'});
 		    }
-	        if (field) {
-	            response.send(field);
+	        if (employee) {
+	        	
+	            response.send(employee);
 	        } 
-    	});
+    	}).sort({Employee_Code:-1}).limit(20)
 	},
 
-	
 }
 
 
