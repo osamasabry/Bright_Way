@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var passwordHash = require('password-hash');
 
 var Btw_EmployeeSchema = mongoose.Schema({
    
@@ -7,7 +8,7 @@ var Btw_EmployeeSchema = mongoose.Schema({
         Employee_Address                :String,
 		Employee_Phone                  :Number,
 		Employee_Email                  :String,
-        Employee_Password               :Number,
+        Employee_Password               :String,
         Employee_NationalID             :Number,
         Employee_Job_Title              :String,
         Employee_Permissions            :[String],
@@ -25,9 +26,16 @@ Btw_EmployeeSchema.virtual('Office',{
     justOne: false // for many-to-1 relationships
 });
 
+Btw_EmployeeSchema.methods.verifyPassword = function(password) {
+    console.log(passwordHash.verify(password,this.Employee_Password))
+    if(passwordHash.verify(password,this.Employee_Password) == 1)
+        return 1;
+    else
+        return 0;
+};
+
 
 var Employees = module.exports = mongoose.model('btw_employee', Btw_EmployeeSchema);
-
 
 
 module.exports.getLastCode = function(callback){

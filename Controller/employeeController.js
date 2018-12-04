@@ -1,6 +1,8 @@
 var Employee = require('../Model/btw_employee');
 var Office = require('../Model/btw_office');
 
+var passwordHash = require('password-hash');
+
 
 module.exports = {
 
@@ -11,7 +13,6 @@ module.exports = {
 			else
 				insetIntoEmployee(1);
 		});
-
 		function insetIntoEmployee(GetNextId){
 			var newEmployee = new Employee();
 			newEmployee.Employee_Code     		 	= GetNextId;
@@ -19,7 +20,7 @@ module.exports = {
 			newEmployee.Employee_Address   	 		= request.body.Employee_Address;
 			newEmployee.Employee_Phone	 			= request.body.Employee_Phone;
 			newEmployee.Employee_Email   	    	= request.body.Employee_Email;
-			newEmployee.Employee_Password   	    = request.body.Employee_Password;
+			newEmployee.Employee_Password   	    = passwordHash.generate(request.body.Employee_Password);
 			newEmployee.Employee_NationalID   	    = request.body.Employee_NationalID;
 			newEmployee.Employee_Job_Title   	    = request.body.Employee_Job_Title;
 			newEmployee.Employee_Permissions   	    = request.body.Employee_Permissions;

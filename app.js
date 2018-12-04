@@ -26,7 +26,7 @@ var app = express();
 
 // db.connect(process.env.hcmProductionDBConnection,{useNewUrlParser: true});
 
-db.connect("mongodb://localhost:27017/travel");
+db.connect("mongodb://localhost:27017/BrightWay");
 
 
 app.use(cors({credentials: true, origin: true}))

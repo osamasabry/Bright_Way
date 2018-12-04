@@ -29,7 +29,7 @@ module.exports = function(passport) {
     function(req, user_name, password, done) {
        process.nextTick(function() {
             // console.log(user_name,password);
-            User.findOne({ 'CP_User_Name' :  user_name }, function(err, user) {
+            User.findOne({ 'Employee_Email' :  user_name }, function(err, user) {
                 if (err){ return done(err);}
                 if (!user)
                   return done(null,false,{status:false,message:'user is not exist'});
@@ -51,14 +51,14 @@ module.exports = function(passport) {
         process.nextTick(function() {
        
             if (!req.user) {
-                User.findOne({ 'user.email' :  email }, function(err, user) {
+                User.findOne({ 'Employee_Email' :  email }, function(err, user) {
             	    if (err){ return done(err);}
                     if (user) {
                         return done(null, false, req.flash('signuperror', 'User already exists'));
                     } else {
                         var newUser            = new User();
-			            newUser.user.username    = req.body.username;
-                        newUser.user.email    = email;
+			            newUser.Employee_Name   = req.body.Employee_Name;
+                        newUser.user.email       = email;
                         // newUser.user.password = newUser.generateHash(password);
                         newUser.user.password = password;
 
