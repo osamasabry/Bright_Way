@@ -5,7 +5,7 @@ var EmployeeController  = require('../Controller/employeeController');
 var OfficeController   = require('../Controller/officeController');
 var SetUpController = require('../Controller/setupController');
 var CustomerController = require('../Controller/customerController');
-// var MediaController = require('../Controller/mediaController');
+var HotelController = require('../Controller/hotelController');
 // var CustomerController = require('../Controller/customerController');
 // var SearchController = require('../Controller/searchController');
 
@@ -156,28 +156,36 @@ router.get('/getAllEmployee', type,function(req, res) {
 });
 
 
-/****************Media****************/
+/****************Hotel****************/
 
-// router.post('/addMedia', type,function(req, res) {
-//     // console.log(req.file);
-//     var AddMedia = async (function (){
-//         MediaController.addMedia(req,res);
-//     });
-//     AddMedia();
-// });
+router.post('/addHotel', type,function(req, res) {
+    console.log(req.body);
+    var AddHotel = async (function (){
+        HotelController.addHotel(req,res);
+    });
+    AddHotel();
+});
 
-// router.post('/editMedia', type,function(req, res) {
-//     var EditMedia = async (function (){
-//         await (MediaController.editMedia(req,res));
-//     });
-//     EditMedia();
-// });
+router.post('/editHotelContact', type,function(req, res) {
+    var EditHotelContact = async (function (){
+        await (HotelController.editHotelContact(req,res));
+    });
+    EditHotelContact();
+});
 
-// router.get('/getMediaByID', type,function(req, res) {
-//     var GetMediaByID= async (function (){
-//         await (MediaController.getMediaByID(req,res));
-//     });
-//     GetMediaByID();
-// });
+router.post('/editHotelContractInfo', type,function(req, res) {
+    var EditHotelContractInfo = async (function (){
+        await (HotelController.editHotelContractInfo(req,res));
+    });
+    EditHotelContractInfo();
+});
+
+router.post('/editHotelContractRoom', type,function(req, res) {
+    var EditHotelContractRoom = async (function (){
+        await (HotelController.editHotelContractRoom(req,res));
+    });
+    EditHotelContractRoom();
+});
+
 
 module.exports = router;
