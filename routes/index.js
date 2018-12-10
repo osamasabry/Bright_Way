@@ -173,11 +173,18 @@ router.post('/editHotelContact', type,function(req, res) {
     EditHotelContact();
 });
 
-router.post('/editHotelContractInfo', type,function(req, res) {
-    var EditHotelContractInfo = async (function (){
-        await (HotelController.editHotelContractInfo(req,res));
+router.post('/editHotelContractBasicInfo', type,function(req, res) {
+    var EditHotelContractBasicInfo = async (function (){
+        await (HotelController.editHotelContractBasicInfo(req,res));
     });
-    EditHotelContractInfo();
+    EditHotelContractBasicInfo();
+});
+
+router.post('/addHotelContractRoom', type,function(req, res) {
+    var AddHotelContractRoom = async (function (){
+        await (HotelController.addHotelContractRoom(req,res));
+    });
+    AddHotelContractRoom();
 });
 
 router.post('/editHotelContractRoom', type,function(req, res) {
@@ -185,6 +192,20 @@ router.post('/editHotelContractRoom', type,function(req, res) {
         await (HotelController.editHotelContractRoom(req,res));
     });
     EditHotelContractRoom();
+});
+
+router.get('/getAllHotels', type,function(req, res) {
+    var GetAllHotels= async (function (){
+        await (HotelController.getAllHotels(req,res));
+    });
+    GetAllHotels();
+});
+
+router.get('/getHotelByID', type,function(req, res) {
+    var GetHotelByID= async (function (){
+        await (HotelController.getHotelByID(req,res));
+    });
+    GetHotelByID();
 });
 
 

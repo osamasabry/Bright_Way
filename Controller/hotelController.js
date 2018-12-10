@@ -131,7 +131,7 @@ module.exports = {
 		})
 	},
 
-	editHotelContractInfo:function(request,res){
+	editHotelContractBasicInfo:function(request,res){
 		var ContractBasic = [
 			{
     			Deposit_Amount          : Number(request.body.Deposit_Amount),
@@ -165,13 +165,51 @@ module.exports = {
 		})
 	},
 
-	editHotelContractRoom:function(request,res){
+	addHotelContractRoom:function(request,res){
 
-		var myquery = { Hotel_Code: request.body.Hotel_Code }; 
+		var myquery = {
+				 Hotel_Code: request.body.Hotel_Code,
+				'Hotel_Contract._id' : request.body.Hotel_ContractID, 
+			}; 
 
 		var newvalues = { 
-			Hotel_Contract.ByEmployee_Code:request.body.Employee_Code,
-		 };
+			$push: { "Hotel_Rooms.$.Room_From"      : request.body.Room_From,
+					 "Hotel_Rooms.$.Room_To" 		: request.body.Room_To,
+					 "Hotel_Rooms.$.Room_Details"   : request.body.Room_Details,
+				},
+		};
+		Hotel.findOneAndUpdate( myquery,newvalues, function(err, field) {
+    	    if (err){
+    	    	return res.send({
+					message: 'Error'
+				});
+    	    }
+            if (!field) {
+            	return res.send({
+					message: 'Hotel not exists'
+				});
+            } else {
+
+                return res.send({
+					message: true
+				});
+			}
+		})
+	},
+
+	editHotelContractRoom:function(request,res){
+
+		var myquery = {
+				 Hotel_Code 			: request.body.Hotel_Code,
+				'Hotel_Contract._id' 	: request.body.Hotel_ContractID, 
+				'Hotel_Rooms._id' 		: request.body.Hotel_RoomID, 
+			}; 
+
+		var newvalues = { 
+			$push: { 
+					"Hotel_Rooms.$.Room_Details"   : request.body.Room_Details,
+				},
+		};
 		Hotel.findOneAndUpdate( myquery,newvalues, function(err, field) {
     	    if (err){
     	    	return res.send({
