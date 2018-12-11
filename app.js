@@ -2,7 +2,7 @@ var express = require('express');
 var path = require('path');
 var favicon = require('static-favicon');
 var logger = require('morgan');
-var port     = process.env.PORT || 3111;
+var port     = process.env.PORT || 3112;
 var routes = require('./routes/index');
 var db= require('mongoose');
 var cors = require('cors');
@@ -24,9 +24,9 @@ require('./config/passport')(passport);
 
 var app = express();
 
-// db.connect(process.env.hcmProductionDBConnection,{useNewUrlParser: true});
+db.connect(process.env.bwProductionDBConnection,{useNewUrlParser: true});
 
-db.connect("mongodb://localhost:27017/BrightWay");
+//db.connect("mongodb://localhost:27017/BrightWay");
 
 
 app.use(cors({credentials: true, origin: true}))

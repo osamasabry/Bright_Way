@@ -6,7 +6,7 @@ var Btw_EmployeeSchema = mongoose.Schema({
 		Employee_Code                   :Number,
         Employee_Name                   :String,
         Employee_Address                :String,
-		Employee_Phone                  :Number,
+		Employee_Phone                  :String,
 		Employee_Email                  :String,
         Employee_Password               :String,
         Employee_NationalID             :Number,
