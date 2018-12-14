@@ -90,6 +90,27 @@ module.exports = {
     	}).sort({Employee_Code:-1}).limit(20)
 	},
 
+	searchEmployee:function(request,response){
+		var object={};
+		if (request.body.Employee_Name)
+			object = {Employee_Name:{ $regex: request.body.Employee_Name, $options: 'i' } }	
+		else
+			object = {Employee_Email:{ $regex: request.body.Employee_Email, $options: 'i' } }	
+
+		Employee.find(object)
+		.populate({ path: 'Office', select: 'Office_Code Office_Name' })
+		.lean()
+		.exec(function(err, employee) {
+		    if (err){
+				console.log(err)
+		    	response.send({message: 'Error'});
+		    }
+	        if (employee) {
+	            response.send(employee);
+	        } 
+    	})
+	},
+
 }
 
 

@@ -99,11 +99,11 @@ router.get('/getActiveOffice', type,function(req, res) {
     GetActiveOffice();
 });
 
-router.get('/getOfficeByID', type,function(req, res) {
-    var GetOfficeByID= async (function (){
-        await (OfficeController.getOfficeByID(req,res));
+router.post('/searchOffice', type,function(req, res) {
+    var SearchOffice= async (function (){
+        await (OfficeController.searchOffice(req,res));
     });
-    GetOfficeByID();
+    SearchOffice();
 });
 
 
@@ -131,6 +131,14 @@ router.get('/getAllCustomer', type,function(req, res) {
     GetAllCustomer();
 });
 
+router.post('/searchCustomer', type,function(req, res) {
+    var SearchCustomer= async (function (){
+        await (CustomerController.searchCustomer(req,res));
+    });
+    SearchCustomer();
+});
+
+
 
 /****************Employee****************/
 
@@ -153,6 +161,15 @@ router.get('/getAllEmployee', type,function(req, res) {
         await (EmployeeController.getAllEmployee(req,res));
     });
     GetAllEmployee();
+});
+
+
+router.post('/searchEmployee', type,function(req, res) {
+    console.log('req.body');
+    var SearchEmployee= async (function (){
+        await (EmployeeController.searchEmployee(req,res));
+    });
+    SearchEmployee();
 });
 
 

@@ -75,6 +75,27 @@ module.exports = {
     	}).sort({Customer_Code:-1}).limit(20)
 	},
 
+	searchCustomer:function(request,response){
+		var object={};
+		if (request.body.Customer_NationalID)
+			object = {Customer_NationalID:request.body.Customer_NationalID};
+		else if(request.body.Customer_Phone )	
+			object = {Customer_Phone:request.body.Customer_Phone};
+		else
+			object = {Customer_Name:{ $regex: request.body.Customer_Name, $options: 'i' } }	
+
+		Customer.find(object)
+		.exec(function(err, customer) {
+		    if (err){
+				console.log(err)
+		    	response.send({message: 'Error'});
+		    }
+	        if (customer) {
+	            response.send(customer);
+	        } 
+    	})
+	},
+
 }
 
 

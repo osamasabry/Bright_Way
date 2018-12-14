@@ -86,54 +86,24 @@ module.exports = {
     	});
 	},
 
-	getOfficeByID:function(request,response){
-		var Searchquery = Number(request.body.row_id); 
-		Office.find({'Office_Code':Searchquery})
+	searchOffice:function(request,response){
+		var object={};
+		if (request.body.Office_Name)
+			object = {Office_Name:{ $regex: request.body.Office_Name, $options: 'i' } }	
+			
+		Office.find(object)
 		.exec(function(err, office) {
-			if (err){
-	    		return response.send({
-					message: err
-				});
-	    	}
-	    	if (office.length == 0) {
-				return response.send({
-					message: 'No offices Found !!',
-					length: office.length
-				});
-        	} else {
-				return response.send({
-					office: office
-				});
-			}
-		})
+		    if (err){
+				console.log(err)
+		    	response.send({message: 'Error'});
+		    }
+	        if (office) {
+	            response.send(office);
+	        } 
+    	})
 	},
 
-	// getPostByTitle:function(request,response){
-	// 	var Searchquery = request.body.row_id; 
-	// 	 Posts.find({'Post_Title':Searchquery})
-	// 	.populate({ path: 'Category', select: 'Category_Code Category_Name' })
-	// 	.populate({ path: 'Tag', select: 'Tag_Code Tag_Name' })
-	// 	.populate({ path: 'Media', select: 'Media_Code Media_Title' })
-	// 	.populate({ path: 'User', select: 'CP_User_Code CP_User_Name' })
-	// 	.lean()
-	// 	.exec(function(err, post) {
-	// 		if (err){
-	//     		return response.send({
-	// 				message: err
-	// 			});
-	//     	}
-	//     	if (post.length == 0) {
-	// 			return response.send({
-	// 				message: 'No Posts Found !!',
-	// 				length: post.length
-	// 			});
- //        	} else {
-	// 			return response.send({
-	// 				post: post
-	// 			});
-	// 		}
-	// 	})
-	// }
+	
 }
 
 
