@@ -6,7 +6,7 @@ var OfficeController   = require('../Controller/officeController');
 var SetUpController = require('../Controller/setupController');
 var CustomerController = require('../Controller/customerController');
 var HotelController = require('../Controller/hotelController');
-// var CustomerController = require('../Controller/customerController');
+var ReservationController = require('../Controller/reservationController');
 // var SearchController = require('../Controller/searchController');
 
 var passport = require('passport');
@@ -38,192 +38,213 @@ router.post('/login', type,function(req, res, next) {
 
 /****************Setup ****************/
 
-router.get('/getPaymentMethods', type,function(req, res) {
-    var GetPaymentMethods= async (function (){
-        await (SetUpController.getPaymentMethods(req,res));
+    router.get('/getPaymentMethods', type,function(req, res) {
+        var GetPaymentMethods= async (function (){
+            await (SetUpController.getPaymentMethods(req,res));
+        });
+        GetPaymentMethods();
     });
-    GetPaymentMethods();
-});
 
-router.get('/getSystemSettings', type,function(req, res) {
-    var GetSystemSettings= async (function (){
-        await (SetUpController.getSystemSettings(req,res));
+    router.get('/getSystemSettings', type,function(req, res) {
+        var GetSystemSettings= async (function (){
+            await (SetUpController.getSystemSettings(req,res));
+        });
+        GetSystemSettings();
     });
-    GetSystemSettings();
-});
 
-router.get('/getRoomTypes', type,function(req, res) {
-    var GetRoomTypes= async (function (){
-        await (SetUpController.getRoomTypes(req,res));
+    router.get('/getRoomTypes', type,function(req, res) {
+        var GetRoomTypes= async (function (){
+            await (SetUpController.getRoomTypes(req,res));
+        });
+        GetRoomTypes();
     });
-    GetRoomTypes();
-});
 
-router.get('/getRoomViews', type,function(req, res) {
-    var GetRoomViews= async (function (){
-        await (SetUpController.getRoomViews(req,res));
+    router.get('/getRoomViews', type,function(req, res) {
+        var GetRoomViews= async (function (){
+            await (SetUpController.getRoomViews(req,res));
+        });
+        GetRoomViews();
     });
-    GetRoomViews();
-});
 
+    router.get('/getCities', type,function(req, res) {
+        var GetCities= async (function (){
+            await (SetUpController.getCities(req,res));
+        });
+        GetCities();
+    });
 
 /****************Office****************/
 
 
-router.post('/addOffice', type,function(req, res) {
-    var AddOffice = async (function (){
-        OfficeController.addOffice(req,res);
+    router.post('/addOffice', type,function(req, res) {
+        var AddOffice = async (function (){
+            OfficeController.addOffice(req,res);
+        });
+        AddOffice();
     });
-    AddOffice();
-});
 
 
-router.post('/editOffice', type,function(req, res) {
-    var EditOffice = async (function (){
-        await (OfficeController.editOffice(req,res));
+    router.post('/editOffice', type,function(req, res) {
+        var EditOffice = async (function (){
+            await (OfficeController.editOffice(req,res));
+        });
+        EditOffice();
     });
-    EditOffice();
-});
 
-router.get('/getAllOffice', type,function(req, res) {
-    var GetAllOffice= async (function (){
-        await (OfficeController.getAllOffice(req,res));
+    router.get('/getAllOffice', type,function(req, res) {
+        var GetAllOffice= async (function (){
+            await (OfficeController.getAllOffice(req,res));
+        });
+        GetAllOffice();
     });
-    GetAllOffice();
-});
 
-router.get('/getActiveOffice', type,function(req, res) {
-    var GetActiveOffice= async (function (){
-        await (OfficeController.getActiveOffice(req,res));
+    router.get('/getActiveOffice', type,function(req, res) {
+        var GetActiveOffice= async (function (){
+            await (OfficeController.getActiveOffice(req,res));
+        });
+        GetActiveOffice();
     });
-    GetActiveOffice();
-});
 
-router.post('/searchOffice', type,function(req, res) {
-    var SearchOffice= async (function (){
-        await (OfficeController.searchOffice(req,res));
+    router.post('/searchOffice', type,function(req, res) {
+        var SearchOffice= async (function (){
+            await (OfficeController.searchOffice(req,res));
+        });
+        SearchOffice();
     });
-    SearchOffice();
-});
 
 
 /****************Customer****************/
 
-router.post('/addCustomer', type,function(req, res) {
-    var AddCustomer = async (function (){
-        CustomerController.addCustomer(req,res);
+    router.post('/addCustomer', type,function(req, res) {
+        var AddCustomer = async (function (){
+            CustomerController.addCustomer(req,res);
+        });
+        AddCustomer();
     });
-    AddCustomer();
-});
 
 
-router.post('/editCustomer', type,function(req, res) {
-    var EditCustomer = async (function (){
-        await (CustomerController.editCustomer(req,res));
+    router.post('/editCustomer', type,function(req, res) {
+        var EditCustomer = async (function (){
+            await (CustomerController.editCustomer(req,res));
+        });
+        EditCustomer();
     });
-    EditCustomer();
-});
 
-router.get('/getAllCustomer', type,function(req, res) {
-    var GetAllCustomer= async (function (){
-        await (CustomerController.getAllCustomer(req,res));
+    router.get('/getAllCustomer', type,function(req, res) {
+        var GetAllCustomer= async (function (){
+            await (CustomerController.getAllCustomer(req,res));
+        });
+        GetAllCustomer();
     });
-    GetAllCustomer();
-});
 
-router.post('/searchCustomer', type,function(req, res) {
-    var SearchCustomer= async (function (){
-        await (CustomerController.searchCustomer(req,res));
+    router.post('/searchCustomer', type,function(req, res) {
+        var SearchCustomer= async (function (){
+            await (CustomerController.searchCustomer(req,res));
+        });
+        SearchCustomer();
     });
-    SearchCustomer();
-});
 
 
 
 /****************Employee****************/
 
-router.post('/addEmployee', type,function(req, res) {
-    var AddEmployee = async (function (){
-        EmployeeController.addEmployee(req,res);
+    router.post('/addEmployee', type,function(req, res) {
+        var AddEmployee = async (function (){
+            EmployeeController.addEmployee(req,res);
+        });
+        AddEmployee();
     });
-    AddEmployee();
-});
 
-router.post('/editEmployee', type,function(req, res) {
-    var EditEmployee = async (function (){
-        await (EmployeeController.editEmployee(req,res));
+    router.post('/editEmployee', type,function(req, res) {
+        var EditEmployee = async (function (){
+            await (EmployeeController.editEmployee(req,res));
+        });
+        EditEmployee();
     });
-    EditEmployee();
-});
 
-router.get('/getAllEmployee', type,function(req, res) {
-    var GetAllEmployee= async (function (){
-        await (EmployeeController.getAllEmployee(req,res));
+    router.get('/getAllEmployee', type,function(req, res) {
+        var GetAllEmployee= async (function (){
+            await (EmployeeController.getAllEmployee(req,res));
+        });
+        GetAllEmployee();
     });
-    GetAllEmployee();
-});
 
 
-router.post('/searchEmployee', type,function(req, res) {
-    console.log('req.body');
-    var SearchEmployee= async (function (){
-        await (EmployeeController.searchEmployee(req,res));
+    router.post('/searchEmployee', type,function(req, res) {
+        console.log('req.body');
+        var SearchEmployee= async (function (){
+            await (EmployeeController.searchEmployee(req,res));
+        });
+        SearchEmployee();
     });
-    SearchEmployee();
-});
 
 
 /****************Hotel****************/
 
-router.post('/addHotel', type,function(req, res) {
-    console.log(req.body);
-    var AddHotel = async (function (){
-        HotelController.addHotel(req,res);
+    router.post('/addHotel', type,function(req, res) {
+        var AddHotel = async (function (){
+            HotelController.addHotel(req,res);
+        });
+        AddHotel();
     });
-    AddHotel();
-});
 
-router.post('/editHotelContact', type,function(req, res) {
-    var EditHotelContact = async (function (){
-        await (HotelController.editHotelContact(req,res));
+    router.post('/editHotelContact', type,function(req, res) {
+        var EditHotelContact = async (function (){
+            await (HotelController.editHotelContact(req,res));
+        });
+        EditHotelContact();
     });
-    EditHotelContact();
-});
 
-router.post('/editHotelContractBasicInfo', type,function(req, res) {
-    var EditHotelContractBasicInfo = async (function (){
-        await (HotelController.editHotelContractBasicInfo(req,res));
+    router.post('/editHotelContractBasicInfo', type,function(req, res) {
+        var EditHotelContractBasicInfo = async (function (){
+            await (HotelController.editHotelContractBasicInfo(req,res));
+        });
+        EditHotelContractBasicInfo();
     });
-    EditHotelContractBasicInfo();
-});
 
-router.post('/addHotelContractRoom', type,function(req, res) {
-    var AddHotelContractRoom = async (function (){
-        await (HotelController.addHotelContractRoom(req,res));
+    router.post('/addHotelContractRoom', type,function(req, res) {
+        var AddHotelContractRoom = async (function (){
+            await (HotelController.addHotelContractRoom(req,res));
+        });
+        AddHotelContractRoom();
     });
-    AddHotelContractRoom();
-});
 
-router.post('/editHotelContractRoom', type,function(req, res) {
-    var EditHotelContractRoom = async (function (){
-        await (HotelController.editHotelContractRoom(req,res));
+    router.post('/editHotelContractRoom', type,function(req, res) {
+        var EditHotelContractRoom = async (function (){
+            await (HotelController.editHotelContractRoom(req,res));
+        });
+        EditHotelContractRoom();
     });
-    EditHotelContractRoom();
-});
 
-router.get('/getAllHotels', type,function(req, res) {
-    var GetAllHotels= async (function (){
-        await (HotelController.getAllHotels(req,res));
+    router.get('/getAllHotels', type,function(req, res) {
+        var GetAllHotels= async (function (){
+            await (HotelController.getAllHotels(req,res));
+        });
+        GetAllHotels();
     });
-    GetAllHotels();
-});
 
-router.get('/getHotelByID', type,function(req, res) {
-    var GetHotelByID= async (function (){
-        await (HotelController.getHotelByID(req,res));
+    router.get('/getHotelByID', type,function(req, res) {
+        var GetHotelByID= async (function (){
+            await (HotelController.getHotelByID(req,res));
+        });
+        GetHotelByID();
     });
-    GetHotelByID();
-});
 
+
+/*****************Reservation Rooms************************************/
+
+    router.post('/checkDate', type,function(req, res) {
+        var CheckDate= async (function (){
+            await (ReservationController.checkDate(req,res));
+        });
+        CheckDate();
+    });
+
+    router.post('/addReservation', type,function(req, res) {
+        var AddReservation= async (function (){
+            await (ReservationController.addReservation(req,res));
+        });
+        AddReservation();
+    });
 
 module.exports = router;

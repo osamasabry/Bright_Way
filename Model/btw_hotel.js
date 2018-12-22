@@ -10,12 +10,11 @@ var Btw_HotelSchema = mongoose.Schema({
             Hotel_ContactName            : String,
             Hotel_ContactTelphone        : [String],
             Hotel_ContactEmail           : [String],
-            
         },{
             toJSON: { virtuals: true }
         }],
 
-        Hotel_City                         :String,
+        Hotel_City                         :Number,
         Hotel_Stars                        :Number,
         Hotel_HasChildernPolicy            :Number, 
         Hotel_FirstChildernAge             :Number,
@@ -30,12 +29,21 @@ var Btw_HotelSchema = mongoose.Schema({
             Hotel_Rooms                :[{
                 Room_From   : Date,
                 Room_To     : Date,
+                Room_Count  :Number,
                 Room_Details:[{
-                    Room_RoomType_Code :Number, 
-                    Room_RoomView_Code :Number,
-                    Room_Count         :Number,
-                    Room_Price         :Number,
-                    Room_Cost          :Number,
+                    RoomType_Code :Number, 
+                    RoomView_Code :Number,
+                    Count         :Number,
+                    Price         :{
+                        Price_Single_Room:Number,
+                        Price_Double_Room:Number,
+                        Price_Triple_Room:Number,
+                    },
+                    Room_Cost          :{
+                        Cost_Single_Room:Number,
+                        Cost_Double_Room:Number,
+                        Cost_Triple_Room:Number,
+                    },
                 }],
             }],
         }],

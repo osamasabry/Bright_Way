@@ -2,7 +2,7 @@ var PaymentMethod = require('../Model/btw_payment_method');
 var SystemSetting = require('../Model/btw_system_setting');
 var RoomType = require('../Model/lut_btw_room_type');
 var RoomView = require('../Model/lut_btw_room_view');
-
+var City = require('../Model/lut_btw_city');
 
 
 module.exports = {
@@ -54,6 +54,18 @@ module.exports = {
 		    }
 	        if (room_view) {
 	            response.send(room_view);
+	        } 
+    	})
+	},
+
+	getCities:function(request,response){
+		City.find({})
+		.exec(function(err, city) {
+		    if (err){
+		    	response.send({message: 'Error'});
+		    }
+	        if (city) {
+	            response.send(city);
 	        } 
     	})
 	},
