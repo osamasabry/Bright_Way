@@ -69,7 +69,72 @@ module.exports = {
 	        } 
     	})
 	},
+
+	addCity:function(request,response){
+		City.getLastCode(function(err,city){
+			if (city) 
+				insetIntoCity(city.City_Code+1);
+			else
+				insetIntoCity(1);
+		});
+
+		function insetIntoCity(GetNextId){
+			var newCity = new City();
+			newCity.City_Code     		 	= GetNextId;
+			newCity.City_Name 	     	 	= request.body.City_Name;
+			newCity.City_IsActive 	     	= 0;
+			newCity.save(function(error, doneadd){
+				if(error){
+					return response.send({
+						message: error
+					});
+				}
+				else{
+					return response.send({
+						message: true
+					});
+				}
+			});
+		}
+	},
 	
+	editCity:function(request,response){
+		var newvalues = { $set: {
+				City_Name 				    : request.body.City_Name,
+				City_IsActive 				: request.body.City_IsActive,
+			} };
+		
+		var myquery = { City_Code: request.body.City_Code }; 
+		City.findOneAndUpdate( myquery,newvalues, function(err, field) {
+    	    if (err){
+    	    	return response.send({
+					message: 'Error'
+				});
+    	    }
+            if (!field) {
+            	return response.send({
+					message: 'City not exists'
+				});
+            } else {
+                return response.send({
+					message: true
+				});
+			}
+		})
+	},
+
+	getActiveCities:function(request,response){
+		City.find({City_IsActive:1})
+		.exec(function(err, city) {
+		    if (err){
+		    	response.send({message: 'Error'});
+		    }
+	        if (city) {
+	            response.send(city);
+	        } 
+    	})
+	},
+
 }
 
 

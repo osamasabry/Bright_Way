@@ -20,17 +20,16 @@ module.exports = {
 			    	response.send({message: err});
 			    }
 		        if (roomBusy) {
-		        	console.log(roomBusy);
 		            checkDateFromHotel(roomBusy.RoomBusy_Count) ;
 		        }else{
-		        	checkDateFromHotel();
+
+		        	checkDateFromHotel(0);
 		        }
 	    	})
 
 		}
 
 		function checkDateFromHotel(count_room){
-			console.log(count_room);
 			Hotel.aggregate([
 			{$match: { Hotel_Code: 1 }},
 			{$unwind: "$Hotel_Contract" },
@@ -42,7 +41,7 @@ module.exports = {
 			    if (err){
 			    	response.send({message: err});
 			    }
-		        if (hotel.length >0) {
+		        if (hotel.length > 0) {
 		        	var available_room =  hotel[0].Hotel_Contract[0] - count_room ;
 		            response.send({count: available_room});
 		        } else{

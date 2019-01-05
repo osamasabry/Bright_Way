@@ -73,6 +73,27 @@ router.post('/login', type,function(req, res, next) {
         GetCities();
     });
 
+    router.get('/getActiveCities', type,function(req, res) {
+        var GetActiveCities= async (function (){
+            await (SetUpController.getActiveCities(req,res));
+        });
+        GetActiveCities();
+    });
+
+    router.post('/addCity', type,function(req, res) {
+        var AddCity = async (function (){
+            SetUpController.addCity(req,res);
+        });
+        AddCity();
+    });
+
+    router.post('/editCity', type,function(req, res) {
+        var EditCity = async (function (){
+            SetUpController.editCity(req,res);
+        });
+        EditCity();
+    });
+
 /****************Office****************/
 
 
