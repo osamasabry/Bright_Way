@@ -209,6 +209,13 @@ router.post('/login', type,function(req, res, next) {
         AddHotel();
     });
 
+    router.post('/editHotel', type,function(req, res) {
+        var EditHotel = async (function (){
+            await (HotelController.editHotel(req,res));
+        });
+        EditHotel();
+    });
+    
     router.post('/editHotelContact', type,function(req, res) {
         var EditHotelContact = async (function (){
             await (HotelController.editHotelContact(req,res));

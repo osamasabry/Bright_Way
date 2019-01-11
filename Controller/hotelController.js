@@ -82,6 +82,7 @@ module.exports = {
 
 	getAllHotels:function(request,response){
 		Hotel.find({})
+		.sort({Hotel_Code: -1})
 		.exec(function(err, hotel) {
 		    if (err){
 		    	response.send({message: 'Error'});
@@ -89,7 +90,7 @@ module.exports = {
 	        if (hotel) {
 	            response.send(hotel);
 	        } 
-    	}).sort({Hotel_Code:-1}).limit(20)
+    	})
 	},
 
 	getHotelByID:function(request,response){
@@ -110,7 +111,7 @@ module.exports = {
 		var myquery = { Hotel_Code: request.body.Hotel_Code }; 
 
 		var newvalues = { 
-			Hotel_Contact	: request.body.Hotel_ContactTitle,
+			Hotel_Contact	: request.body.Hotel_Contact,
 		};
 		Hotel.findOneAndUpdate( myquery,newvalues, function(err, field) {
     	    if (err){
