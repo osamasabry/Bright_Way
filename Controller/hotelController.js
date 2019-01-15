@@ -135,6 +135,7 @@ module.exports = {
 	editHotelContractBasicInfo:function(request,res){
 		var ContractBasic = [
 			{
+				Title 					: request.body.Title,
     			Deposit_Amount          : Number(request.body.Deposit_Amount),
 	            Limit_Reservation_For   : Number(request.body.Limit_Reservation_For),
 	            Date                    : request.body.Date,

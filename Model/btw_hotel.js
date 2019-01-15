@@ -22,6 +22,7 @@ var Btw_HotelSchema = mongoose.Schema({
         Hotel_ThirdChildernAge             :Number, 
         Hotel_ChildernPolicy_Hint          :String,
         Hotel_Contract : [{
+            Title                   :String,
             Deposit_Amount          :Number,
             Limit_Reservation_For   :Number,
             Date                    :Date,
