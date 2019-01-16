@@ -94,8 +94,8 @@ module.exports = {
 	},
 
 	getHotelByID:function(request,response){
-		var Search = Numer(request.body.Hotel_Code);
-		Hotel.find({Hotel_Code:Search})
+		var Search = Number(request.body.Hotel_Code);
+		Hotel.findOne({Hotel_Code:Search})
 		.exec(function(err, hotel) {
 		    if (err){
 		    	response.send({message: 'Error'});
@@ -289,7 +289,20 @@ module.exports = {
 				});
 			}
 		})
-	}
+	},
+
+	getHotelContractByID:function(request,response){
+		var Search = Number(request.body.Hotel_Code);
+		Hotel.findOne({Hotel_Code:Search})
+		.exec(function(err, hotel) {
+		    if (err){
+		    	response.send({message: 'Error'});
+		    }
+	        if (hotel) {
+	            response.send(hotel.Hotel_Contract);
+	        } 
+    	})
+	},
 
 }
 

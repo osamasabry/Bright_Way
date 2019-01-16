@@ -192,7 +192,6 @@ router.post('/login', type,function(req, res, next) {
 
 
     router.post('/searchEmployee', type,function(req, res) {
-        console.log('req.body');
         var SearchEmployee= async (function (){
             await (EmployeeController.searchEmployee(req,res));
         });
@@ -251,11 +250,18 @@ router.post('/login', type,function(req, res, next) {
         GetAllHotels();
     });
 
-    router.get('/getHotelByID', type,function(req, res) {
+    router.post('/getHotelByID', type,function(req, res) {
         var GetHotelByID= async (function (){
             await (HotelController.getHotelByID(req,res));
         });
         GetHotelByID();
+    });
+
+    router.post('/getHotelContractByID', type,function(req, res) {
+        var GetHotelContractByID= async (function (){
+            await (HotelController.getHotelContractByID(req,res));
+        });
+        GetHotelContractByID();
     });
 
 
