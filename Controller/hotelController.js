@@ -260,35 +260,52 @@ module.exports = {
 	},
 
 	editHotelContractRoom:function(request,res){
-
-		var myquery = {
-				 Hotel_Code 			: request.body.Hotel_Code,
-				'Hotel_Contract._id' 	: request.body.Hotel_ContractID, 
-				'Hotel_Rooms._id' 		: request.body.Hotel_RoomID, 
-			}; 
-
-		var newvalues = { 
-			$push: { 
-					"Hotel_Rooms.$.Room_Details"   : request.body.Room_Details,
-				},
-		};
-		Hotel.findOneAndUpdate( myquery,newvalues, function(err, field) {
-    	    if (err){
-    	    	return res.send({
-					message: 'Error'
-				});
-    	    }
-            if (!field) {
-            	return res.send({
-					message: 'Hotel not exists'
-				});
-            } else {
-
-                return res.send({
-					message: true
-				});
-			}
+		Hotel.findOne({Hotel_Code: request.body.Hotel_Code}).then((Hotel) => {
+			var Hotel_Contract = Hotel.Hotel_Contract.filter((object) => {
+				return object["_id"] == request.body.Hotel_ContractID
+			})
+			var Hotel_Rooms = Hotel_Contract[0].Hotel_Rooms.filter((object) => {
+				return object["_id"] == request.body.Hotel_RoomID
+			})
+			Hotel_Rooms[0].Room_Details.push(request.body.Room_Details);
+			Hotel.save();
+			return res.send({
+				message: true
+			})
 		})
+		.catch((err)=>{
+            return res.send({
+				message: err
+			});
+		});
+		// var myquery = {
+		// 		 Hotel_Code 			: request.body.Hotel_Code,
+		// 		'Hotel_Contract._id' 	: request.body.Hotel_ContractID, 
+		// 		'Hotel_Rooms._id' 		: request.body.Hotel_RoomID, 
+		// 	}; 
+
+		// var newvalues = { 
+		// 	$push: { 
+		// 			"Hotel_Rooms.$.Room_Details"   : request.body.Room_Details,
+		// 		},
+		// };
+		// Hotel.findOneAndUpdate( myquery,newvalues, function(err, field) {
+    	//     if (err){
+    	//     	return res.send({
+		// 			message: 'Error'
+		// 		});
+    	//     }
+        //     if (!field) {
+        //     	return res.send({
+		// 			message: err
+		// 		});
+        //     } else {
+
+        //         return res.send({
+		// 			message: true
+		// 		});
+		// 	}
+		// })
 	},
 
 	getHotelContractByID:function(request,response){
@@ -296,7 +313,7 @@ module.exports = {
 		Hotel.findOne({Hotel_Code:Search})
 		.exec(function(err, hotel) {
 		    if (err){
-		    	response.send({message: 'Error'});
+		    	response.send({message: err});
 		    }
 	        if (hotel) {
 	            response.send(hotel.Hotel_Contract);
