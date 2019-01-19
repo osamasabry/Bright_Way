@@ -56,18 +56,39 @@ var Btw_HotelSchema = mongoose.Schema({
         Hotel_IsActive                  :Number,
 
 },{
+    toObject: { virtuals: true },
     toJSON: { virtuals: true }
 });
 
-// Btw_EmployeeSchema.virtual('Office',{
-//     ref: 'btw_office',
-//     localField: 'Employee_Office_Code',
-//     foreignField: 'Office_Code',
-//     justOne: false // for many-to-1 relationships
-// });
+Btw_HotelSchema.virtual('City',{
+    ref: 'btw_city',
+    localField: 'Hotel_City',
+    foreignField: 'City_Code',
+    justOne: false // for many-to-1 relationships
+});
 
 
+Btw_HotelSchema.virtual('Employee',{
+    ref: 'btw_employee',
+    localField: 'Hotel_Contract.ByEmployee_Code',
+    foreignField: 'Employee_Code',
+    justOne: false // for many-to-1 relationships
+});
 
+Btw_HotelSchema.virtual('RoomType',{
+    ref: 'btw_room_type',
+    localField: 'Hotel_Contract.Hotel_Rooms.Room_Details.RoomType_Code',
+    foreignField: 'RoomType_Code',
+    justOne: false // for many-to-1 relationships
+});
+
+
+Btw_HotelSchema.virtual('RoomView',{
+    ref: 'btw_room_view',
+    localField: 'Hotel_Contract.Hotel_Rooms.Room_Details.RoomView_Code',
+    foreignField: 'RoomView_Code',
+    justOne: false // for many-to-1 relationships
+});
 
 var Hotels = module.exports = mongoose.model('btw_hotel', Btw_HotelSchema);
 

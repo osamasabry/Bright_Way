@@ -1,4 +1,8 @@
 var Hotel = require('../Model/btw_hotel');
+var City = require('../Model/lut_btw_city');
+var RoomType = require('../Model/lut_btw_room_type');
+var RoomView = require('../Model/lut_btw_room_view');
+var Employee = require('../Model/btw_employee');
 
 
 module.exports = {
@@ -96,9 +100,14 @@ module.exports = {
 	getHotelByID:function(request,response){
 		var Search = Number(request.body.Hotel_Code);
 		Hotel.findOne({Hotel_Code:Search})
+		.populate({ path: 'City', select: 'City_Name' })
+		.populate({ path: 'Employee', select: 'Employee_Name' })
+		.populate({ path: 'RoomType', select: 'RoomType_Name' })
+		.populate({ path: 'RoomView', select: 'RoomView_Name' })
+		.lean()
 		.exec(function(err, hotel) {
 		    if (err){
-		    	response.send({message: 'Error'});
+		    	response.send(err);
 		    }
 	        if (hotel) {
 	            response.send(hotel);
@@ -311,11 +320,17 @@ module.exports = {
 	getHotelContractByID:function(request,response){
 		var Search = Number(request.body.Hotel_Code);
 		Hotel.findOne({Hotel_Code:Search})
+		.populate({ path: 'City', select: 'City_Name' })
+		.populate({ path: 'Employee', select: 'Employee_Name' })
+		.populate({ path: 'RoomType', select: 'RoomType_Name' })
+		.populate({ path: 'RoomView', select: 'RoomView_Name' })
+		.lean()
 		.exec(function(err, hotel) {
 		    if (err){
 		    	response.send({message: err});
 		    }
 	        if (hotel) {
+	        	console.log(hotel);
 	            response.send(hotel.Hotel_Contract);
 	        } 
     	})
