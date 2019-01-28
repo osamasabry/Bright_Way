@@ -322,3 +322,59 @@ module.exports = {
 
 
 
+//hashed by osama 
+
+// Room_Details:
+			// [
+			// 	{
+			// 		RoomType_Code:1,
+			// 		RoomView_Code:1,
+			// 		Count:5,
+			// 		Price :{
+	  //                   Price_Single_Room:1000,
+	  //                   Price_Double_Room:1500,
+	  //                   Price_Triple_Room:1700,
+	  //               },
+			// 	},
+			// 	{
+			// 		RoomType_Code:2,
+			// 		RoomView_Code:2,
+			// 		Count:7,
+			// 		Price :{
+	  //                   Price_Single_Room:500,
+	  //                   Price_Double_Room:700,
+	  //                   Price_Triple_Room:900,
+	  //               },
+			// 	},
+			// ]
+			// },
+			// {
+			// // Room_From :request.body.Room_From,
+			// // Room_To :request.body.Room_To,
+			// // Room_Details:request.body.Room_Details
+			// Room_From :new Date('2018-12-19'),
+			// Room_To :new Date('2018-12-25'),
+			// Room_Details:
+			// [
+			// 	{
+			// 		RoomType_Code:2,
+			// 		RoomView_Code:2,
+			// 		Count:7,
+			// 		Price :{
+	  //                   Price_Single_Room:900,
+	  //                   Price_Double_Room:600,
+	  //                   Price_Triple_Room:350,
+	  //               },
+			// 	},
+			// 	{
+			// 		RoomType_Code:2,
+			// 		RoomView_Code:2,
+			// 		Count:7,
+			// 		Price :{
+	  //                   Price_Single_Room:1100,
+	  //                   Price_Double_Room:1300,
+	  //                   Price_Triple_Room:1400,
+	  //               },
+			// 	},
+			// ]
+		// }]

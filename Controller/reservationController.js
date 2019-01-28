@@ -85,27 +85,23 @@ module.exports = {
 			var newReservation = new Reservation();
 			newReservation.Reservation_Code     		= GetNextId;
 			newReservation.Reservation_Customer_ID 	    = request.body.Reservation_Customer_ID;
-			// newReservation.Reservation_Date   	 		= request.body.Reservation_Date;
+			newReservation.Reservation_Date   	 		= request.body.Reservation_Date;
 			newReservation.Reservation_Hotel_ID	 		= request.body.Reservation_Hotel_ID;
-			
-			// newReservation.Reservation_Date_From   	    = request.body.Reservation_Date_From;
-			// newReservation.Reservation_Date_To   	    = request.body.Reservation_Date_To;
-			
-			newReservation.Reservation_Date_From   	    = new Date('2018-12-15');
-			newReservation.Reservation_Date_To   	    = new Date('2018-12-18');
-
-
-			// newReservation.Reservation_Number_of_Adult  = request.body.Reservation_Number_of_Adult;
-			// newReservation.Reservation_Number_of_Child  = request.body.Reservation_Number_of_Child;
-			// newReservation.Reservation_ByEmployee_ID   	= request.body.Reservation_ByEmployee_ID;
-			// newReservation.Reservation_Office_ID   	    = request.body.Reservation_Office_ID;
-			// newReservation.Reservation_Grand_Total      = request.body.Reservation_Grand_Total;
-			// newReservation.Reservation_Room 			= request.body.Reservation_Room
-			newReservation.Reservation_Room 			= arrayrooms ;
+			newReservation.Reservation_Date_From   	    = request.body.Reservation_Date_From;
+			newReservation.Reservation_Date_To   	    = request.body.Reservation_Date_To;
+			// newReservation.Reservation_Date_From   	    = new Date('2018-12-15');
+			// newReservation.Reservation_Date_To   	    = new Date('2018-12-18');
+			newReservation.Reservation_Number_of_Adult  = request.body.Reservation_Number_of_Adult;
+			newReservation.Reservation_Number_of_Child  = request.body.Reservation_Number_of_Child;
+			newReservation.Reservation_ByEmployee_ID   	= request.body.Reservation_ByEmployee_ID;
+			newReservation.Reservation_Office_ID   	    = request.body.Reservation_Office_ID;
+			newReservation.Reservation_Grand_Total      = request.body.Reservation_Grand_Total;
+			newReservation.Reservation_Room 			= request.body.Reservation_Room
+			// newReservation.Reservation_Room 			= arrayrooms ;
 			
 			// newReservation.Reservation_Payment			= request.body.Reservation_Payment ;
-			// newReservation.Reservation_Number_of_Chair  = request.body.Reservation_Number_of_Chair;
-			// newReservation.Reservation_Chair_Price      = request.body.Reservation_Chair_Price;
+			newReservation.Reservation_Number_of_Chair  = request.body.Reservation_Number_of_Chair;
+			newReservation.Reservation_Chair_Price      = request.body.Reservation_Chair_Price;
 			
 			newReservation.save(function(error, doneadd){
 				if(error){
@@ -143,23 +139,23 @@ module.exports = {
 
 		function InsertBusyRoom(date){
 
-			roombusy=[
-				{
-					Count   :3,
-					Type    :1,
-					View    :1
-				},
-				{
-					Count   :3,
-					Type    :2,
-					View    :2
-				}
-			];
+			// roombusy=[
+			// 	{
+			// 		Count   :3,
+			// 		Type    :1,
+			// 		View    :1
+			// 	},
+			// 	{
+			// 		Count   :3,
+			// 		Type    :2,
+			// 		View    :2
+			// 	}
+			// ];
 			var newRoomBusy = new RoomBusy();
 
 			newRoomBusy.RoomBusy_Date     		 	= date;
 			newRoomBusy.RoomBusy_HotelID 	     	= request.body.Reservation_Hotel_ID;
-			newRoomBusy.RoomBusy_Details   	 		= roombusy;
+			newRoomBusy.RoomBusy_Details   	 		= request.body.roombusy;
 			newRoomBusy.RoomBusy_Count 				= request.body.RoomBusy_Count;
 			newRoomBusy.save(function(error, doneadd){
 				if(error){
