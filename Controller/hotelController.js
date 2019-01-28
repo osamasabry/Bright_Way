@@ -177,95 +177,74 @@ module.exports = {
 	},
 
 	addHotelContractRoom:function(request,res){
-		arrayhotel={
-			Room_From :request.body.Room_From,
-			Room_To :request.body.Room_To,
+		
+		var From = request.body.Room_From; 
+		var To = request.body.Room_To;
+		var arrayhotel={
+			Room_From :From,
+			Room_To :To,
+			Room_Count :request.body.Room_Count,
 			Room_Details:request.body.Room_Details
 		}
-			// Room_From :new Date('2018-12-15'),
-			// Room_To :new Date('2018-12-18'),
-			// Room_Details:
-			// [
-			// 	{
-			// 		RoomType_Code:1,
-			// 		RoomView_Code:1,
-			// 		Count:5,
-			// 		Price :{
-	  //                   Price_Single_Room:1000,
-	  //                   Price_Double_Room:1500,
-	  //                   Price_Triple_Room:1700,
-	  //               },
-			// 	},
-			// 	{
-			// 		RoomType_Code:2,
-			// 		RoomView_Code:2,
-			// 		Count:7,
-			// 		Price :{
-	  //                   Price_Single_Room:500,
-	  //                   Price_Double_Room:700,
-	  //                   Price_Triple_Room:900,
-	  //               },
-			// 	},
-			// ]
-			// },
-			// {
-			// // Room_From :request.body.Room_From,
-			// // Room_To :request.body.Room_To,
-			// // Room_Details:request.body.Room_Details
-			// Room_From :new Date('2018-12-19'),
-			// Room_To :new Date('2018-12-25'),
-			// Room_Details:
-			// [
-			// 	{
-			// 		RoomType_Code:2,
-			// 		RoomView_Code:2,
-			// 		Count:7,
-			// 		Price :{
-	  //                   Price_Single_Room:900,
-	  //                   Price_Double_Room:600,
-	  //                   Price_Triple_Room:350,
-	  //               },
-			// 	},
-			// 	{
-			// 		RoomType_Code:2,
-			// 		RoomView_Code:2,
-			// 		Count:7,
-			// 		Price :{
-	  //                   Price_Single_Room:1100,
-	  //                   Price_Double_Room:1300,
-	  //                   Price_Triple_Room:1400,
-	  //               },
-			// 	},
-			// ]
-		// }]
-		var myquery = {
+
+		// var From = new Date('2018-12-11'); 
+		// var To = new Date('2018-12-14');
+
+		//  var arrayhotel={
+		// 	Room_From : From,
+		// 	Room_To : To,
+		// 	Room_Count :3,
+		// }
+		// console.log(From);
+		// console.log(To);
+
+		object = { $or:[ {'Hotel_Contract.Hotel_Rooms.Room_From': { $gte: From, $lte: To}},
+						{'Hotel_Contract.Hotel_Rooms.Room_To': { $gte: From, $lte: To}}]};
+			Hotel.findOne(object)
+			.exec(function(err, busy) {
+			    if (err){
+			    	res.send({message: err});
+			    }
+		        if (busy) {
+		            res.send({message: 'This Date has been Reserved'});
+		        }else{
+		        	console.log('yyyy');
+		            addDateContract();
+		        }
+    	})
+
+
+		function addDateContract(){
+
+			var myquery = {
 				 Hotel_Code: request.body.Hotel_Code,
 				'Hotel_Contract._id' : request.body.Hotel_ContractID, 
 			}; 
-
-		var newvalues = { 
-			$push: { 
-					 "Hotel_Contract.$.Hotel_Rooms"   : arrayhotel,
+			var newvalues = { 
+				$push: { 
+						 "Hotel_Contract.$.Hotel_Rooms"   : arrayhotel,
 					},
-		};
+			};
 
-		Hotel.findOneAndUpdate( myquery,newvalues, function(err, field) {
-    	    if (err){
-    	    	return res.send({
-					message: err,
-				});
-    	    }
-            if (!field) {
-            	return res.send({
-					message: 'Hotel not exists'
-				});
-            } else {
-            	console.log(field);
-                return res.send({
-					message: true
-				});
-			}
-		})
+			Hotel.findOneAndUpdate( myquery,newvalues, function(err, field) {
+	    	    if (err){
+	    	    	return res.send({
+						message: err,
+					});
+	    	    }
+	            if (!field) {
+	            	return res.send({
+						message: 'Hotel not exists'
+					});
+	            } else {
+	            	// console.log(field);
+	                return res.send({
+						message: true
+					});
+				}
+			})
+		}
+		
 	},
 
 	editHotelContractRoom:function(request,res){
