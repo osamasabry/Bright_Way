@@ -281,4 +281,11 @@ router.post('/login', type,function(req, res, next) {
         AddReservation();
     });
 
+    router.post('/editPayemtnReservation', type,function(req, res) {
+        var EditPayemtnReservation= async (function (){
+            await (ReservationController.editPayemtnReservation(req,res));
+        });
+        EditPayemtnReservation();
+    });
+    
 module.exports = router;

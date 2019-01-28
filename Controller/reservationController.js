@@ -60,26 +60,26 @@ module.exports = {
 				insetIntoReservation(1);
 		});
 
-		arrayrooms=[
-			{
-				Count   :3,
-				View    :1,
-				Type    :1,
-				SNTType :1,
-				Price   :3000,
-				Adult   :3,
-				Child   :0,
-			},
-			{
-				Count   :3,
-				View    :2,
-				Type    :2,
-				SNTType :2,
-				Price   :2200,
-				Adult   :6,
-				Child   :2,
-			}
-		]
+		// arrayrooms=[
+		// 	{
+		// 		Count   :3,
+		// 		View    :1,
+		// 		Type    :1,
+		// 		SNTType :1,
+		// 		Price   :3000,
+		// 		Adult   :3,
+		// 		Child   :0,
+		// 	},
+		// 	{
+		// 		Count   :3,
+		// 		View    :2,
+		// 		Type    :2,
+		// 		SNTType :2,
+		// 		Price   :2200,
+		// 		Adult   :6,
+		// 		Child   :2,
+		// 	}
+		// ]
 
 		function insetIntoReservation(GetNextId){
 			var newReservation = new Reservation();
@@ -110,11 +110,7 @@ module.exports = {
 					});
 				}
 				else{
-
 					 getDates(new Date('2018-12-15'),new Date('2018-12-18'))
-					// return response.send({
-					// 	message: true
-					// });
 				}
 			});
 		}
@@ -165,6 +161,30 @@ module.exports = {
 				}
 			});
 		}
+	},
+
+	editPayemtnReservation:function(request,response){
+
+		var newvalues = { $set: {
+				Reservation_Payment : request.body.Reservation_Payment,
+			} };
+		var myquery = { Reservation_Code: request.body.Reservation_Code }; 
+		Reservation.findOneAndUpdate( myquery,newvalues, function(err, field) {
+    	    if (err){
+    	    	return response.send({
+					message: 'Error'
+				});
+    	    }
+            if (!field) {
+            	return response.send({
+					message: 'Reservation not exists'
+				});
+            } else {
+                return response.send({
+					message: true
+				});
+			}
+		})	
 	}
 
 }
