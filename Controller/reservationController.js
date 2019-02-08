@@ -110,7 +110,7 @@ module.exports = {
 					});
 				}
 				else{
-					 getDates(new Date('2018-12-15'),new Date('2018-12-18'))
+					 getDates(Reservation_Date_From,Reservation_Date_To);
 				}
 			});
 		}
