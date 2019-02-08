@@ -110,7 +110,7 @@ module.exports = {
 					});
 				}
 				else{
-					 getDates(Reservation_Date_From,Reservation_Date_To);
+					 getDates(request.body.Reservation_Date_From,request.body.Reservation_Date_To);
 				}
 			});
 		}
