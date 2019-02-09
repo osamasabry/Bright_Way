@@ -2,16 +2,21 @@ var mongoose = require('mongoose');
 
 var Btw_RoomBusySchema = mongoose.Schema({
    
-		RoomBusy_Date           :Date,
-        RoomBusy_HotelID        :Number,
-        RoomBusy_Details 		:[{
-            Type            :Number,
-			View            :Number,
-			Count               :Number,
-         // ReservationID       :Number,
+		RoomBusy_Date               :Date,
+        RoomBusy_HotelID            :Number,
+        RoomBusy_Room_Type_Code     :Number,
+        RoomBusy_Room_View_Code     :Number,
+        RoomBusy_Room_Count         :Number,// 8
+        //RoomBusy_Room_MaxCount      :Number,// 15
+        RoomBusy_Reservation_Code   :[Number],
+        // RoomBusy_Details 		:[{
+        //     Type            :Number,
+		// 	View            :Number,
+		// 	Count               :Number,
+        //  // ReservationID       :Number,
 
-        }],
-        RoomBusy_Count:Number,
+        // }],
+        //RoomBusy_Count:Number,
 
 },{
     toJSON: { virtuals: true }
