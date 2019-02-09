@@ -80,6 +80,8 @@ module.exports = {
 		// 		Child   :2,
 		// 	}
 		// ]
+		var From  =  new Date(request.body.Reservation_Date_From);
+		var To = new Date(request.body.Reservation_Date_To);
 
 		function insetIntoReservation(GetNextId){
 			var newReservation = new Reservation();
@@ -87,8 +89,8 @@ module.exports = {
 			newReservation.Reservation_Customer_ID 	    = request.body.Reservation_Customer_ID;
 			newReservation.Reservation_Date   	 		= request.body.Reservation_Date;
 			newReservation.Reservation_Hotel_ID	 		= request.body.Reservation_Hotel_ID;
-			newReservation.Reservation_Date_From   	    = request.body.Reservation_Date_From;
-			newReservation.Reservation_Date_To   	    = request.body.Reservation_Date_To;
+			newReservation.Reservation_Date_From   	    = From;
+			newReservation.Reservation_Date_To   	    = To;
 			// newReservation.Reservation_Date_From   	    = new Date('2018-12-15');
 			// newReservation.Reservation_Date_To   	    = new Date('2018-12-18');
 			newReservation.Reservation_Number_of_Adult  = request.body.Reservation_Number_of_Adult;
@@ -110,7 +112,7 @@ module.exports = {
 					});
 				}
 				else{
-					 getDates(request.body.Reservation_Date_From,request.body.Reservation_Date_To);
+					 getDates(From,To);
 				}
 			});
 		}
