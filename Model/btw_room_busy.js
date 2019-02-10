@@ -32,7 +32,7 @@ Btw_RoomBusySchema.virtual('Hotel',{
 
 Btw_RoomBusySchema.virtual('RoomType',{
     ref: 'btw_room_type',
-    localField: 'RoomBusy_Details.RoomType',
+    localField: 'RoomBusy_Room_Type_Code',
     foreignField: 'RoomType_Code',
     justOne: false // for many-to-1 relationships
 });
@@ -41,14 +41,14 @@ Btw_RoomBusySchema.virtual('RoomType',{
 
 Btw_RoomBusySchema.virtual('RoomView',{
     ref: 'btw_room_view',
-    localField: 'RoomBusy_Details.RoomView',
+    localField: 'RoomBusy_Room_View_Code',
     foreignField: 'RoomView_Code',
     justOne: false // for many-to-1 relationships
 });
 
 Btw_RoomBusySchema.virtual('Reservation',{
     ref: 'btw_reservation',
-    localField: 'RoomBusy_Details.ReservationID',
+    localField: 'RoomBusy_Reservation_Code',
     foreignField: 'Reservation_Code',
     justOne: false // for many-to-1 relationships
 });

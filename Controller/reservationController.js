@@ -5,24 +5,38 @@ var Hotel = require('../Model/btw_hotel');
 
 module.exports = {
 	checkDate:function(request,response){
-		var date1 = new Date('2018-12-14');
-		var date2 = new Date('2018-12-18');
+		// var date1 = new Date('2019-02-09');
+		// var date2 = new Date('2019-02-12');
+
+		var date1 = new Date(request.body.From);
+		var date2 = new Date(request.body.To);
 
 		checkDateFromRoomBusy();
-		
+
 		function checkDateFromRoomBusy(){
-		    object = {RoomBusy_Date: { $gte: date1, $lte: date2}}
+		    object = {$and:[
+		    		// {RoomBusy_HotelID:1},
+		    		// {RoomBusy_Date: { $gte: date1, $lte: date2}},
+		    		// {RoomBusy_Room_Type_Code:1},
+		    		// {RoomBusy_Room_View_Code:1},
+
+		    		{RoomBusy_HotelID:request.body.RoomBusy_HotelID},
+		    		{RoomBusy_Date: { $gte: date1, $lte: date2}},
+		    		{RoomBusy_Room_Type_Code:request.body.RoomBusy_Room_Type_Code},
+		    		{RoomBusy_Room_View_Code:request.body.RoomBusy_Room_View_Code},
+		    	]}
 			RoomBusy.findOne(object)
-			.sort('-RoomBusy_Count')
+			.sort('-RoomBusy_Room_Count')
 			.limit(1)
 			.exec(function(err, roomBusy) {
 			    if (err){
 			    	response.send({message: err});
 			    }
 		        if (roomBusy) {
-		            checkDateFromHotel(roomBusy.RoomBusy_Count) ;
+		        	// console.log(roomBusy)
+		            checkDateFromHotel(roomBusy.RoomBusy_Room_Count) ;
 		        }else{
-
+		        	// console.log('no')
 		        	checkDateFromHotel(0);
 		        }
 	    	})
@@ -31,20 +45,34 @@ module.exports = {
 
 		function checkDateFromHotel(count_room){
 			Hotel.aggregate([
-			{$match: { Hotel_Code: 1 }},
+			{$match: { Hotel_Code: request.body.RoomBusy_HotelID }},
 			{$unwind: "$Hotel_Contract" },
 			{$unwind: "$Hotel_Contract.Hotel_Rooms" },
-			{$group: { _id: { to: "$Hotel_Contract.Hotel_Rooms.Room_To", from: "$Hotel_Contract.Hotel_Rooms.Room_From" }, Hotel_Contract: { $push: "$Hotel_Contract.Hotel_Rooms.Room_Count" } } },
-			{$match: { "_id.from":{$lte:date1} ,"_id.to":{$gte:date2}} },
+			{$group: { _id: { 	to: "$Hotel_Contract.Hotel_Rooms.Room_To",
+							  	from: "$Hotel_Contract.Hotel_Rooms.Room_From",
+							},
+			 	Data: { $push: "$Hotel_Contract.Hotel_Rooms" } } },
+				{$unwind: "$Data" },
+				{$unwind: "$Data.Room_Details" },
+				{$match: {
+						 "_id.from":{$lte:date1} ,"_id.to":{$gte:date2},
+						 "Data.Room_Details.RoomType_Code":{$eq:request.body.RoomBusy_Room_Type_Code} ,
+						 "Data.Room_Details.RoomView_Code":{$eq:request.body.RoomBusy_Room_View_Code} ,
+				}},
 			])
 			.exec(function(err, hotel) {
 			    if (err){
 			    	response.send({message: err});
 			    }
 		        if (hotel.length > 0) {
-		        	var available_room =  hotel[0].Hotel_Contract[0] - count_room ;
-		            response.send({count: available_room});
+		        	// console.log(hotel[0]);
+		        	// var available_room =  hotel[0].Hotel_Contract[0] - count_room ;
+		            response.send({
+		            	data:hotel[0],
+		            	roombusy:count_room,
+		            });
 		        } else{
+		        	// console.log('Date Is Not Vaild');
 			    	response.send({message: "Date Is Not Vaild"});
 		        }
 	    	})
