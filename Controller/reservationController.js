@@ -1,7 +1,8 @@
 var Reservation = require('../Model/btw_reservation');
 var RoomBusy = require('../Model/btw_room_busy');
 var Hotel = require('../Model/btw_hotel');
-
+var async = require('asyncawait/async');
+var await = require('asyncawait/await');
 
 module.exports = {
 	checkDate:function(request,response){
@@ -166,26 +167,20 @@ module.exports = {
 		function InsertBusyRoom(date){
 
 			var rooms = request.body.Reservation_Room;
+			// var GetPaymentMethods= async (function (){
+	  //           await (SetUpController.getPaymentMethods(req,res));
+	  //       });
+
+			
 			for (var i = 0; i < rooms.length; i++) {
-			 	object = {$and:[
-		    		{RoomBusy_HotelID:request.body.RoomBusy_HotelID},
-		    		{RoomBusy_Date:date},
-		    		{RoomBusy_Room_Type_Code:rooms[i].Type},
-		    		{RoomBusy_Room_View_Code:rooms[i].View},
-		    	]}
-				RoomBusy.findOne(object)
-				.exec(function(err, roomBusy) {
-				    if (err){
-				    	response.send({message: err});
-				    }
-			        if (roomBusy) {
-			        	var Id =roomBusy._id;
-			        	var count = roomBusy.RoomBusy_Room_Count + rooms[i].Count;
-			            UpdateRow(Id,count) ;
-			        }else{
-			        	InsertRow();
-			        }
-		    	})
+			 	
+				// var returndata  = await checkRoom(i);
+
+				var returndata = async (function (){
+		            await (checkRoom(i));
+		        });
+
+				returndata();
 
 		    	function InsertRow(){
 					var newRoomBusy = new RoomBusy();
@@ -224,6 +219,28 @@ module.exports = {
 				}
 			}
 
+			function checkRoom(j){
+
+				object = {$and:[
+		    		{RoomBusy_HotelID:request.body.Reservation_Hotel_ID},
+		    		{RoomBusy_Date:new Date(date)},
+		    		{RoomBusy_Room_Type_Code:rooms[j].Type},
+		    		{RoomBusy_Room_View_Code:rooms[j].View},
+		    	]}
+				RoomBusy.findOne(object)
+				.exec(function(err, roomBusy) {
+				    if (err){
+				    	response.send({message: err});
+				    }
+			        if (roomBusy) {
+			        	var Id =roomBusy._id;
+			        	var count = roomBusy.RoomBusy_Room_Count + rooms[i].Count;
+			            UpdateRow(Id,count) ;
+			        }else{
+			        	InsertRow();
+			        }
+		    	})
+			}
 			// function InsertRow(){
 			// 	var newRoomBusy = new RoomBusy();
 			// 	newRoomBusy.RoomBusy_Date     		 	= date;
