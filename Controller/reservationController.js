@@ -165,23 +165,81 @@ module.exports = {
 
 		function InsertBusyRoom(date){
 
-			for (var i = 0; i < request.body.Reservation_Room.length; i++) {
+			var rooms = request.body.Reservation_Room;
+			for (var i = 0; i < rooms.length; i++) {
+			 	object = {$and:[
+		    		{RoomBusy_HotelID:request.body.RoomBusy_HotelID},
+		    		{RoomBusy_Date:date},
+		    		{RoomBusy_Room_Type_Code:rooms[i].Type},
+		    		{RoomBusy_Room_View_Code:rooms[i].View},
+		    	]}
+				RoomBusy.findOne(object)
+				.exec(function(err, roomBusy) {
+				    if (err){
+				    	response.send({message: err});
+				    }
+			        if (roomBusy) {
+			        	var Id =roomBusy._id;
+			        	var count = roomBusy.RoomBusy_Room_Count + rooms[i].Count;
+			            UpdateRow(Id,count) ;
+			        }else{
+			        	InsertRow();
+			        }
+		    	})
 
-				var newRoomBusy = new RoomBusy();
-				newRoomBusy.RoomBusy_Date     		 	= date;
-				newRoomBusy.RoomBusy_HotelID 	     	= request.body.Reservation_Hotel_ID;
-				newRoomBusy.RoomBusy_Room_Type_Code   	= request.body.Reservation_Room[i].Type;
-				newRoomBusy.RoomBusy_Room_View_Code 	= request.body.Reservation_Room[i].View;
-				newRoomBusy.RoomBusy_Room_Count 		= request.body.Reservation_Room[i].Count;
-				// RoomBusy_Reservation_Code
-				newRoomBusy.save(function(error, doneadd){
-					if(error){
-						return response.send({
-							message: error
-						});
-					}
-				});
+		    	function InsertRow(){
+					var newRoomBusy = new RoomBusy();
+					newRoomBusy.RoomBusy_Date     		 	= date;
+					newRoomBusy.RoomBusy_HotelID 	     	= request.body.Reservation_Hotel_ID;
+					newRoomBusy.RoomBusy_Room_Type_Code   	= request.body.rooms[i].Type;
+					newRoomBusy.RoomBusy_Room_View_Code 	= request.body.rooms[i].View;
+					newRoomBusy.RoomBusy_Room_Count 		= request.body.rooms[i].Count;
+					// RoomBusy_Reservation_Code
+					newRoomBusy.save(function(error, doneadd){
+						if(error){
+							return response.send({
+								message: error
+							});
+						}
+					});
+				}
+
+				function UpdateRow(Id,count){
+					var newvalues = { $set: {
+							RoomBusy_Room_Count : count,
+						} };
+					var myquery = { _id: Id }; 
+					RoomBusy.findOneAndUpdate( myquery,newvalues, function(err, field) {
+			    	    if (err){
+			    	    	return response.send({
+								message: 'Error'
+							});
+			    	    }
+			            if (!field) {
+			            	return response.send({
+								message: 'Room not exists'
+							});
+			            } 
+					})
+				}
 			}
+
+			// function InsertRow(){
+			// 	var newRoomBusy = new RoomBusy();
+			// 	newRoomBusy.RoomBusy_Date     		 	= date;
+			// 	newRoomBusy.RoomBusy_HotelID 	     	= request.body.Reservation_Hotel_ID;
+			// 	newRoomBusy.RoomBusy_Room_Type_Code   	= request.body.Reservation_Room[i].Type;
+			// 	newRoomBusy.RoomBusy_Room_View_Code 	= request.body.Reservation_Room[i].View;
+			// 	newRoomBusy.RoomBusy_Room_Count 		= request.body.Reservation_Room[i].Count;
+			// 	// RoomBusy_Reservation_Code
+			// 	newRoomBusy.save(function(error, doneadd){
+			// 		if(error){
+			// 			return response.send({
+			// 				message: error
+			// 			});
+			// 		}
+			// 	});
+			// }
 			
 		}
 	},
