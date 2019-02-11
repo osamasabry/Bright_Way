@@ -165,31 +165,24 @@ module.exports = {
 
 		function InsertBusyRoom(date){
 
-			// roombusy=[
-			// 	{
-			// 		Count   :3,
-			// 		Type    :1,
-			// 		View    :1
-			// 	},
-			// 	{
-			// 		Count   :3,
-			// 		Type    :2,
-			// 		View    :2
-			// 	}
-			// ];
-			var newRoomBusy = new RoomBusy();
+			for (var i = 0; i < request.body.Reservation_Room.length; i++) {
 
-			newRoomBusy.RoomBusy_Date     		 	= date;
-			newRoomBusy.RoomBusy_HotelID 	     	= request.body.Reservation_Hotel_ID;
-			newRoomBusy.RoomBusy_Details   	 		= request.body.roombusy;
-			newRoomBusy.RoomBusy_Count 				= request.body.RoomBusy_Count;
-			newRoomBusy.save(function(error, doneadd){
-				if(error){
-					return response.send({
-						message: error
-					});
-				}
-			});
+				var newRoomBusy = new RoomBusy();
+				newRoomBusy.RoomBusy_Date     		 	= date;
+				newRoomBusy.RoomBusy_HotelID 	     	= request.body.Reservation_Hotel_ID;
+				newRoomBusy.RoomBusy_Room_Type_Code   	= request.body.Reservation_Room[i].Type;
+				newRoomBusy.RoomBusy_Room_View_Code 	= request.body.Reservation_Room[i].View;
+				newRoomBusy.RoomBusy_Room_Count 		= request.body.Reservation_Room[i].Count;
+				// RoomBusy_Reservation_Code
+				newRoomBusy.save(function(error, doneadd){
+					if(error){
+						return response.send({
+							message: error
+						});
+					}
+				});
+			}
+			
 		}
 	},
 
