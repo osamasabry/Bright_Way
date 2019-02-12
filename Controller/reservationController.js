@@ -2,7 +2,9 @@ var Reservation = require('../Model/btw_reservation');
 var RoomBusy = require('../Model/btw_room_busy');
 var Hotel = require('../Model/btw_hotel');
 var async = require('asyncawait/async');
-var await = require('asyncawait/await');
+// var await = require('asyncawait/await');
+var asyncLoop = require('node-async-loop');
+
 
 module.exports = {
 	checkDate:function(request,response){
@@ -92,23 +94,27 @@ module.exports = {
 		// arrayrooms=[
 		// 	{
 		// 		Count   :3,
-		// 		View    :1,
-		// 		Type    :1,
-		// 		SNTType :1,
-		// 		Price   :3000,
-		// 		Adult   :3,
-		// 		Child   :0,
-		// 	},
-		// 	{
-		// 		Count   :3,
 		// 		View    :2,
 		// 		Type    :2,
-		// 		SNTType :2,
-		// 		Price   :2200,
-		// 		Adult   :6,
-		// 		Child   :2,
+		// 		SNTType :1,
+		// 		Price   :2500,
+		// 		Adult   :2,
+		// 		Child   :1,
 		// 	}
+			// ,
+			// {
+			// 	Count   :3,
+			// 	View    :2,
+			// 	Type    :2,
+			// 	SNTType :2,
+			// 	Price   :2200,
+			// 	Adult   :6,
+			// 	Child   :2,
+			// }
 		// ]
+
+		// var From = new Date('2019-02-09');
+		// var To = new Date('2019-02-12');
 		var From  =  new Date(request.body.Reservation_Date_From);
 		var To = new Date(request.body.Reservation_Date_To);
 
@@ -127,10 +133,10 @@ module.exports = {
 			newReservation.Reservation_ByEmployee_ID   	= request.body.Reservation_ByEmployee_ID;
 			newReservation.Reservation_Office_ID   	    = request.body.Reservation_Office_ID;
 			newReservation.Reservation_Grand_Total      = request.body.Reservation_Grand_Total;
-			newReservation.Reservation_Room 			= request.body.Reservation_Room
+			newReservation.Reservation_Room 			= request.body.Reservation_Room;
 			// newReservation.Reservation_Room 			= arrayrooms ;
 			
-			// newReservation.Reservation_Payment			= request.body.Reservation_Payment ;
+			newReservation.Reservation_Payment			= request.body.Reservation_Payment ;
 			newReservation.Reservation_Number_of_Chair  = request.body.Reservation_Number_of_Chair;
 			newReservation.Reservation_Chair_Price      = request.body.Reservation_Chair_Price;
 			
@@ -165,99 +171,89 @@ module.exports = {
 		}
 
 		function InsertBusyRoom(date){
-
-			var rooms = request.body.Reservation_Room;
-			// var GetPaymentMethods= async (function (){
-	  //           await (SetUpController.getPaymentMethods(req,res));
-	  //       });
-
-			
-			for (var i = 0; i < rooms.length; i++) {
-			 	
-				// var returndata  = await checkRoom(i);
-
-				var returndata = async (function (){
-		            await (checkRoom(i));
-		        });
-
-				returndata();
-
-		    	function InsertRow(){
-					var newRoomBusy = new RoomBusy();
-					newRoomBusy.RoomBusy_Date     		 	= date;
-					newRoomBusy.RoomBusy_HotelID 	     	= request.body.Reservation_Hotel_ID;
-					newRoomBusy.RoomBusy_Room_Type_Code   	= request.body.rooms[i].Type;
-					newRoomBusy.RoomBusy_Room_View_Code 	= request.body.rooms[i].View;
-					newRoomBusy.RoomBusy_Room_Count 		= request.body.rooms[i].Count;
-					// RoomBusy_Reservation_Code
-					newRoomBusy.save(function(error, doneadd){
-						if(error){
-							return response.send({
-								message: error
-							});
-						}
-					});
-				}
-
-				function UpdateRow(Id,count){
-					var newvalues = { $set: {
-							RoomBusy_Room_Count : count,
-						} };
-					var myquery = { _id: Id }; 
-					RoomBusy.findOneAndUpdate( myquery,newvalues, function(err, field) {
-			    	    if (err){
-			    	    	return response.send({
-								message: 'Error'
-							});
-			    	    }
-			            if (!field) {
-			            	return response.send({
-								message: 'Room not exists'
-							});
-			            } 
-					})
-				}
-			}
-
-			function checkRoom(j){
-
+			// var rooms = arrayrooms;
+			var rooms = request.body.Reservation_Room
+			asyncLoop(rooms, function (room, next)
+			{
 				object = {$and:[
-		    		{RoomBusy_HotelID:request.body.Reservation_Hotel_ID},
-		    		{RoomBusy_Date:new Date(date)},
-		    		{RoomBusy_Room_Type_Code:rooms[j].Type},
-		    		{RoomBusy_Room_View_Code:rooms[j].View},
-		    	]}
+				    		{RoomBusy_HotelID:request.body.Reservation_Hotel_ID},
+				    		{RoomBusy_Date:new Date(date)},
+				    		{RoomBusy_Room_Type_Code:room.Type},
+				    		{RoomBusy_Room_View_Code:room.View},
+			    	]}
 				RoomBusy.findOne(object)
 				.exec(function(err, roomBusy) {
 				    if (err){
-				    	response.send({message: err});
+				    	// response.send({message: err});
+				    	next(err);
+			            return;
 				    }
 			        if (roomBusy) {
-			        	var Id =roomBusy._id;
-			        	var count = roomBusy.RoomBusy_Room_Count + rooms[i].Count;
-			            UpdateRow(Id,count) ;
+			        	console.log(roomBusy);
+			        	console.log('update');
+			        	var count = roomBusy.RoomBusy_Room_Count + room.Count;
+			        	var Id = roomBusy._id;
+			        	UpdateRow(Id,count);
+			        	next();
+			   //      	var count = roomBusy.RoomBusy_Room_Count + room.Count;
+						// roomobject.count = count;
+						// roomobject.Id = roomBusy._id;
+						// roomobject.status = 'Update';
+						// checkreturn.push(roomobject);	 
 			        }else{
-			        	InsertRow();
+			        	console.log('Insert');
+			        	InsertRow(room.Type,room.View,room.Count);
+			        	next();
+						// roomobject.status = 'Insert';
+						// checkreturn.push(roomobject);	 
 			        }
 		    	})
+			}, function (err)
+			{
+			    if (err)
+			    {
+			        console.error('Error: ' + err.message);
+			        return;
+			    }
+			 
+			    console.log('Finished!');
+			});
+
+			function InsertRow(type,view,count){
+				var newRoomBusy = new RoomBusy();
+				newRoomBusy.RoomBusy_Date     		 	= date;
+				newRoomBusy.RoomBusy_HotelID 	     	= request.body.Reservation_Hotel_ID;
+				newRoomBusy.RoomBusy_Room_Type_Code   	= type;
+				newRoomBusy.RoomBusy_Room_View_Code 	= view;
+				newRoomBusy.RoomBusy_Room_Count 		= count;
+				// RoomBusy_Reservation_Code
+				newRoomBusy.save(function(error, doneadd){
+					if(error){
+						return response.send({
+							message: error
+						});
+					}
+				});
 			}
-			// function InsertRow(){
-			// 	var newRoomBusy = new RoomBusy();
-			// 	newRoomBusy.RoomBusy_Date     		 	= date;
-			// 	newRoomBusy.RoomBusy_HotelID 	     	= request.body.Reservation_Hotel_ID;
-			// 	newRoomBusy.RoomBusy_Room_Type_Code   	= request.body.Reservation_Room[i].Type;
-			// 	newRoomBusy.RoomBusy_Room_View_Code 	= request.body.Reservation_Room[i].View;
-			// 	newRoomBusy.RoomBusy_Room_Count 		= request.body.Reservation_Room[i].Count;
-			// 	// RoomBusy_Reservation_Code
-			// 	newRoomBusy.save(function(error, doneadd){
-			// 		if(error){
-			// 			return response.send({
-			// 				message: error
-			// 			});
-			// 		}
-			// 	});
-			// }
-			
+
+			function UpdateRow(Id,count){
+				var newvalues = { $set: {
+						RoomBusy_Room_Count : count,
+					} };
+				var myquery = { _id: Id }; 
+				RoomBusy.findOneAndUpdate( myquery,newvalues, function(err, field) {
+		    	    if (err){
+		    	    	return response.send({
+							message: 'Error'
+						});
+		    	    }
+		            if (!field) {
+		            	return response.send({
+							message: 'Room not exists'
+						});
+		            } 
+				})
+			}
 		}
 	},
 
