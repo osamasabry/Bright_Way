@@ -24,6 +24,7 @@ module.exports = {
 			    	response.send({message: err});
 			    }
 		        if (hotel) {
+		        	console.log
 		        	AllHotels =hotel;
 					 GetBusyRoom();
 		        }else{
@@ -33,6 +34,7 @@ module.exports = {
 		}
 
 		function GetBusyRoom(){
+			
 			asyncLoop(AllHotels, function (hotel, next)
 			{
 				object = {$and:[
