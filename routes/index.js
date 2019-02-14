@@ -7,7 +7,7 @@ var SetUpController = require('../Controller/setupController');
 var CustomerController = require('../Controller/customerController');
 var HotelController = require('../Controller/hotelController');
 var ReservationController = require('../Controller/reservationController');
-// var SearchController = require('../Controller/searchController');
+var SearchController = require('../Controller/searchController');
 
 var passport = require('passport');
 var multer=require('multer');
@@ -286,6 +286,15 @@ router.post('/login', type,function(req, res, next) {
             await (ReservationController.editPayemtnReservation(req,res));
         });
         EditPayemtnReservation();
+    });
+
+/*****************Resarch Tool************************************/
+
+    router.post('/searchData', type,function(req, res) {
+        var SearchData= async (function (){
+            await (SearchController.searchData(req,res));
+        });
+        SearchData();
     });
     
 module.exports = router;
