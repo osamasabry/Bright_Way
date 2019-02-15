@@ -149,6 +149,12 @@ module.exports = {
 	            Limit_Reservation_For   : Number(request.body.Limit_Reservation_For),
 	            Date                    : request.body.Date,
 	            ByEmployee_Code         : Number(request.body.ByEmployee_Code),
+	            Bed_only 				: request.body.Bed_only, 
+				Bed_breakfast			: request.body.Bed_breakfast,
+				Half_board				: request.body.Half_board,
+				Full_board				: request.body.Full_board,
+				Soft_allinclusive		: request.body.Soft_allinclusive,
+				Ultra					: request.body.Ultra,
 			}
         ]
 

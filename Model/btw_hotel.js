@@ -25,6 +25,12 @@ var Btw_HotelSchema = mongoose.Schema({
             Title                   :String,
             Deposit_Amount          :Number,
             Limit_Reservation_For   :Number,
+            Bed_only                :Number,
+            Bed_breakfast           :Number,
+            Half_board              :Number,
+            Full_board              :Number,
+            Soft_allinclusive       :Number,
+            Ultra                   :Number,
             Date                    :Date,
             ByEmployee_Code         :Number,
             Hotel_Rooms                :[{
@@ -35,15 +41,31 @@ var Btw_HotelSchema = mongoose.Schema({
                     RoomType_Code :Number, 
                     RoomView_Code :Number,
                     Count         :Number,
+                    Max_Capacity  :{
+                        Capacity_Single_Room:{
+                            Capacity_Child :Number,
+                            Capacity_Adult :Number,
+                        },
+                        Capacity_Double_Room:{
+                            Capacity_Child :Number,
+                            Capacity_Adult :Number,
+                        },
+                        Capacity_Triple_Room:{
+                            Capacity_Child :Number,
+                            Capacity_Adult :Number,
+                        },
+                    },
                     Price         :{
                         Price_Single_Room:Number,
                         Price_Double_Room:Number,
                         Price_Triple_Room:Number,
+                        Price_Child      :Number,
                     },
                     Room_Cost          :{
                         Cost_Single_Room:Number,
                         Cost_Double_Room:Number,
                         Cost_Triple_Room:Number,
+                        Cost_Child      :Number,
                     },
                 }],
             }],
