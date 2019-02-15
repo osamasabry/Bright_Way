@@ -12,21 +12,35 @@ module.exports = {
 		var To = new Date(request.body.Reservation_Date_To);
 		var AllHotels =[];
 		function getHotelByCityID(){
-			object = {Hotel_City:request.body.City_Code}
-			Hotel.find(object)
-			.populate({ path: 'City', select: 'City_Name' })
-			.populate({ path: 'Employee', select: 'Employee_Name' })
-			.populate({ path: 'RoomType', select: 'RoomType_Name' })
-			.populate({ path: 'RoomView', select: 'RoomView_Name' })
-			.lean()
+			Hotel.aggregate([
+			{$match: { Hotel_City: Number(request.body.City_Code) }},
+			{$unwind: "$Hotel_Contract" },
+			{$unwind: "$Hotel_Contract.Hotel_Rooms" },
+			{$group: { _id: { 	to: "$Hotel_Contract.Hotel_Rooms.Room_To",
+							  	from: "$Hotel_Contract.Hotel_Rooms.Room_From",
+							},
+			        	HotelStars : { $first: '$Hotel_Stars' },
+			        	HotelName : { $first: '$Hotel_Name' },
+			        	Hotel_Code : { $first: '$Hotel_Code' },
+			        	
+			 	Data: { $push: "$Hotel_Contract.Hotel_Rooms" } } },
+				{$unwind: "$Data" },
+				{$unwind: "$Data.Room_Details" },
+				{$match: {
+						 "_id.from":{$lte:From} ,"_id.to":{$gte:To},
+						 "Data.Room_Details.RoomType_Code":{$eq:Number(request.body.Room_Type_Code)} ,
+						 "Data.Room_Details.RoomView_Code":{$eq:Number(request.body.Room_View_Code)} ,
+				}},
+			])
 			.exec(function(err, hotel) {
 			    if (err){
 			    	response.send({message: err});
 			    }
-		        if (hotel) {
-		        	console.log
+		        if (hotel.length > 0) {
+		        	// console.log(hotel);
 		        	AllHotels =hotel;
 					 GetBusyRoom();
+					 // response.send(hotel)
 		        }else{
 			    	response.send({message: "This City Doesn't have any Hotel"});
 		        }
@@ -42,7 +56,7 @@ module.exports = {
 				    		{RoomBusy_Date:{ $gte: From, $lte: To}},
 				    		{RoomBusy_Room_Type_Code:request.body.Room_Type_Code},
 				    		{RoomBusy_Room_View_Code:request.body.Room_View_Code},
-			    	]}
+		    	]}
 				RoomBusy.findOne(object)
 				.sort('-RoomBusy_Room_Count')
 				.limit(1)
