@@ -22,9 +22,9 @@ module.exports = {
 			newHotel.Hotel_City	 					= request.body.Hotel_City;
 			newHotel.Hotel_Stars   	    			= request.body.Hotel_Stars;
 			newHotel.Hotel_HasChildernPolicy   		= request.body.Hotel_HasChildernPolicy;
-			newHotel.Hotel_FirstChildernAge   	    = request.body.Hotel_FirstChildernAge;
-			newHotel.Hotel_SecondChildernAge   	    = request.body.Hotel_SecondChildernAge;
-			newHotel.Hotel_ThirdChildernAge   	    = request.body.Hotel_ThirdChildernAge;
+			// newHotel.Hotel_FirstChildernAge   	    = request.body.Hotel_FirstChildernAge;
+			// newHotel.Hotel_SecondChildernAge   	    = request.body.Hotel_SecondChildernAge;
+			// newHotel.Hotel_ThirdChildernAge   	    = request.body.Hotel_ThirdChildernAge;
 			newHotel.Hotel_ChildernPolicy_Hint   	= request.body.Hotel_ChildernPolicy_Hint;
 			newHotel.Hotel_Bank_Name   	    		= request.body.Hotel_Bank_Name;
 			newHotel.Hotel_Bank_Account_Number   	= request.body.Hotel_Bank_Account_Number;
@@ -54,9 +54,9 @@ module.exports = {
 				Hotel_City 						: request.body.Hotel_City,
 				Hotel_Stars 					: request.body.Hotel_Stars,
 				Hotel_HasChildernPolicy 		: request.body.Hotel_HasChildernPolicy,
-				Hotel_FirstChildernAge 			: request.body.Hotel_FirstChildernAge,
-				Hotel_SecondChildernAge 		: request.body.Hotel_SecondChildernAge,
-				Hotel_ThirdChildernAge 			: request.body.Hotel_ThirdChildernAge,
+				// Hotel_FirstChildernAge 			: request.body.Hotel_FirstChildernAge,
+				// Hotel_SecondChildernAge 		: request.body.Hotel_SecondChildernAge,
+				// Hotel_ThirdChildernAge 			: request.body.Hotel_ThirdChildernAge,
 				Hotel_ChildernPolicy_Hint 		: request.body.Hotel_ChildernPolicy_Hint,
 				Hotel_Bank_Name 				: request.body.Hotel_Bank_Name,
 				Hotel_Bank_Account_Number 		: request.body.Hotel_Bank_Account_Number,

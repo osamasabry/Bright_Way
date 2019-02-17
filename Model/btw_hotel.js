@@ -17,9 +17,9 @@ var Btw_HotelSchema = mongoose.Schema({
         Hotel_City                         :Number,
         Hotel_Stars                        :Number,
         Hotel_HasChildernPolicy            :Number, 
-        Hotel_FirstChildernAge             :Number,
-        Hotel_SecondChildernAge            :Number, 
-        Hotel_ThirdChildernAge             :Number, 
+        // Hotel_FirstChildernAge             :Number,
+        // Hotel_SecondChildernAge            :Number, 
+        // Hotel_ThirdChildernAge             :Number, 
         Hotel_ChildernPolicy_Hint          :String,
         Hotel_Contract : [{
             Title                   :String,
@@ -41,20 +41,12 @@ var Btw_HotelSchema = mongoose.Schema({
                     RoomType_Code :Number, 
                     RoomView_Code :Number,
                     Count         :Number,
-                    Max_Capacity  :{
-                        Capacity_Single_Room:{
-                            Capacity_Child :Number,
-                            Capacity_Adult :Number,
-                        },
-                        Capacity_Double_Room:{
-                            Capacity_Child :Number,
-                            Capacity_Adult :Number,
-                        },
-                        Capacity_Triple_Room:{
-                            Capacity_Child :Number,
-                            Capacity_Adult :Number,
-                        },
-                    },
+                    Max_Capacity_Single_Room_Adult:Number, 
+                    Max_Capacity_Single_Room_Child:Number, 
+                    Max_Capacity_Double_Room_Adult:Number,
+                    Max_Capacity_Double_Room_Child:Number, 
+                    Max_Capacity_Triple_Room_Adult:Number,
+                    Max_Capacity_Triple_Room_Child:Number,
                     Price         :{
                         Price_Single_Room:Number,
                         Price_Double_Room:Number,
