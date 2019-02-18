@@ -164,11 +164,23 @@ module.exports = {
 			}
         ]
 
-		var myquery = { Hotel_Code: request.body.Hotel_Code }; 
+        var myquery ='';
+        var newvalues = '';
+		if (request.body.row_id) {
+			 myquery = {Hotel_Code: request.body.Hotel_Code,'Hotel_Contract._id': request.body.row_id}; 
+			 newvalues = { 
+				$set:{Hotel_Contract:ContractBasic},
+			 }; 
+		}else{
+			 myquery = {Hotel_Code: request.body.Hotel_Code};
+			 newvalues = { 
+				$push:{Hotel_Contract:ContractBasic},
+			 }; 
+		}
 
-		var newvalues = { 
-			$push:{Hotel_Contract:ContractBasic},
-		 };
+		// var newvalues = { 
+		// 	$push:{Hotel_Contract:ContractBasic},
+		//  };
 		Hotel.findOneAndUpdate( myquery,newvalues, function(err, field) {
     	    if (err){
     	    	return res.send({
