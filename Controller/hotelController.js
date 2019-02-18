@@ -149,13 +149,13 @@ module.exports = {
 	            Limit_Reservation_For   : Number(request.body.Limit_Reservation_For),
 	            Date                    : request.body.Date,
 	            ByEmployee_Code         : Number(request.body.ByEmployee_Code),
-	            Bed_only_Price  		: request.body.Bed_only_Price, 
+	            // Bed_only_Price  		: request.body.Bed_only_Price, 
 				Bed_breakfast_Price		: request.body.Bed_breakfast_Price,
 				Half_board_Price		: request.body.Half_board_Price,
 				Full_board_Price		: request.body.Full_board_Price,
 				Soft_allinclusive_Price	: request.body.Soft_allinclusive_Price,
 				Ultra_Price				: request.body.Ultra_Price,
-				Bed_only_Cost          	: request.body.Bed_only_Cost,
+				// Bed_only_Cost          	: request.body.Bed_only_Cost,
 	            Bed_breakfast_Cost     	: request.body.Bed_breakfast_Cost,
 	            Half_board_Cost        	: request.body.Half_board_Cost,
 	            Full_board_Cost        	: request.body.Full_board_Cost,
@@ -167,9 +167,11 @@ module.exports = {
         var myquery ='';
         var newvalues = '';
 		if (request.body.row_id) {
-			 myquery = {Hotel_Code: request.body.Hotel_Code,'Hotel_Contract._id': request.body.row_id}; 
+			 myquery = {Hotel_Code: Number(request.body.Hotel_Code),
+			 	'Hotel_Contract._id': request.body.row_id
+			 }; 
 			 newvalues = { 
-				$set:{Hotel_Contract:ContractBasic},
+				$set:{'Hotel_Contract.$':ContractBasic},
 			 }; 
 		}else{
 			 myquery = {Hotel_Code: request.body.Hotel_Code};
@@ -177,14 +179,10 @@ module.exports = {
 				$push:{Hotel_Contract:ContractBasic},
 			 }; 
 		}
-
-		// var newvalues = { 
-		// 	$push:{Hotel_Contract:ContractBasic},
-		//  };
 		Hotel.findOneAndUpdate( myquery,newvalues, function(err, field) {
     	    if (err){
     	    	return res.send({
-					message: 'Error'
+					message: err
 				});
     	    }
             if (!field) {
@@ -192,7 +190,6 @@ module.exports = {
 					message: 'Hotel not exists'
 				});
             } else {
-
                 return res.send({
 					message: true
 				});
@@ -240,15 +237,30 @@ module.exports = {
 
 		function addDateContract(){
 
-			var myquery = {
-				 Hotel_Code: request.body.Hotel_Code,
-				'Hotel_Contract._id' : request.body.Hotel_ContractID, 
-			}; 
-			var newvalues = { 
-				$push: { 
-						 "Hotel_Contract.$.Hotel_Rooms"   : arrayhotel,
-					},
-			};
+			var myquery = '';
+			var newvalues ='';
+
+			if (Hotel_RoomID) {
+				myquery = {
+					 Hotel_Code: request.body.Hotel_Code,
+					'Hotel_Contract._id' : request.body.Hotel_ContractID,
+					'Hotel_Contract.Hotel_Rooms._id' : request.body.Hotel_RoomID,
+				};
+				newvalues = { 
+					$set: { "Hotel_Contract.$.Hotel_Rooms"   : arrayhotel},
+				};
+			}else{
+
+				myquery = {
+					 Hotel_Code: request.body.Hotel_Code,
+					'Hotel_Contract._id' : request.body.Hotel_ContractID, 
+				};
+				newvalues = { 
+					$push: { "Hotel_Contract.$.Hotel_Rooms"   : arrayhotel},
+				};
+			}
+			 
+			
 
 			Hotel.findOneAndUpdate( myquery,newvalues, function(err, field) {
 	    	    if (err){
