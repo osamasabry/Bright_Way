@@ -240,7 +240,7 @@ module.exports = {
 			var myquery = '';
 			var newvalues ='';
 
-			if (Hotel_RoomID) {
+			if (request.body.Hotel_RoomID) {
 				myquery = {
 					 Hotel_Code: request.body.Hotel_Code,
 					'Hotel_Contract._id' : request.body.Hotel_ContractID,
