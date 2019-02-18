@@ -247,7 +247,7 @@ module.exports = {
 					'Hotel_Contract.Hotel_Rooms._id' : request.body.Hotel_RoomID,
 				};
 				newvalues = { 
-					$set: { "Hotel_Contract.$.Hotel_Rooms"   : arrayhotel},
+					$set: { "Hotel_Contract.$.Hotel_Rooms.$"   : arrayhotel},
 				};
 			}else{
 
