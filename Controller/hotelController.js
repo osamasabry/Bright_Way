@@ -226,7 +226,7 @@ module.exports = {
 			    if (err){
 			    	res.send({message: err});
 			    }
-		        if (busy.length > 0) {
+		        if (busy) {
 		        	// res.send({busy})
 		        	// console.log(busy);
 		            res.send({message: 'This Date has been Reserved'});
@@ -370,7 +370,7 @@ module.exports = {
 			})
 		}	
 	},
-	
+
 	editHotelContractRoomDetails:function(request,res){
 		Hotel.findOne({Hotel_Code: request.body.Hotel_Code}).then((Hotel) => {
 			var Hotel_Contract = Hotel.Hotel_Contract.filter((object) => {
