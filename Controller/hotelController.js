@@ -265,7 +265,7 @@ module.exports = {
 		
 	},
 
-	editHotelContractRoom:function(){
+	editHotelContractRoom:function(request,res){
 
 		var From = request.body.Room_From; 
 		var To = request.body.Room_To;
