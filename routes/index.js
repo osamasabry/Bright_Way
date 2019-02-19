@@ -243,6 +243,13 @@ router.post('/login', type,function(req, res, next) {
         EditHotelContractRoom();
     });
 
+     router.post('/editHotelContractRoomDetails', type,function(req, res) {
+        var EditHotelContractRoomDetails = async (function (){
+            await (HotelController.editHotelContractRoomDetails(req,res));
+        });
+        EditHotelContractRoomDetails();
+    });
+
     router.get('/getAllHotels', type,function(req, res) {
         var GetAllHotels= async (function (){
             await (HotelController.getAllHotels(req,res));

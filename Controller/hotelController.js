@@ -4,6 +4,7 @@ var RoomType = require('../Model/lut_btw_room_type');
 var RoomView = require('../Model/lut_btw_room_view');
 var Employee = require('../Model/btw_employee');
 
+var mongoose = require('mongoose');
 
 module.exports = {
 
@@ -208,60 +209,41 @@ module.exports = {
 			Room_Details:request.body.Room_Details
 		}
 
-		// var From = new Date('2018-12-11'); 
-		// var To = new Date('2018-12-14');
+		var Hotel_ContractID = mongoose.Types.ObjectId(request.body.Hotel_ContractID);
 
-		//  var arrayhotel={
-		// 	Room_From : From,
-		// 	Room_To : To,
-		// 	Room_Count :3,
-		// }
-		// console.log(From);
-		// console.log(To);
+		object = {	
+					$and :[
+						{Hotel_Code:Number(request.body.Hotel_Code)},
+						// {'Hotel_Contract._id':Hotel_ContractID},
+						{ $or:[ {'Hotel_Contract.Hotel_Rooms.Room_From': { $gte: From, $lte: To}},
+						{'Hotel_Contract.Hotel_Rooms.Room_To': { $gte: From, $lte: To}}]}
 
-		object = { $or:[ {'Hotel_Contract.Hotel_Rooms.Room_From': { $gte: From, $lte: To}},
-						{'Hotel_Contract.Hotel_Rooms.Room_To': { $gte: From, $lte: To}}]};
+				]}
+			 // $or:[ {'Hotel_Contract.Hotel_Rooms.Room_From': { $gte: From, $lte: To}},
+				// {'Hotel_Contract.Hotel_Rooms.Room_To': { $gte: From, $lte: To}}]};
 			Hotel.findOne(object)
 			.exec(function(err, busy) {
 			    if (err){
 			    	res.send({message: err});
 			    }
-		        if (busy) {
+		        if (busy.length > 0) {
+		        	// res.send({busy})
+		        	// console.log(busy);
 		            res.send({message: 'This Date has been Reserved'});
 		        }else{
-		        	console.log('yyyy');
+		        	// console.log('yyyy');
 		            addDateContract();
 		        }
     	})
 
-
 		function addDateContract(){
-
-			var myquery = '';
-			var newvalues ='';
-
-			if (request.body.Hotel_RoomID) {
-				myquery = {
+				var myquery = {
 					 Hotel_Code: request.body.Hotel_Code,
-					'Hotel_Contract._id' : request.body.Hotel_ContractID,
-					'Hotel_Contract.Hotel_Rooms._id' : request.body.Hotel_RoomID,
+					'Hotel_Contract._id' : Hotel_ContractID,
 				};
-				newvalues = { 
-					$set: { "Hotel_Contract.$.Hotel_Rooms.$"   : arrayhotel},
+				var newvalues = { 
+					$push: { "Hotel_Contract.$.Hotel_Rooms.$"   : arrayhotel},
 				};
-			}else{
-
-				myquery = {
-					 Hotel_Code: request.body.Hotel_Code,
-					'Hotel_Contract._id' : request.body.Hotel_ContractID, 
-				};
-				newvalues = { 
-					$push: { "Hotel_Contract.$.Hotel_Rooms"   : arrayhotel},
-				};
-			}
-			 
-			
-
 			Hotel.findOneAndUpdate( myquery,newvalues, function(err, field) {
 	    	    if (err){
 	    	    	return res.send({
@@ -283,7 +265,113 @@ module.exports = {
 		
 	},
 
-	editHotelContractRoom:function(request,res){
+	editHotelContractRoom:function(){
+
+		var From = request.body.Room_From; 
+		var To = request.body.Room_To;
+		var arrayhotel={
+			Room_From :From,
+			Room_To :To,
+			Room_Count :request.body.Room_Count,
+			Room_Details:request.body.Room_Details
+		}
+		// from 2019-01-31
+		// to 2019-02-27
+
+		// var From = new Date('2019-02-01'); 
+		// var To = new Date('2019-04-01');
+		// console.log(From)
+
+		// console.log(To)
+		//  var arrayhotel={
+		// 	Room_From : From,
+		// 	Room_To : To,
+		// 	Room_Count :3,
+		// }
+		// console.log(From);
+		// console.log(To);
+			var Hotel_ContractID = mongoose.Types.ObjectId(request.body.Hotel_ContractID);
+			var Hotel_RoomID = mongoose.Types.ObjectId(request.body.Hotel_RoomID);
+
+		// object = {	
+		// 			$and :[
+		// 				{Hotel_Code:Number(request.body.Hotel_Code)},
+		// 				{'Hotel_Contract._id':Hotel_ContractID},
+		// 				{'Hotel_Contract.Hotel_Rooms._id':Hotel_RoomID},
+		// 				// { $or:[ {'Hotel_Contract.Hotel_Rooms.Room_From': { $gte: From, $lte: To}},
+		// 				// {'Hotel_Contract.Hotel_Rooms.Room_To': { $gte: From, $lte: To}}]}
+
+		// 		]}
+		// 			 // $or:[ {'Hotel_Contract.Hotel_Rooms.Room_From': { $gte: From, $lte: To}},
+		// 				// {'Hotel_Contract.Hotel_Rooms.Room_To': { $gte: From, $lte: To}}]};
+			
+		// 		console.log(object);
+		// 		Hotel.findOne(object)
+
+
+			// console.log(idrow);
+			Hotel.aggregate([
+			{$match: { Hotel_Code: Number(request.body.Hotel_Code),
+						"Hotel_Contract._id":Hotel_ContractID
+					}},
+			{$unwind: "$Hotel_Contract" },
+			{$unwind: "$Hotel_Contract.Hotel_Rooms" },
+			{$group: { _id: { 	to: "$Hotel_Contract.Hotel_Rooms.Room_To",
+							  	from: "$Hotel_Contract.Hotel_Rooms.Room_From",
+							},
+			 	Data: { $push: "$Hotel_Contract.Hotel_Rooms" } } },
+				{$unwind: "$Data" },
+					{$match: {
+							'Data._id':{$ne:Hotel_RoomID},
+							 "_id.from":{$lte:From,$lte:To} ,
+							 "_id.to":{$gte:To,$gte:From},
+					}
+				},
+			])
+			.exec(function(err, busy) {
+			    if (err){
+			    	res.send({message: err});
+			    }
+		        if (busy.length > 0) {
+		        	// res.send({busy})
+		        	// console.log(busy);
+		            res.send({message: 'This Date has been Reserved'});
+		        }else{
+		        	// console.log('yyyy');
+		            addDateContract();
+		        }
+    	})
+
+		function addDateContract(){
+				var myquery = {
+					 Hotel_Code: request.body.Hotel_Code,
+					'Hotel_Contract._id' : Hotel_ContractID,
+					'Hotel_Contract.Hotel_Rooms._id' : Hotel_RoomID,
+				};
+				var newvalues = { 
+					$set: { "Hotel_Contract.$.Hotel_Rooms.$"   : arrayhotel},
+				};
+			Hotel.findOneAndUpdate( myquery,newvalues, function(err, field) {
+	    	    if (err){
+	    	    	return res.send({
+						message: err,
+					});
+	    	    }
+	            if (!field) {
+	            	return res.send({
+						message: 'Hotel not exists'
+					});
+	            } else {
+	            	// console.log(field);
+	                return res.send({
+						message: true
+					});
+				}
+			})
+		}	
+	},
+	
+	editHotelContractRoomDetails:function(request,res){
 		Hotel.findOne({Hotel_Code: request.body.Hotel_Code}).then((Hotel) => {
 			var Hotel_Contract = Hotel.Hotel_Contract.filter((object) => {
 				return object["_id"] == request.body.Hotel_ContractID

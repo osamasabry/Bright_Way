@@ -16,7 +16,7 @@ var Btw_HotelSchema = mongoose.Schema({
 
         Hotel_City                         :Number,
         Hotel_Stars                        :Number,
-        Hotel_HasChildernPolicy            :Number, 
+        // Hotel_HasChildernPolicy            :Number, 
         // Hotel_FirstChildernAge             :Number,
         // Hotel_SecondChildernAge            :Number, 
         // Hotel_ThirdChildernAge             :Number, 
