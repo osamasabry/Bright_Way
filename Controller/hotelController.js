@@ -242,7 +242,7 @@ module.exports = {
 					'Hotel_Contract._id' : Hotel_ContractID,
 				};
 				var newvalues = { 
-					$push: { "Hotel_Contract.$.Hotel_Rooms.$"   : arrayhotel},
+					$push: { "Hotel_Contract.$.Hotel_Rooms"   : arrayhotel},
 				};
 			Hotel.findOneAndUpdate( myquery,newvalues, function(err, field) {
 	    	    if (err){
