@@ -318,6 +318,17 @@ module.exports = {
 					message: true
 				})
 			})
+			//###################################
+
+			// db.btw_hotels.updateOne({ "Hotel_Contract.Hotel_Rooms._id":  ObjectId("5c6c8c86520de06ae70b8d23")},
+
+			// {$set: {"Hotel_Contract.$[cont].Hotel_Rooms.$[degree].Room_Count": 888989999999}},
+			// { arrayFilters : [ {"cont._id" : ObjectId("5c6b059846b1991d4801ecc5") },{"degree._id" : ObjectId("5c6c8c86520de06ae70b8d23") } ],
+			// 	 multi : false })
+			
+			//###################################
+
+
 
 
 			// 	Hotel.updateOne({Hotel_Code: Number(request.body.Hotel_Code),
