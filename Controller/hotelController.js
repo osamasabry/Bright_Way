@@ -303,33 +303,50 @@ module.exports = {
 		})
 
 		function addDateContract(){
-				Hotel.updateOne({Hotel_Code: Number(request.body.Hotel_Code),
-								"Hotel_Contract._id":Hotel_ContractID,
-								"Hotel_Contract.Hotel_Rooms._id":Hotel_RoomID},
-								{ $set: {
-								 "Hotel_Contract.0.Hotel_Rooms.$.Room_From" : request.body.Room_From ,
-								 "Hotel_Contract.0.Hotel_Rooms.$.Room_To" : request.body.Room_To ,
-								 "Hotel_Contract.0.Hotel_Rooms.$.Room_Count" : request.body.Room_Count ,
-								} }, {"multi": true}
-
-								)
-
-				.exec(function(err, field){
-	    	    if (err){
-	    	    	return res.send({
-						message: err,
-					});
-	    	    }
-	            if (!field) {
-	            	return res.send({
-						message: 'Hotel not exists'
-					});
-	            } else {
-	                return res.send({
-						message: true
-					});
-				}
+			Hotel.findOne({Hotel_Code: request.body.Hotel_Code}).then((Hotel) => {
+				var Hotel_Contract = Hotel.Hotel_Contract.filter((object) => {
+					return object["_id"] == request.body.Hotel_ContractID
+				})
+				var Hotel_Rooms = Hotel_Contract[0].Hotel_Rooms.filter((object) => {
+					return object["_id"] == request.body.Hotel_RoomID
+				})
+				Hotel_Rooms[0].Room_From = request.body.Room_From;
+				Hotel_Rooms[0].Room_To = request.body.Room_To;
+				Hotel_Rooms[0].Room_Count = request.body.Room_Count;
+				Hotel.save();
+				return res.send({
+					message: true
+				})
 			})
+
+
+			// 	Hotel.updateOne({Hotel_Code: Number(request.body.Hotel_Code),
+			// 					"Hotel_Contract._id":Hotel_ContractID,
+			// 					"Hotel_Contract.Hotel_Rooms._id":Hotel_RoomID},
+			// 					{ $set: {
+			// 					 "Hotel_Contract.0.Hotel_Rooms.$.Room_From" : request.body.Room_From ,
+			// 					 "Hotel_Contract.0.Hotel_Rooms.$.Room_To" : request.body.Room_To ,
+			// 					 "Hotel_Contract.0.Hotel_Rooms.$.Room_Count" : request.body.Room_Count ,
+			// 					} }, {"multi": true}
+
+			// 					)
+
+			// 	.exec(function(err, field){
+	    	//     if (err){
+	    	//     	return res.send({
+			// 			message: err,
+			// 		});
+	    	//     }
+	        //     if (!field) {
+	        //     	return res.send({
+			// 			message: 'Hotel not exists'
+			// 		});
+	        //     } else {
+	        //         return res.send({
+			// 			message: true
+			// 		});
+			// 	}
+			// })
 		}	
 	},
 
