@@ -295,8 +295,8 @@ module.exports = {
 	        if (busy.length > 0) {
 	            res.send({message: 'This Date has been Reserved'});
 	        }else{
-	            // addDateContract();
-	            res.send({message: 'Update'});
+	            addDateContract();
+	            // res.send({message: 'Update'});
 
 	        }
 		})
