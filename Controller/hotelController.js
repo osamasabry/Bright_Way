@@ -261,9 +261,12 @@ module.exports = {
 	},
 
 	editHotelContractRoom:function(request,res){
+		// var From = new Date('2019-03-15');
+		// var To = new Date('2019-04-25');
+		
 
-		var From = request.body.Room_From; 
-		var To = request.body.Room_To;
+		var From = new Date(request.body.Room_From); 
+		var To = new Date(request.body.Room_To);
 		var Hotel_ContractID = mongoose.Types.ObjectId(request.body.Hotel_ContractID);
 		var Hotel_RoomID = mongoose.Types.ObjectId(request.body.Hotel_RoomID);
 			
@@ -292,7 +295,9 @@ module.exports = {
 	        if (busy.length > 0) {
 	            res.send({message: 'This Date has been Reserved'});
 	        }else{
-	            addDateContract();
+	            // addDateContract();
+	            res.send({message: 'Update'});
+
 	        }
 		})
 
@@ -418,7 +423,7 @@ module.exports = {
 				}
 			})
 	},
-	
+
 	getHotelContractByID:function(request,response){
 		var Search = Number(request.body.Hotel_Code);
 		Hotel.findOne({Hotel_Code:Search})
