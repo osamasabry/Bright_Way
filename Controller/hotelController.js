@@ -22,7 +22,7 @@ module.exports = {
 			newHotel.Hotel_Address   	 			= request.body.Hotel_Address;
 			newHotel.Hotel_City	 					= request.body.Hotel_City;
 			newHotel.Hotel_Stars   	    			= request.body.Hotel_Stars;
-			newHotel.Hotel_HasChildernPolicy   		= request.body.Hotel_HasChildernPolicy;
+			// newHotel.Hotel_HasChildernPolicy   		= request.body.Hotel_HasChildernPolicy;
 			// newHotel.Hotel_FirstChildernAge   	    = request.body.Hotel_FirstChildernAge;
 			// newHotel.Hotel_SecondChildernAge   	    = request.body.Hotel_SecondChildernAge;
 			// newHotel.Hotel_ThirdChildernAge   	    = request.body.Hotel_ThirdChildernAge;
@@ -54,7 +54,7 @@ module.exports = {
 				Hotel_Address 					: request.body.Hotel_Address,
 				Hotel_City 						: request.body.Hotel_City,
 				Hotel_Stars 					: request.body.Hotel_Stars,
-				Hotel_HasChildernPolicy 		: request.body.Hotel_HasChildernPolicy,
+				// Hotel_HasChildernPolicy 		: request.body.Hotel_HasChildernPolicy,
 				// Hotel_FirstChildernAge 			: request.body.Hotel_FirstChildernAge,
 				// Hotel_SecondChildernAge 		: request.body.Hotel_SecondChildernAge,
 				// Hotel_ThirdChildernAge 			: request.body.Hotel_ThirdChildernAge,
@@ -219,19 +219,14 @@ module.exports = {
 						{'Hotel_Contract.Hotel_Rooms.Room_To': { $gte: From, $lte: To}}]}
 
 				]}
-			 // $or:[ {'Hotel_Contract.Hotel_Rooms.Room_From': { $gte: From, $lte: To}},
-				// {'Hotel_Contract.Hotel_Rooms.Room_To': { $gte: From, $lte: To}}]};
 			Hotel.findOne(object)
 			.exec(function(err, busy) {
 			    if (err){
 			    	res.send({message: err});
 			    }
 		        if (busy) {
-		        	// res.send({busy})
-		        	// console.log(busy);
 		            res.send({message: 'This Date has been Reserved'});
 		        }else{
-		        	// console.log('yyyy');
 		            addDateContract();
 		        }
     	})
@@ -297,71 +292,61 @@ module.exports = {
 	        if (busy.length > 0) {
 	            res.send({message: 'This Date has been Reserved'});
 	        }else{
-	        	console.log('yyyy');
 	            addDateContract();
 	        }
 		})
 
 		function addDateContract(){
-			Hotel.findOne({Hotel_Code: request.body.Hotel_Code}).then((Hotel) => {
-				var Hotel_Contract = Hotel.Hotel_Contract.filter((object) => {
-					return object["_id"] == request.body.Hotel_ContractID
-				})
-				var Hotel_Rooms = Hotel_Contract[0].Hotel_Rooms.filter((object) => {
-					return object["_id"] == request.body.Hotel_RoomID
-				})
-				Hotel_Rooms[0].Room_From = request.body.Room_From;
-				Hotel_Rooms[0].Room_To = request.body.Room_To;
-				Hotel_Rooms[0].Room_Count = request.body.Room_Count;
-				Hotel.save();
-				return res.send({
-					message: true
-				})
-			})
-			//###################################
-
-			// db.btw_hotels.updateOne({ "Hotel_Contract.Hotel_Rooms._id":  ObjectId("5c6c8c86520de06ae70b8d23")},
-
-			// {$set: {"Hotel_Contract.$[cont].Hotel_Rooms.$[degree].Room_Count": 888989999999}},
-			// { arrayFilters : [ {"cont._id" : ObjectId("5c6b059846b1991d4801ecc5") },{"degree._id" : ObjectId("5c6c8c86520de06ae70b8d23") } ],
-			// 	 multi : false })
-			
-			//###################################
-
-
-
-
-			// 	Hotel.updateOne({Hotel_Code: Number(request.body.Hotel_Code),
-			// 					"Hotel_Contract._id":Hotel_ContractID,
-			// 					"Hotel_Contract.Hotel_Rooms._id":Hotel_RoomID},
-			// 					{ $set: {
-			// 					 "Hotel_Contract.0.Hotel_Rooms.$.Room_From" : request.body.Room_From ,
-			// 					 "Hotel_Contract.0.Hotel_Rooms.$.Room_To" : request.body.Room_To ,
-			// 					 "Hotel_Contract.0.Hotel_Rooms.$.Room_Count" : request.body.Room_Count ,
-			// 					} }, {"multi": true}
-
-			// 					)
-
-			// 	.exec(function(err, field){
-	    	//     if (err){
-	    	//     	return res.send({
-			// 			message: err,
-			// 		});
-	    	//     }
-	        //     if (!field) {
-	        //     	return res.send({
-			// 			message: 'Hotel not exists'
-			// 		});
-	        //     } else {
-	        //         return res.send({
-			// 			message: true
-			// 		});
-			// 	}
+			// Hotel.findOne({Hotel_Code: request.body.Hotel_Code}).then((Hotel) => {
+			// 	var Hotel_Contract = Hotel.Hotel_Contract.filter((object) => {
+			// 		return object["_id"] == request.body.Hotel_ContractID
+			// 	})
+			// 	var Hotel_Rooms = Hotel_Contract[0].Hotel_Rooms.filter((object) => {
+			// 		return object["_id"] == request.body.Hotel_RoomID
+			// 	})
+			// 	Hotel_Rooms[0].Room_From = request.body.Room_From;
+			// 	Hotel_Rooms[0].Room_To = request.body.Room_To;
+			// 	Hotel_Rooms[0].Room_Count = request.body.Room_Count;
+			// 	Hotel.save();
+			// 	return res.send({
+			// 		message: true
+			// 	})
 			// })
+			//###################################
+
+			Hotel.updateOne({ Hotel_Code:request.body.Hotel_Code},
+			{$set: 
+				{
+					"Hotel_Contract.$[con1].Hotel_Rooms.$[con2].Room_From": request.body.Room_From,
+					"Hotel_Contract.$[con1].Hotel_Rooms.$[con2].Room_To": request.body.Room_To,
+					"Hotel_Contract.$[con1].Hotel_Rooms.$[con2].Room_Count": request.body.Room_Count,
+				}	
+			},
+			{ arrayFilters : [ 
+						{"con1._id" : Hotel_ContractID },
+						{"con2._id" : Hotel_RoomID }
+					],
+			 	multi : true })
+			.exec(function(err, field){
+	    	    if (err){
+	    	    	return res.send({
+						message: err,
+					});
+	    	    }
+	            if (!field) {
+	            	return res.send({
+						message: 'Hotel not exists'
+					});
+	            } else {
+	                return res.send({
+						message: true
+					});
+				}
+			})
 		}	
 	},
 
-	editHotelContractRoomDetails:function(request,res){
+	addHotelContractRoomDetails:function(request,res){
 		Hotel.findOne({Hotel_Code: request.body.Hotel_Code}).then((Hotel) => {
 			var Hotel_Contract = Hotel.Hotel_Contract.filter((object) => {
 				return object["_id"] == request.body.Hotel_ContractID
@@ -380,36 +365,60 @@ module.exports = {
 				message: err
 			});
 		});
-		// var myquery = {
-		// 		 Hotel_Code 			: request.body.Hotel_Code,
-		// 		'Hotel_Contract._id' 	: request.body.Hotel_ContractID, 
-		// 		'Hotel_Rooms._id' 		: request.body.Hotel_RoomID, 
-		// 	}; 
-
-		// var newvalues = { 
-		// 	$push: { 
-		// 			"Hotel_Rooms.$.Room_Details"   : request.body.Room_Details,
-		// 		},
-		// };
-		// Hotel.findOneAndUpdate( myquery,newvalues, function(err, field) {
-    	//     if (err){
-    	//     	return res.send({
-		// 			message: 'Error'
-		// 		});
-    	//     }
-        //     if (!field) {
-        //     	return res.send({
-		// 			message: err
-		// 		});
-        //     } else {
-
-        //         return res.send({
-		// 			message: true
-		// 		});
-		// 	}
-		// })
 	},
 
+	editHotelContractRoomDetails:function(request,res){
+
+		var Hotel_ContractID = mongoose.Types.ObjectId(request.body.Hotel_ContractID);
+		var Hotel_RoomID = mongoose.Types.ObjectId(request.body.Hotel_RoomID);
+		var Hotel_RoomDetailsID = mongoose.Types.ObjectId(request.body.Hotel_RoomDetailsID);
+
+		Hotel.updateOne({ Hotel_Code:request.body.Hotel_Code},
+			{$set: 
+				{
+					"Hotel_Contract.$[con1].Hotel_Rooms.$[con2].Room_Details.$[con3].RoomType_Code"					: request.body.RoomType_Code,
+					"Hotel_Contract.$[con1].Hotel_Rooms.$[con2].Room_Details.$[con3].RoomView_Code"					: request.body.RoomView_Code,
+					"Hotel_Contract.$[con1].Hotel_Rooms.$[con2].Room_Details.$[con3].Count"							: request.body.Count,
+					"Hotel_Contract.$[con1].Hotel_Rooms.$[con2].Room_Details.$[con3].Max_Capacity_Single_Room_Adult": request.body.Max_Capacity_Single_Room_Adult,
+					"Hotel_Contract.$[con1].Hotel_Rooms.$[con2].Room_Details.$[con3].Max_Capacity_Single_Room_Child": request.body.Max_Capacity_Single_Room_Child,
+					"Hotel_Contract.$[con1].Hotel_Rooms.$[con2].Room_Details.$[con3].Max_Capacity_Double_Room_Adult": request.body.Max_Capacity_Double_Room_Adult,
+					"Hotel_Contract.$[con1].Hotel_Rooms.$[con2].Room_Details.$[con3].Max_Capacity_Double_Room_Child": request.body.Max_Capacity_Double_Room_Child,
+					"Hotel_Contract.$[con1].Hotel_Rooms.$[con2].Room_Details.$[con3].Max_Capacity_Triple_Room_Adult": request.body.Max_Capacity_Triple_Room_Adult,
+					"Hotel_Contract.$[con1].Hotel_Rooms.$[con2].Room_Details.$[con3].Max_Capacity_Triple_Room_Child": request.body.Max_Capacity_Triple_Room_Child,
+					"Hotel_Contract.$[con1].Hotel_Rooms.$[con2].Room_Details.$[con3].Price_Single_Room"				: request.body.Price_Single_Room,
+					"Hotel_Contract.$[con1].Hotel_Rooms.$[con2].Room_Details.$[con3].Price_Double_Room"				: request.body.Price_Double_Room,
+					"Hotel_Contract.$[con1].Hotel_Rooms.$[con2].Room_Details.$[con3].Price_Triple_Room"				: request.body.Price_Triple_Room,
+					"Hotel_Contract.$[con1].Hotel_Rooms.$[con2].Room_Details.$[con3].Price_Child"					: request.body.Price_Child,
+					"Hotel_Contract.$[con1].Hotel_Rooms.$[con2].Room_Details.$[con3].Cost_Single_Room"				: request.body.Cost_Single_Room,
+					"Hotel_Contract.$[con1].Hotel_Rooms.$[con2].Room_Details.$[con3].Cost_Double_Room"				: request.body.Cost_Double_Room,
+					"Hotel_Contract.$[con1].Hotel_Rooms.$[con2].Room_Details.$[con3].Cost_Triple_Room"				: request.body.Cost_Triple_Room,
+					"Hotel_Contract.$[con1].Hotel_Rooms.$[con2].Room_Details.$[con3].Cost_Child"					: request.body.Cost_Child
+				}	
+			},
+			{ arrayFilters : [ 
+						{"con1._id" : Hotel_ContractID },
+						{"con2._id" : Hotel_RoomID },
+						{"con3._id" : Hotel_RoomDetailsID }
+					],
+			 	multi : true })
+			.exec(function(err, field){
+	    	    if (err){
+	    	    	return res.send({
+						message: err,
+					});
+	    	    }
+	            if (!field) {
+	            	return res.send({
+						message: 'Hotel not exists'
+					});
+	            } else {
+	                return res.send({
+						message: true
+					});
+				}
+			})
+	},
+	
 	getHotelContractByID:function(request,response){
 		var Search = Number(request.body.Hotel_Code);
 		Hotel.findOne({Hotel_Code:Search})

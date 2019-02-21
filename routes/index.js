@@ -243,7 +243,14 @@ router.post('/login', type,function(req, res, next) {
         EditHotelContractRoom();
     });
 
-     router.post('/editHotelContractRoomDetails', type,function(req, res) {
+    router.post('/addHotelContractRoomDetails', type,function(req, res) {
+        var AddHotelContractRoomDetails = async (function (){
+            await (HotelController.addHotelContractRoomDetails(req,res));
+        });
+        AddHotelContractRoomDetails();
+    });
+
+    router.post('/editHotelContractRoomDetails', type,function(req, res) {
         var EditHotelContractRoomDetails = async (function (){
             await (HotelController.editHotelContractRoomDetails(req,res));
         });
