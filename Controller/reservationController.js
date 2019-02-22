@@ -287,6 +287,7 @@ module.exports = {
 				Date :new Date(request.body.Date),
 				Type_Code :request.body.Type_Code,
 				Ammount :request.body.Ammount,
+				Discount :request.body.Discount,
 				CC_Transaction_Code :request.body.CC_Transaction_Code,
 				Receipt_Number:receipt_number
 			}
@@ -332,8 +333,6 @@ module.exports = {
 	        } 
     	})
 	},
-
-
 }
 
 

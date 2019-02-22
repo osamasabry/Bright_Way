@@ -30,6 +30,7 @@ var Btw_ReservationSchema = mongoose.Schema({
             Date                :Date,
             Type_Code           :Number,
             Ammount             :Number,
+            Discount            :Number,
             CC_Transaction_Code :String,
         }],
 
