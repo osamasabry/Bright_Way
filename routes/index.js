@@ -295,11 +295,18 @@ router.post('/login', type,function(req, res, next) {
         AddReservation();
     });
 
-    router.post('/editPayemtnReservation', type,function(req, res) {
-        var EditPayemtnReservation= async (function (){
-            await (ReservationController.editPayemtnReservation(req,res));
+    router.post('/addPayemtnReservation', type,function(req, res) {
+        var AddPayemtnReservation= async (function (){
+            await (ReservationController.addPayemtnReservation(req,res));
         });
-        EditPayemtnReservation();
+        AddPayemtnReservation();
+    });
+
+     router.post('/getReservationByCustomerID', type,function(req, res) {
+        var GetReservationByCustomerID= async (function (){
+            await (ReservationController.getReservationByCustomerID(req,res));
+        });
+        GetReservationByCustomerID();
     });
 
 /*****************Resarch Tool************************************/

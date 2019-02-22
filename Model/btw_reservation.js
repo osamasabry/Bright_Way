@@ -26,10 +26,11 @@ var Btw_ReservationSchema = mongoose.Schema({
         Reservation_Office_ID                   :Number, 
         Reservation_Grand_Total                 :Number, 
         Reservation_Payment             :[{
-            Date        :Date,
-            Type_ID     :Number,
-            Ammount     :Number,
-            Payment_Code:String,
+            Receipt_Number      :Number,
+            Date                :Date,
+            Type_Code           :Number,
+            Ammount             :Number,
+            CC_Transaction_Code :String,
         }],
 
         Reservation_Number_of_Chair             :Number,
@@ -70,7 +71,8 @@ Btw_ReservationSchema.virtual('Employee',{
 var Reservation = module.exports = mongoose.model('btw_reservation', Btw_ReservationSchema);
 
 
+
 module.exports.getLastCode = function(callback){
-    
     Reservation.findOne({},callback).sort({Reservation_Code:-1});
 }
+

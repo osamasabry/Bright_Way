@@ -257,29 +257,82 @@ module.exports = {
 		}
 	},
 
-	editPayemtnReservation:function(request,response){
+	addPayemtnReservation:function(request,response){
+		var object = { Reservation_Code: request.body.Reservation_Code }; 
 
-		var newvalues = { $set: {
-				Reservation_Payment : request.body.Reservation_Payment,
-			} };
-		var myquery = { Reservation_Code: request.body.Reservation_Code }; 
-		Reservation.findOneAndUpdate( myquery,newvalues, function(err, field) {
+		Reservation.findOne(object)
+		.select('Reservation_Payment.Receipt_Number')
+		// .sort('Reservation_Payment._id')
+		.exec(function(err, field){
     	    if (err){
     	    	return response.send({
-					message: 'Error'
+					message: err,
 				});
     	    }
             if (!field) {
             	return response.send({
 					message: 'Reservation not exists'
 				});
-            } else {
-                return response.send({
-					message: true
-				});
+            } else if(field.Reservation_Payment.length == 0){
+				GetIDByDate(0);
+			}else{
+            	var val = field.Reservation_Payment[field.Reservation_Payment.length - 1];
+            	GetIDByDate(val.Receipt_Number+1);
 			}
-		})	
-	}
+		})
+
+		function GetIDByDate(receipt_number){
+
+			PaymantArray = {
+				Date :new Date(request.body.Date),
+				Type_Code :request.body.Type_Code,
+				Ammount :request.body.Ammount,
+				CC_Transaction_Code :request.body.CC_Transaction_Code,
+				Receipt_Number:receipt_number
+			}
+
+			var myquery = { Reservation_Code: request.body.Reservation_Code }; 
+
+			var newvalues = {$push:{
+				Reservation_Payment:PaymantArray},
+			}
+			Reservation.findOneAndUpdate( myquery,newvalues)
+			.exec(function(err, field){
+	    	    if (err){
+	    	    	return response.send({
+						message: err,
+					});
+	    	    }
+	            if (!field) {
+	            	return response.send({
+						message: 'Reservation not exists'
+					});
+	            } else {
+	   				return response.send({
+						message: true,
+					});
+				}
+			})
+		}	
+	},
+
+	getReservationByCustomerID:function(request,response){
+		var Search = Number(request.body.Customer_ID);
+		Reservation.findOne({Reservation_Customer_ID:Search})
+		.select('Reservation_Customer_ID Reservation_Payment Reservation_Date Reservation_Grand_Total')
+		.populate({ path: 'City', select: 'City_Name' })
+		.populate({ path: 'Customer', select: 'Customer_Name' })
+		.lean()
+		.exec(function(err, hotel) {
+		    if (err){
+		    	response.send(err);
+		    }
+	        if (hotel) {
+	            response.send(hotel);
+	        } 
+    	})
+	},
+
 
 }
 
