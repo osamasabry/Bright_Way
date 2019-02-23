@@ -30,10 +30,9 @@ var Btw_ReservationSchema = mongoose.Schema({
             Date                :Date,
             Type_Code           :Number,
             Ammount             :Number,
-            Discount            :Number,
             CC_Transaction_Code :String,
         }],
-
+        Reservation_Discount                    :Number,
         Reservation_Number_of_Chair             :Number,
         Reservation_Chair_Price                 :Number,
 },{

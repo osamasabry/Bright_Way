@@ -274,29 +274,29 @@ module.exports = {
 					message: 'Reservation not exists'
 				});
             } else if(field.Reservation_Payment.length == 0){
-				GetIDByDate(0);
+				UpdateRow(1);
 			}else{
             	var val = field.Reservation_Payment[field.Reservation_Payment.length - 1];
-            	GetIDByDate(val.Receipt_Number+1);
+            	UpdateRow(val.Receipt_Number + 1);
 			}
 		})
 
-		function GetIDByDate(receipt_number){
+		function UpdateRow(receipt_number){
 
 			PaymantArray = {
 				Date :new Date(request.body.Date),
 				Type_Code :request.body.Type_Code,
 				Ammount :request.body.Ammount,
-				Discount :request.body.Discount,
 				CC_Transaction_Code :request.body.CC_Transaction_Code,
 				Receipt_Number:receipt_number
 			}
 
 			var myquery = { Reservation_Code: request.body.Reservation_Code }; 
 
-			var newvalues = {$push:{
-				Reservation_Payment:PaymantArray},
-			}
+			var newvalues = {
+				$push:{Reservation_Payment:PaymantArray},
+				$set:{Reservation_Discount:request.body.Discount}
+			}	
 			Reservation.findOneAndUpdate( myquery,newvalues)
 			.exec(function(err, field){
 	    	    if (err){
