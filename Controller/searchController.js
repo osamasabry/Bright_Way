@@ -6,8 +6,9 @@ var asyncLoop = require('node-async-loop');
 
 module.exports = {
 	searchData:function(request,response){
-		// var From = new Date('2019-02-09');
-		// var To = new Date('2019-02-12');
+		// var From = new Date('2019-02-14');
+		// var To = new Date('2019-02-28');
+		// console.log(From,To);
 		var From  =  new Date(request.body.Reservation_Date_From);
 		var To = new Date(request.body.Reservation_Date_To);
 		var AllHotels =[];
@@ -23,13 +24,14 @@ module.exports = {
 			        	HotelName : { $first: '$Hotel_Name' },
 			        	Hotel_Code : { $first: '$Hotel_Code' },
 			        	
-			 	Data: { $push: "$Hotel_Contract.Hotel_Rooms" } } },
+			 	Data: { $push: "$Hotel_Contract" } } },
 				{$unwind: "$Data" },
-				{$unwind: "$Data.Room_Details" },
+				{$unwind: "$Data.Hotel_Rooms" },
+				{$unwind: "$Data.Hotel_Rooms.Room_Details" },
 				{$match: {
 						 "_id.from":{$lte:From} ,"_id.to":{$gte:To},
-						 "Data.Room_Details.RoomType_Code":{$eq:Number(request.body.Room_Type_Code)} ,
-						 "Data.Room_Details.RoomView_Code":{$eq:Number(request.body.Room_View_Code)} ,
+						 "Data.Hotel_Rooms.Room_Details.RoomType_Code":{$eq:Number(request.body.Room_Type_Code)} ,
+						 "Data.Hotel_Rooms.Room_Details.RoomView_Code":{$eq:Number(request.body.Room_View_Code)} ,
 				}},
 			])
 			.exec(function(err, hotel) {
