@@ -139,6 +139,7 @@ module.exports = {
 			newReservation.Reservation_Payment			= request.body.Reservation_Payment ;
 			newReservation.Reservation_Number_of_Chair  = request.body.Reservation_Number_of_Chair;
 			newReservation.Reservation_Chair_Price      = request.body.Reservation_Chair_Price;
+			newReservation.Reservation_Discount 		= request.body.Discount;
 			
 			newReservation.save(function(error, doneadd){
 				if(error){
@@ -147,12 +148,12 @@ module.exports = {
 					});
 				}
 				else{
-					 getDates(From,To);
+					 getDates(From,To,GetNextId);
 				}
 			});
 		}
 
-		var getDates = function(startDate, endDate) {
+		var getDates = function(startDate, endDate,GetNextId) {
 		  var dates = [],
 		      currentDate = startDate,
 		      addDays = function(days) {
@@ -166,7 +167,8 @@ module.exports = {
 		  }
 		  // return dates;
 		  return response.send({
-				message: true
+				message: true,
+				Code:GetNextId
 			});
 		}
 
@@ -295,7 +297,6 @@ module.exports = {
 
 			var newvalues = {
 				$push:{Reservation_Payment:PaymantArray},
-				$set:{Reservation_Discount:request.body.Discount}
 			}	
 			Reservation.findOneAndUpdate( myquery,newvalues)
 			.exec(function(err, field){
