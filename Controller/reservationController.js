@@ -320,7 +320,7 @@ module.exports = {
 
 	getReservationByCustomerID:function(request,response){
 		var Search = Number(request.body.Customer_ID);
-		Reservation.findOne({Reservation_Customer_ID:Search})
+		Reservation.find({Reservation_Customer_ID:Search})
 		// .select('Reservation_Customer_ID Reservation_Payment Reservation_Date Reservation_Grand_Total')
 		.populate({ path: 'City', select: 'City_Name' })
 		.populate({ path: 'Customer', select: 'Customer_Name' })

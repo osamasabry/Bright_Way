@@ -7,6 +7,8 @@ var Btw_OfficeSchema = mongoose.Schema({
         Office_Phone          :String,
 		Office_Address        :String,
 		Office_Is_Active      :Number,
+		Office_City_ID        :Number,
+
 		// Office_Transportaion  :[{
 		// 	City_ID:Number,
 		// 	Chair_Price:Number,
