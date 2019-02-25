@@ -72,7 +72,7 @@ module.exports = {
 	        	
 	            response.send(customer);
 	        } 
-    	}).sort({Customer_Code:-1}).limit(20)
+    	})
 	},
 
 	searchCustomer:function(request,response){

@@ -3,6 +3,7 @@ var SystemSetting = require('../Model/btw_system_setting');
 var RoomType = require('../Model/lut_btw_room_type');
 var RoomView = require('../Model/lut_btw_room_view');
 var City = require('../Model/lut_btw_city');
+var TransportationMethod = require('../Model/btw_transportation_method');
 
 
 module.exports = {
@@ -131,6 +132,18 @@ module.exports = {
 		    }
 	        if (city) {
 	            response.send(city);
+	        } 
+    	})
+	},
+
+	getTransportationMethod:function(request,response){
+		TransportationMethod.find({})
+		.exec(function(err, transmethod) {
+		    if (err){
+		    	response.send({message: 'Error'});
+		    }
+	        if (transmethod) {
+	            response.send(transmethod);
 	        } 
     	})
 	},

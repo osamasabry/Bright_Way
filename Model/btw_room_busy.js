@@ -55,9 +55,3 @@ Btw_RoomBusySchema.virtual('Reservation',{
 
 var RoomBusy = module.exports = mongoose.model('btw_room_busy', Btw_RoomBusySchema);
 
-
-
-// module.exports.getLastCode = function(callback){
-    
-//     RoomBusy.findOne({},callback).sort({Customer_Code:-1});
-// }

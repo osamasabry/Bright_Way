@@ -8,6 +8,7 @@ var CustomerController = require('../Controller/customerController');
 var HotelController = require('../Controller/hotelController');
 var ReservationController = require('../Controller/reservationController');
 var SearchController = require('../Controller/searchController');
+var BusController = require('../Controller/busController');
 
 var passport = require('passport');
 var multer=require('multer');
@@ -92,6 +93,13 @@ router.post('/login', type,function(req, res, next) {
             SetUpController.editCity(req,res);
         });
         EditCity();
+    });
+
+     router.get('/getTransportationMethod', type,function(req, res) {
+        var GetTransportationMethod= async (function (){
+            await (SetUpController.getTransportationMethod(req,res));
+        });
+        GetTransportationMethod();
     });
 
 /****************Office****************/
@@ -316,6 +324,36 @@ router.post('/login', type,function(req, res, next) {
             await (SearchController.searchData(req,res));
         });
         SearchData();
+    });
+
+/*************************Buses*************************************/
+    router.post('/addBus', type,function(req, res) {
+        var AddBus = async (function (){
+            BusController.addBus(req,res);
+        });
+        AddBus();
+    });
+
+    router.post('/editBus', type,function(req, res) {
+        var EditBus = async (function (){
+            await (BusController.editBus(req,res));
+        });
+        EditBus();
+    });
+
+    router.get('/getAllBuses', type,function(req, res) {
+        var GetAllBuses= async (function (){
+            await (BusController.getAllBuses(req,res));
+        });
+        GetAllBuses();
+    });
+
+
+    router.post('/searchBuses', type,function(req, res) {
+        var SearchBuses= async (function (){
+            await (BusController.searchBuses(req,res));
+        });
+        SearchBuses();
     });
     
 module.exports = router;

@@ -136,7 +136,7 @@ module.exports = {
 			newReservation.Reservation_Room 			= request.body.Reservation_Room;
 			// newReservation.Reservation_Room 			= arrayrooms ;
 			
-			newReservation.Reservation_Payment			= request.body.Reservation_Payment ;
+			newReservation.Reservation_Payment			= [] ;
 			newReservation.Reservation_Number_of_Chair  = request.body.Reservation_Number_of_Chair;
 			newReservation.Reservation_Chair_Price      = request.body.Reservation_Chair_Price;
 			newReservation.Reservation_Discount 		= request.body.Discount;
@@ -192,7 +192,7 @@ module.exports = {
 				    }
 			        if (roomBusy) {
 			        	console.log(roomBusy);
-			        	console.log('update');
+			        	// console.log('update');
 			        	var count = roomBusy.RoomBusy_Room_Count + room.Count;
 			        	var Id = roomBusy._id;
 			        	UpdateRow(Id,count);
@@ -203,7 +203,7 @@ module.exports = {
 						// roomobject.status = 'Update';
 						// checkreturn.push(roomobject);	 
 			        }else{
-			        	console.log('Insert');
+			        	// console.log('Insert');
 			        	InsertRow(room.Type,room.View,room.Count);
 			        	next();
 						// roomobject.status = 'Insert';
@@ -218,7 +218,7 @@ module.exports = {
 			        return;
 			    }
 			 
-			    console.log('Finished!');
+			    // console.log('Finished!');
 			});
 
 			function InsertRow(type,view,count){
@@ -260,39 +260,39 @@ module.exports = {
 	},
 
 	addPayemtnReservation:function(request,response){
-		var object = { Reservation_Code: request.body.Reservation_Code }; 
+		// console.log(request.body.Reservation_Code);
+		// var object = { Reservation_Code: Number(request.body.Reservation_Code) }; 
+		// console.log(object);
+		// Reservation.findOne(object)
+		// .select('Reservation_Payment.Receipt_Number')
+		// // .sort('Reservation_Payment._id')
+		// .exec(function(err, field){
+  //   	    if (err){
+  //   	    	return response.send({
+		// 			message: err,
+		// 		});
+  //   	    }
+  //           if (!field) {
+  //           	return response.send({
+		// 			message: 'Reservation not exists'
+		// 		});
+  //           } else if(field.Reservation_Payment.length == 0){
+		// 		UpdateRow(1);
+		// 	}else{
+  //           	var val = field.Reservation_Payment[field.Reservation_Payment.length - 1];
+  //           	UpdateRow(val.Receipt_Number + 1);
+		// 	}
+		// })
 
-		Reservation.findOne(object)
-		.select('Reservation_Payment.Receipt_Number')
-		// .sort('Reservation_Payment._id')
-		.exec(function(err, field){
-    	    if (err){
-    	    	return response.send({
-					message: err,
-				});
-    	    }
-            if (!field) {
-            	return response.send({
-					message: 'Reservation not exists'
-				});
-            } else if(field.Reservation_Payment.length == 0){
-				UpdateRow(1);
-			}else{
-            	var val = field.Reservation_Payment[field.Reservation_Payment.length - 1];
-            	UpdateRow(val.Receipt_Number + 1);
-			}
-		})
-
-		function UpdateRow(receipt_number){
+		// function UpdateRow(receipt_number){
 
 			PaymantArray = {
 				Date :new Date(request.body.Date),
 				Type_Code :request.body.Type_Code,
 				Ammount :request.body.Ammount,
 				CC_Transaction_Code :request.body.CC_Transaction_Code,
-				Receipt_Number:receipt_number
+				// Receipt_Number:receipt_number
 			}
-
 			var myquery = { Reservation_Code: request.body.Reservation_Code }; 
 
 			var newvalues = {
@@ -315,15 +315,16 @@ module.exports = {
 					});
 				}
 			})
-		}	
+		// }	
 	},
 
 	getReservationByCustomerID:function(request,response){
 		var Search = Number(request.body.Customer_ID);
 		Reservation.findOne({Reservation_Customer_ID:Search})
-		.select('Reservation_Customer_ID Reservation_Payment Reservation_Date Reservation_Grand_Total')
+		// .select('Reservation_Customer_ID Reservation_Payment Reservation_Date Reservation_Grand_Total')
 		.populate({ path: 'City', select: 'City_Name' })
 		.populate({ path: 'Customer', select: 'Customer_Name' })
+		.populate({ path: 'Hotel', select: 'Hotel_Name' })
 		.lean()
 		.exec(function(err, hotel) {
 		    if (err){
