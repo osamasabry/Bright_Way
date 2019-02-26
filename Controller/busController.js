@@ -62,6 +62,8 @@ module.exports = {
 
 	getAllBuses:function(request,response){
 		Bus.find({})
+		.populate({ path: 'CityFrom', select: 'City_Name' })
+		.populate({ path: 'CityTo', select: 'City_Name' })
 		.exec(function(err, bus) {
 		    if (err){
 		    	response.send({message: err});
