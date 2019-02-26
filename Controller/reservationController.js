@@ -1,6 +1,8 @@
 var Reservation = require('../Model/btw_reservation');
 var RoomBusy = require('../Model/btw_room_busy');
 var Hotel = require('../Model/btw_hotel');
+var Increment = require('../Model/btw_increment');
+
 var async = require('asyncawait/async');
 // var await = require('asyncawait/await');
 var asyncLoop = require('node-async-loop');
@@ -260,38 +262,11 @@ module.exports = {
 	},
 
 	addPayemtnReservation:function(request,response){
-		// console.log(request.body.Reservation_Code);
-		// var object = { Reservation_Code: Number(request.body.Reservation_Code) }; 
-		// console.log(object);
-		// Reservation.findOne(object)
-		// .select('Reservation_Payment.Receipt_Number')
-		// // .sort('Reservation_Payment._id')
-		// .exec(function(err, field){
-  //   	    if (err){
-  //   	    	return response.send({
-		// 			message: err,
-		// 		});
-  //   	    }
-  //           if (!field) {
-  //           	return response.send({
-		// 			message: 'Reservation not exists'
-		// 		});
-  //           } else if(field.Reservation_Payment.length == 0){
-		// 		UpdateRow(1);
-		// 	}else{
-  //           	var val = field.Reservation_Payment[field.Reservation_Payment.length - 1];
-  //           	UpdateRow(val.Receipt_Number + 1);
-		// 	}
-		// })
-
-		// function UpdateRow(receipt_number){
-
 			PaymantArray = {
 				Date :new Date(request.body.Date),
 				Type_Code :request.body.Type_Code,
 				Ammount :request.body.Ammount,
 				CC_Transaction_Code :request.body.CC_Transaction_Code,
-				// Receipt_Number:receipt_number
 			}
 			var myquery = { Reservation_Code: request.body.Reservation_Code }; 
 
@@ -310,12 +285,21 @@ module.exports = {
 						message: 'Reservation not exists'
 					});
 	            } else {
-	   				return response.send({
-						message: true,
-					});
+	   				increment();
 				}
 			})
-		// }	
+
+			function increment(){
+				Increment.findOneAndUpdate(
+				   { Increment_Code: 1 },
+				   { $inc: { Increment_sequence: 1} }
+				).exec(function(err,done){
+					if (err) return response.send({message:err})
+					else {
+						return response.send({ message: true});
+					}
+				})
+			}
 	},
 
 	getReservationByCustomerID:function(request,response){

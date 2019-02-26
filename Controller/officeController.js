@@ -19,7 +19,7 @@ module.exports = {
 			newOffice.Office_Phone   	 	    = request.body.Office_Phone;
 			newOffice.Office_Address	 	    = request.body.Office_Address;
 			newOffice.Office_Is_Active   		= 1;
-			newOffice.Transportaion				= request.body.Transportaion;
+			newOffice.Office_City_ID			= Number(request.body.Office_City_ID);
 			newOffice.save(function(error, doneadd){
 				if(error){
 					return response.send({
@@ -41,7 +41,7 @@ module.exports = {
 				Office_Phone 				: request.body.Office_Phone,
 				Office_Address 				: request.body.Office_Address,
 				Office_Is_Active 			: request.body.Office_Is_Active,
-				Transportaion				: request.body.Transportaion,
+				Office_City_ID				: request.body.Office_City_ID,
 			} };
 
 		var myquery = { Office_Code: request.body.Office_Code }; 

@@ -4,6 +4,7 @@ var LocalStrategy    = require('passport-local').Strategy;
 
 
 var User       = require('../Model/btw_employee');
+var Office       = require('../Model/btw_employee');
 
 // console.log(User);
 
@@ -29,7 +30,9 @@ module.exports = function(passport) {
     function(req, user_name, password, done) {
        process.nextTick(function() {
             // console.log(user_name,password);
-            User.findOne({ 'Employee_Email' :  user_name }, function(err, user) {
+            User.findOne({ 'Employee_Email' :  user_name })
+            .populate({ path: 'Office'}).
+            exec(function(err, user) {
                 if (err){ return done(err);}
                 if (!user)
                   return done(null,false,{status:false,message:'user is not exist'});
