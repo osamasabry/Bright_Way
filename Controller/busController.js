@@ -81,6 +81,8 @@ module.exports = {
 				{Bus_To:Number(request.body.Bus_To)},
 		]};
 		Bus.find(object)
+		.populate({ path: 'CityFrom', select: 'City_Name' })
+		.populate({ path: 'CityTo', select: 'City_Name' })
 		.exec(function(err, bus) {
 		    if (err){
 		    	response.send({message: err});
