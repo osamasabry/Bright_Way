@@ -372,5 +372,12 @@ router.post('/login', type,function(req, res, next) {
         });
         SearchBusDailyPassengers();
     });
+
+    router.post('/getCustomerByBusNumber', type,function(req, res) {
+        var GetCustomerByBusNumber = async (function (){
+            await (BusDailyPassengersController.getCustomerByBusNumber(req,res));
+        });
+        GetCustomerByBusNumber();
+    });
     
 module.exports = router;

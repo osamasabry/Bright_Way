@@ -93,6 +93,30 @@ module.exports = {
     	}
 	},
 
+	getCustomerByBusNumber:function(request,response){
+		var object={
+			$and :[
+					{BusDailyPassengers_Place_From  	:Number(request.body.BusDailyPassengers_Place_From)},
+					{BusDailyPassengers_Place_To		:Number(request.body.BusDailyPassengers_Place_To)},
+					{BusDailyPassengers_Date 			:new Date(request.body.BusDailyPassengers_Date)},
+					{BusDailyPassengers_Bus_Number 		:request.body.BusDailyPassengers_Bus_Number},
+			]
+		};
+		BusDailyPassengers.find(object)
+		.populate({ path: 'Customer', select: 'Customer_Name' })
+		.lean()
+		.exec(function(err, field) {
+		    if (err){
+		    	response.send({message: err});
+		    }
+	        if (field) {
+            	response.send(field);
+	        }else{
+		    	response.send({message: "This Data Not Match Any Reservation"});
+	        } 
+    	})
+	},
+
 }
 
 
