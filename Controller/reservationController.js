@@ -2,6 +2,7 @@ var Reservation = require('../Model/btw_reservation');
 var RoomBusy = require('../Model/btw_room_busy');
 var Hotel = require('../Model/btw_hotel');
 var Increment = require('../Model/btw_increment');
+var BusDailyPassengers = require('../Model/btw_bus_daily_passenger');
 
 var async = require('asyncawait/async');
 // var await = require('asyncawait/await');
@@ -168,6 +169,10 @@ module.exports = {
 		    currentDate = addDays.call(currentDate, 1);
 		  }
 		  // return dates;
+		  
+		  if (request.body.BusDailyPassengers_Count) 
+		  		InsertBusDailyPassenger();
+
 		  return response.send({
 				message: true,
 				Code:GetNextId
@@ -193,23 +198,15 @@ module.exports = {
 			            return;
 				    }
 			        if (roomBusy) {
-			        	console.log(roomBusy);
+			        	// console.log(roomBusy);
 			        	// console.log('update');
 			        	var count = roomBusy.RoomBusy_Room_Count + room.Count;
 			        	var Id = roomBusy._id;
 			        	UpdateRow(Id,count);
 			        	next();
-			   //      	var count = roomBusy.RoomBusy_Room_Count + room.Count;
-						// roomobject.count = count;
-						// roomobject.Id = roomBusy._id;
-						// roomobject.status = 'Update';
-						// checkreturn.push(roomobject);	 
 			        }else{
-			        	// console.log('Insert');
 			        	InsertRow(room.Type,room.View,room.Count);
 			        	next();
-						// roomobject.status = 'Insert';
-						// checkreturn.push(roomobject);	 
 			        }
 		    	})
 			}, function (err)
@@ -230,7 +227,6 @@ module.exports = {
 				newRoomBusy.RoomBusy_Room_Type_Code   	= type;
 				newRoomBusy.RoomBusy_Room_View_Code 	= view;
 				newRoomBusy.RoomBusy_Room_Count 		= count;
-				// RoomBusy_Reservation_Code
 				newRoomBusy.save(function(error, doneadd){
 					if(error){
 						return response.send({
@@ -257,6 +253,43 @@ module.exports = {
 						});
 		            } 
 				})
+			}
+		}
+
+		function InsertBusDailyPassenger(){
+			
+			BusDailyPassengers.getLastCode(function(err,busreserve){
+				if (busreserve) 
+					insetIntoReservBus(busreserve.BusDailyPassengers_Code+1);
+				else
+					insetIntoReservBus(1);
+			});
+
+			function insetIntoReservBus(NextId){
+
+				var newReservBus = new BusDailyPassengers();
+				newReservBus.BusDailyPassengers_Code     		= NextId;
+				newReservBus.BusDailyPassengers_Customer_Code 	= request.body.Reservation_Customer_ID;
+				newReservBus.BusDailyPassengers_Hotel_Code   	= request.body.Reservation_Hotel_ID;
+				newReservBus.BusDailyPassengers_Date	 		= From;
+				newReservBus.BusDailyPassengers_Place_From      = BusDailyPassengers_Place_From;
+				newReservBus.BusDailyPassengers_Place_To		= BusDailyPassengers_Place_To;
+				newReservBus.BusDailyPassengers_Direction   	= 'Go';
+				newReservBus.BusDailyPassengers_Count   	   	= request.body.BusDailyPassengers_Count;
+				newReservBus.save();
+
+				var NewNextId =  NextId + 1;
+
+				var newNextReservBus = new BusDailyPassengers();
+				newNextReservBus.BusDailyPassengers_Code     		= NewNextId;
+				newNextReservBus.BusDailyPassengers_Customer_Code 	= request.body.Reservation_Customer_ID;
+				newNextReservBus.BusDailyPassengers_Hotel_Code   	= request.body.Reservation_Hotel_ID;
+				newNextReservBus.BusDailyPassengers_Date	 		= To;
+				newNextReservBus.BusDailyPassengers_Place_From      = BusDailyPassengers_Place_From;
+				newNextReservBus.BusDailyPassengers_Place_To		= BusDailyPassengers_Place_To;
+				newNextReservBus.BusDailyPassengers_Direction   	= 'Back';
+				newNextReservBus.BusDailyPassengers_Count   	   	= request.body.BusDailyPassengers_Count;
+				newNextReservBus.save();
 			}
 		}
 	},

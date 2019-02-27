@@ -9,6 +9,8 @@ var HotelController = require('../Controller/hotelController');
 var ReservationController = require('../Controller/reservationController');
 var SearchController = require('../Controller/searchController');
 var BusController = require('../Controller/busController');
+var BusDailyPassengersController = require('../Controller/busDailyPassengerController');
+
 
 var passport = require('passport');
 var multer=require('multer');
@@ -354,6 +356,21 @@ router.post('/login', type,function(req, res, next) {
             await (BusController.searchBuses(req,res));
         });
         SearchBuses();
+    });
+
+/*************************Bus daily Passenger*************************************/
+    router.post('/editBusDailyPassengers', type,function(req, res) {
+        var EditBusDailyPassengers = async (function (){
+            BusDailyPassengersController.editBusDailyPassengers(req,res);
+        });
+        EditBusDailyPassengers();
+    });
+
+    router.post('/searchBusDailyPassengers', type,function(req, res) {
+        var SearchBusDailyPassengers = async (function (){
+            await (BusDailyPassengersController.searchBusDailyPassengers(req,res));
+        });
+        SearchBusDailyPassengers();
     });
     
 module.exports = router;
