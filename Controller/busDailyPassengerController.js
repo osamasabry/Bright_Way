@@ -48,6 +48,11 @@ module.exports = {
 		}
 
 		BusDailyPassengers.find(object)
+		.populate({ path: 'Hotel', select: 'Hotel_Name' })
+		.populate({ path: 'Customer', select: 'Customer_Name' })
+		.populate({ path: 'CityFrom', select: 'City_Name' })
+		.populate({ path: 'CityTo', select: 'City_Name' })
+		.lean()
 		.exec(function(err, field) {
 		    if (err){
 		    	response.send({message: err});
@@ -103,7 +108,10 @@ module.exports = {
 			]
 		};
 		BusDailyPassengers.find(object)
+		.populate({ path: 'Hotel', select: 'Hotel_Name' })
 		.populate({ path: 'Customer', select: 'Customer_Name' })
+		.populate({ path: 'CityFrom', select: 'City_Name' })
+		.populate({ path: 'CityTo', select: 'City_Name' })
 		.lean()
 		.exec(function(err, field) {
 		    if (err){
