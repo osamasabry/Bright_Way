@@ -275,7 +275,8 @@ module.exports = {
 				newReservBus.BusDailyPassengers_Place_From      = BusDailyPassengers_Place_From;
 				newReservBus.BusDailyPassengers_Place_To		= BusDailyPassengers_Place_To;
 				newReservBus.BusDailyPassengers_Direction   	= 'Go';
-				newReservBus.BusDailyPassengers_Count   	   	= request.body.BusDailyPassengers_Count;
+				newReservBus.BusDailyPassengers_Count   	   	= request.body.Reservation_Number_of_Chair;
+				newReservBus.BusDailyPassengers_Transportation_Method =0;
 				newReservBus.save();
 
 				var NewNextId =  NextId + 1;
@@ -288,7 +289,8 @@ module.exports = {
 				newNextReservBus.BusDailyPassengers_Place_From      = BusDailyPassengers_Place_From;
 				newNextReservBus.BusDailyPassengers_Place_To		= BusDailyPassengers_Place_To;
 				newNextReservBus.BusDailyPassengers_Direction   	= 'Back';
-				newNextReservBus.BusDailyPassengers_Count   	   	= request.body.BusDailyPassengers_Count;
+				newNextReservBus.BusDailyPassengers_Count   	   	= request.body.Reservation_Number_of_Chair;
+				newReservBus.BusDailyPassengers_Transportation_Method =0;
 				newNextReservBus.save();
 			}
 		}
