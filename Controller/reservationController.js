@@ -170,13 +170,14 @@ module.exports = {
 		  }
 		  // return dates;
 		  
-		  if (request.body.BusDailyPassengers_Count) 
-		  		InsertBusDailyPassenger();
-
-		  return response.send({
-				message: true,
-				Code:GetNextId
-			});
+		  	if (request.body.BusDailyPassengers_Count) 
+		  		InsertBusDailyPassenger(GetNextId);
+		  	else{
+			  	return response.send({
+					message: true,
+					Code:GetNextId
+				});
+			}
 		}
 
 		function InsertBusyRoom(date){
@@ -256,7 +257,7 @@ module.exports = {
 			}
 		}
 
-		function InsertBusDailyPassenger(){
+		function InsertBusDailyPassenger(GetNextId){
 			
 			BusDailyPassengers.getLastCode(function(err,busreserve){
 				if (busreserve) 
@@ -292,6 +293,11 @@ module.exports = {
 				newNextReservBus.BusDailyPassengers_Count   	   	= request.body.Reservation_Number_of_Chair;
 				newReservBus.BusDailyPassengers_Transportation_Method =0;
 				newNextReservBus.save();
+
+				return response.send({
+					message: true,
+					Code:GetNextId
+				});
 			}
 		}
 	},
