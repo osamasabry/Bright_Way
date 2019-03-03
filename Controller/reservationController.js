@@ -94,30 +94,6 @@ module.exports = {
 				insetIntoReservation(1);
 		});
 
-		// arrayrooms=[
-		// 	{
-		// 		Count   :3,
-		// 		View    :2,
-		// 		Type    :2,
-		// 		SNTType :1,
-		// 		Price   :2500,
-		// 		Adult   :2,
-		// 		Child   :1,
-		// 	}
-			// ,
-			// {
-			// 	Count   :3,
-			// 	View    :2,
-			// 	Type    :2,
-			// 	SNTType :2,
-			// 	Price   :2200,
-			// 	Adult   :6,
-			// 	Child   :2,
-			// }
-		// ]
-
-		// var From = new Date('2019-02-09');
-		// var To = new Date('2019-02-12');
 		var From  =  new Date(request.body.Reservation_Date_From);
 		var To = new Date(request.body.Reservation_Date_To);
 
@@ -129,21 +105,16 @@ module.exports = {
 			newReservation.Reservation_Hotel_ID	 		= request.body.Reservation_Hotel_ID;
 			newReservation.Reservation_Date_From   	    = From;
 			newReservation.Reservation_Date_To   	    = To;
-			// newReservation.Reservation_Date_From   	    = new Date('2018-12-15');
-			// newReservation.Reservation_Date_To   	    = new Date('2018-12-18');
 			newReservation.Reservation_Number_of_Adult  = request.body.Reservation_Number_of_Adult;
 			newReservation.Reservation_Number_of_Child  = request.body.Reservation_Number_of_Child;
 			newReservation.Reservation_ByEmployee_ID   	= request.body.Reservation_ByEmployee_ID;
 			newReservation.Reservation_Office_ID   	    = request.body.Reservation_Office_ID;
 			newReservation.Reservation_Grand_Total      = request.body.Reservation_Grand_Total;
 			newReservation.Reservation_Room 			= request.body.Reservation_Room;
-			// newReservation.Reservation_Room 			= arrayrooms ;
-			
 			newReservation.Reservation_Payment			= [] ;
 			newReservation.Reservation_Number_of_Chair  = request.body.Reservation_Number_of_Chair;
 			newReservation.Reservation_Chair_Price      = request.body.Reservation_Chair_Price;
 			newReservation.Reservation_Discount 		= request.body.Discount;
-			
 			newReservation.save(function(error, doneadd){
 				if(error){
 					return response.send({
@@ -170,7 +141,7 @@ module.exports = {
 		  }
 		  // return dates;
 		  
-		  	if (request.body.BusDailyPassengers_Count) 
+		  	if (request.body.Reservation_Number_of_Chair) 
 		  		InsertBusDailyPassenger(GetNextId);
 		  	else{
 			  	return response.send({
