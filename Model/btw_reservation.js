@@ -19,6 +19,9 @@ var Btw_ReservationSchema = mongoose.Schema({
             Price           : Number,
             Adult           : Number,
             Child           : Number,
+            Addons          : String,
+            Price_Child     : Number,
+            Price_Adult     : Number,
         },{
             toJSON: { virtuals: true }
         }],
@@ -33,8 +36,10 @@ var Btw_ReservationSchema = mongoose.Schema({
             CC_Transaction_Code :String,
         }],
         Reservation_Discount                    :Number,
-        Reservation_Number_of_Chair             :Number,
-        Reservation_Chair_Price                 :Number,
+        Reservation_Number_of_Chair_InPackage   :Number,
+        Reservation_Chair_Price_InPackage       :Number,
+        Reservation_Number_of_Chair_OutPackage   :Number,
+        Reservation_Chair_Price_OutPackage       :Number,
 },{
     toJSON: { virtuals: true }
 });

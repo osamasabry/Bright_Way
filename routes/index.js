@@ -366,6 +366,13 @@ router.post('/login', type,function(req, res, next) {
         EditBusDailyPassengers();
     });
 
+    router.post('/editBusDailyPassengersGoAndBack', type,function(req, res) {
+        var EditBusDailyPassengersGoAndBack = async (function (){
+            BusDailyPassengersController.editBusDailyPassengersGoAndBack(req,res);
+        });
+        EditBusDailyPassengersGoAndBack();
+    });
+
     router.post('/searchBusDailyPassengers', type,function(req, res) {
         var SearchBusDailyPassengers = async (function (){
             await (BusDailyPassengersController.searchBusDailyPassengers(req,res));

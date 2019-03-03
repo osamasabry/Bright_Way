@@ -99,22 +99,24 @@ module.exports = {
 
 		function insetIntoReservation(GetNextId){
 			var newReservation = new Reservation();
-			newReservation.Reservation_Code     		= GetNextId;
-			newReservation.Reservation_Customer_ID 	    = request.body.Reservation_Customer_ID;
-			newReservation.Reservation_Date   	 		= request.body.Reservation_Date;
-			newReservation.Reservation_Hotel_ID	 		= request.body.Reservation_Hotel_ID;
-			newReservation.Reservation_Date_From   	    = From;
-			newReservation.Reservation_Date_To   	    = To;
-			newReservation.Reservation_Number_of_Adult  = request.body.Reservation_Number_of_Adult;
-			newReservation.Reservation_Number_of_Child  = request.body.Reservation_Number_of_Child;
-			newReservation.Reservation_ByEmployee_ID   	= request.body.Reservation_ByEmployee_ID;
-			newReservation.Reservation_Office_ID   	    = request.body.Reservation_Office_ID;
-			newReservation.Reservation_Grand_Total      = request.body.Reservation_Grand_Total;
-			newReservation.Reservation_Room 			= request.body.Reservation_Room;
-			newReservation.Reservation_Payment			= [] ;
-			newReservation.Reservation_Number_of_Chair  = request.body.Reservation_Number_of_Chair;
-			newReservation.Reservation_Chair_Price      = request.body.Reservation_Chair_Price;
-			newReservation.Reservation_Discount 		= request.body.Discount;
+			newReservation.Reservation_Code     					= GetNextId;
+			newReservation.Reservation_Customer_ID 	    			= request.body.Reservation_Customer_ID;
+			newReservation.Reservation_Date   	 					= request.body.Reservation_Date;
+			newReservation.Reservation_Hotel_ID	 					= request.body.Reservation_Hotel_ID;
+			newReservation.Reservation_Date_From   	    			= From;
+			newReservation.Reservation_Date_To   	    			= To;
+			newReservation.Reservation_Number_of_Adult  			= request.body.Reservation_Number_of_Adult;
+			newReservation.Reservation_Number_of_Child  			= request.body.Reservation_Number_of_Child;
+			newReservation.Reservation_ByEmployee_ID   				= request.body.Reservation_ByEmployee_ID;
+			newReservation.Reservation_Office_ID   	    			= request.body.Reservation_Office_ID;
+			newReservation.Reservation_Grand_Total      			= request.body.Reservation_Grand_Total;
+			newReservation.Reservation_Room 						= request.body.Reservation_Room;
+			newReservation.Reservation_Payment						= [] ;
+			newReservation.Reservation_Number_of_Chair_InPackage  	= request.body.Reservation_Number_of_Chair_InPackage;
+			newReservation.Reservation_Chair_Price_InPackage      	= request.body.Reservation_Chair_Price_InPackage;
+			newReservation.Reservation_Number_of_Chair_OutPackage  	= request.body.Reservation_Number_of_Chair_OutPackage;
+			newReservation.Reservation_Chair_Price_OutPackage      	= request.body.Reservation_Chair_Price_OutPackage;
+			newReservation.Reservation_Discount 					= request.body.Discount;
 			newReservation.save(function(error, doneadd){
 				if(error){
 					return response.send({
@@ -141,7 +143,7 @@ module.exports = {
 		  }
 		  // return dates;
 		  
-		  	if (request.body.Reservation_Number_of_Chair) 
+		  	if (request.body.Reservation_Number_of_Chair_InPackage || request.body.Reservation_Number_of_Chair_OutPackage ) 
 		  		InsertBusDailyPassenger(GetNextId);
 		  	else{
 			  	return response.send({
@@ -248,7 +250,7 @@ module.exports = {
 				newReservBus.BusDailyPassengers_Place_From      = request.body.BusDailyPassengers_Place_From;
 				newReservBus.BusDailyPassengers_Place_To		= request.body.BusDailyPassengers_Place_To;
 				newReservBus.BusDailyPassengers_Direction   	= 'Go';
-				newReservBus.BusDailyPassengers_Count   	   	= request.body.Reservation_Number_of_Chair;
+				newReservBus.BusDailyPassengers_Count   	   	= request.body.Reservation_Number_of_Chair_OutPackage + request.body.Reservation_Number_of_Chair_InPackage ;
 				newReservBus.BusDailyPassengers_Transportation_Method =0;
 				newReservBus.save();
 
@@ -263,7 +265,7 @@ module.exports = {
 				newNextReservBus.BusDailyPassengers_Place_From      = request.body.BusDailyPassengers_Place_To;
 				newNextReservBus.BusDailyPassengers_Place_To		= request.body.BusDailyPassengers_Place_From;
 				newNextReservBus.BusDailyPassengers_Direction   	= 'Back';
-				newNextReservBus.BusDailyPassengers_Count   	   	= request.body.Reservation_Number_of_Chair;
+				newNextReservBus.BusDailyPassengers_Count   	   	= request.body.Reservation_Number_of_Chair_OutPackage + request.body.Reservation_Number_of_Chair_InPackage;
 				newNextReservBus.BusDailyPassengers_Transportation_Method =0;
 				newNextReservBus.save();
 
