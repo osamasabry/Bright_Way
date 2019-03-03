@@ -4,7 +4,8 @@ var Btw_BusDailyPassengersSchema = mongoose.Schema({
    
 		BusDailyPassengers_Code                		:Number,
         BusDailyPassengers_Customer_Code       		:Number,
-		BusDailyPassengers_Hotel_Code               :Number,
+        BusDailyPassengers_Hotel_Code               :Number,
+        BusDailyPassengers_Reservation_Code         :Number,
 		BusDailyPassengers_Date 	              	:Date,
 		BusDailyPassengers_Place_From               :Number,
 		BusDailyPassengers_Place_To               	:Number,
@@ -12,7 +13,8 @@ var Btw_BusDailyPassengersSchema = mongoose.Schema({
 		BusDailyPassengers_Count               		:Number,
 		BusDailyPassengers_Transportation_Method   	:Number,
 		BusDailyPassengers_Transportation_Details   :String,
-		BusDailyPassengers_Bus_Number              	:String,
+        BusDailyPassengers_Bus_Number              	:String,
+        
 		//1
 },{
     toJSON: { virtuals: true }

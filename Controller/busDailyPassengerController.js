@@ -29,10 +29,36 @@ module.exports = {
 		})
 	},
 
+	editBusDailyPassengersGoAndBack:function(request,response){
+		var newvalues = { $set: {
+				BusDailyPassengers_Transportation_Method 	: request.body.BusDailyPassengers_Transportation_Method,
+				BusDailyPassengers_Transportation_Details 	: request.body.BusDailyPassengers_Transportation_Details,
+				BusDailyPassengers_Bus_Number 				: request.body.BusDailyPassengers_Bus_Number,
+			} };
+		var myquery = { BusDailyPassengers_Reservation_Code: request.body.BusDailyPassengers_Reservation_Code }; 
+		BusDailyPassengers.findAndUpdate( myquery,newvalues, function(err, field) {
+    	    if (err){
+    	    	return response.send({
+					message: err
+				});
+    	    }
+            if (!field) {
+            	return response.send({
+					message: 'Bus not exists'
+				});
+            } else {
+                return response.send({
+					message: true
+				});
+			}
+		})
+	},
+
 	searchBusDailyPassengers:function(request,response){
 		var Data = [];
 		var obj = {};
 		if (request.body.Date && request.body.Place_From &&request.body.Place_To ) {
+			console.log('multiple option');
 			var object={
 			$and :[
 					{BusDailyPassengers_Place_From  			:Number(request.body.Place_From)},
@@ -41,10 +67,12 @@ module.exports = {
 					{BusDailyPassengers_Transportation_Method 	:0},
 			]};
 		}else{
+			console.log('single');
 			var object = {
 				BusDailyPassengers_Date 		:new Date(request.body.Date),
 				BusDailyPassengers_Transportation_Method 	:0,
 			};
+			console.log(object);
 		}
 
 		BusDailyPassengers.find(object)
@@ -62,6 +90,8 @@ module.exports = {
 	        	if(request.body.Place_From &&request.body.Place_To){
 	        		getBrightWayPassenger();
 	        	}else{
+					console.log(field);
+					console.log('adfsadf');
 	      		  	Data.push(obj);
 	            	response.send(Data);
 	        	}

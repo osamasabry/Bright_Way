@@ -243,9 +243,10 @@ module.exports = {
 				newReservBus.BusDailyPassengers_Code     		= NextId;
 				newReservBus.BusDailyPassengers_Customer_Code 	= request.body.Reservation_Customer_ID;
 				newReservBus.BusDailyPassengers_Hotel_Code   	= request.body.Reservation_Hotel_ID;
+				newReservBus.BusDailyPassengers_Reservation_Code = GetNextId;
 				newReservBus.BusDailyPassengers_Date	 		= From;
-				newReservBus.BusDailyPassengers_Place_From      = BusDailyPassengers_Place_From;
-				newReservBus.BusDailyPassengers_Place_To		= BusDailyPassengers_Place_To;
+				newReservBus.BusDailyPassengers_Place_From      = request.body.BusDailyPassengers_Place_From;
+				newReservBus.BusDailyPassengers_Place_To		= request.body.BusDailyPassengers_Place_To;
 				newReservBus.BusDailyPassengers_Direction   	= 'Go';
 				newReservBus.BusDailyPassengers_Count   	   	= request.body.Reservation_Number_of_Chair;
 				newReservBus.BusDailyPassengers_Transportation_Method =0;
@@ -257,12 +258,13 @@ module.exports = {
 				newNextReservBus.BusDailyPassengers_Code     		= NewNextId;
 				newNextReservBus.BusDailyPassengers_Customer_Code 	= request.body.Reservation_Customer_ID;
 				newNextReservBus.BusDailyPassengers_Hotel_Code   	= request.body.Reservation_Hotel_ID;
+				newNextReservBus.BusDailyPassengers_Reservation_Code = GetNextId;
 				newNextReservBus.BusDailyPassengers_Date	 		= To;
-				newNextReservBus.BusDailyPassengers_Place_From      = BusDailyPassengers_Place_From;
-				newNextReservBus.BusDailyPassengers_Place_To		= BusDailyPassengers_Place_To;
+				newNextReservBus.BusDailyPassengers_Place_From      = request.body.BusDailyPassengers_Place_To;
+				newNextReservBus.BusDailyPassengers_Place_To		= request.body.BusDailyPassengers_Place_From;
 				newNextReservBus.BusDailyPassengers_Direction   	= 'Back';
 				newNextReservBus.BusDailyPassengers_Count   	   	= request.body.Reservation_Number_of_Chair;
-				newReservBus.BusDailyPassengers_Transportation_Method =0;
+				newNextReservBus.BusDailyPassengers_Transportation_Method =0;
 				newNextReservBus.save();
 
 				return response.send({
@@ -274,7 +276,11 @@ module.exports = {
 	},
 
 	addPayemtnReservation:function(request,response){
+		var NextPaymentCode;
+		Increment.findOne({Increment_Code: 1}).exec(function(err,inc){
+			NextPaymentCode = inc.Increment_sequence + 1;
 			PaymantArray = {
+				Receipt_Number : NextPaymentCode,
 				Date :new Date(request.body.Date),
 				Type_Code :request.body.Type_Code,
 				Ammount :request.body.Ammount,
@@ -300,6 +306,10 @@ module.exports = {
 	   				increment();
 				}
 			})
+			
+		})
+
+			
 
 			function increment(){
 				Increment.findOneAndUpdate(
