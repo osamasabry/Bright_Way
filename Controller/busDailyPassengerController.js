@@ -110,11 +110,10 @@ module.exports = {
 			]}},
 				{$group: 
 					{ 	
-						_id : null, 
-						Sum : { $sum: "$BusDailyPassengers_Count" },
-						BusNumber : { $first: "$BusDailyPassengers_Bus_Number" },
+						_id : {BusNumber: "$BusDailyPassengers_Bus_Number"}, 
+						Sum : { $sum: "$BusDailyPassengers_Count" }
 					}
-			 	},
+				},
 			])
 			.exec(function(err, brw_way) {
 			    if (err){
