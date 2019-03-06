@@ -216,6 +216,58 @@ module.exports = {
 	        } 
     	})
 	},
+	getCustomerForGoBus:function(request,response){
+		var object={
+			$and :[
+					{BusDailyPassengers_Place_From  	:Number(request.body.BusDailyPassengers_Place_From)},
+					{BusDailyPassengers_Place_To		:Number(request.body.BusDailyPassengers_Place_To)},
+					{BusDailyPassengers_Date 			:new Date(request.body.BusDailyPassengers_Date)},
+					{BusDailyPassengers_Transportation_Method : 2},
+			]
+		};
+		BusDailyPassengers.find(object)
+		.populate({ path: 'Hotel', select: 'Hotel_Name' })
+		.populate({ path: 'Customer', select: 'Customer_Name' })
+		.populate({ path: 'CityFrom', select: 'City_Name' })
+		.populate({ path: 'CityTo', select: 'City_Name' })
+		.lean()
+		.exec(function(err, field) {
+		    if (err){
+		    	response.send({message: err});
+		    }
+	        if (field) {
+            	response.send(field);
+	        }else{
+		    	response.send({message: "This Data Not Match Any Reservation"});
+	        } 
+    	})
+	},
+	getCustomerForCustomerConvenience:function(request,response){
+		var object={
+			$and :[
+					{BusDailyPassengers_Place_From  	:Number(request.body.BusDailyPassengers_Place_From)},
+					{BusDailyPassengers_Place_To		:Number(request.body.BusDailyPassengers_Place_To)},
+					{BusDailyPassengers_Date 			:new Date(request.body.BusDailyPassengers_Date)},
+					{BusDailyPassengers_Transportation_Method : 3},
+			]
+		};
+		BusDailyPassengers.find(object)
+		.populate({ path: 'Hotel', select: 'Hotel_Name' })
+		.populate({ path: 'Customer', select: 'Customer_Name' })
+		.populate({ path: 'CityFrom', select: 'City_Name' })
+		.populate({ path: 'CityTo', select: 'City_Name' })
+		.lean()
+		.exec(function(err, field) {
+		    if (err){
+		    	response.send({message: err});
+		    }
+	        if (field) {
+            	response.send(field);
+	        }else{
+		    	response.send({message: "This Data Not Match Any Reservation"});
+	        } 
+    	})
+	},
 
 }
 
