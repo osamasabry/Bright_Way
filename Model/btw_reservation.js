@@ -22,12 +22,17 @@ var Btw_ReservationSchema = mongoose.Schema({
             Addons          : String,
             Price_Child     : Number,
             Price_Adult     : Number,
+            Cost            : Number,
+            Cost_Child      : Number,
+            Cost_Adult      : Number,
+
         },{
             toJSON: { virtuals: true }
         }],
         Reservation_ByEmployee_ID               :Number,
         Reservation_Office_ID                   :Number, 
         Reservation_Grand_Total                 :Number, 
+        Reservation_Grand_Total_Cost            :Number, 
         Reservation_Payment             :[{
             Receipt_Number      :Number,
             Date                :Date,
