@@ -110,6 +110,7 @@ module.exports = {
 			newReservation.Reservation_ByEmployee_ID   				= request.body.Reservation_ByEmployee_ID;
 			newReservation.Reservation_Office_ID   	    			= request.body.Reservation_Office_ID;
 			newReservation.Reservation_Grand_Total      			= request.body.Reservation_Grand_Total;
+			newReservation.Reservation_Grand_Total_Cost      		= request.body.Reservation_Grand_Total_Cost;
 			newReservation.Reservation_Room 						= request.body.Reservation_Room;
 			newReservation.Reservation_Payment						= [] ;
 			newReservation.Reservation_Number_of_Chair_InPackage  	= request.body.Reservation_Number_of_Chair_InPackage;
