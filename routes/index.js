@@ -10,6 +10,7 @@ var ReservationController = require('../Controller/reservationController');
 var SearchController = require('../Controller/searchController');
 var BusController = require('../Controller/busController');
 var BusDailyPassengersController = require('../Controller/busDailyPassengerController');
+var ReportController = require('../Controller/reportController');
 
 
 var passport = require('passport');
@@ -391,6 +392,28 @@ router.post('/login', type,function(req, res, next) {
             await (BusDailyPassengersController.getCustomerForCustomerConvenience(req,res));
         });
         GetCustomerForCustomerConvenience();
+    });
+   
+/*************************Reports*************************************/
+    router.post('/getReservationByHotelID', type,function(req, res) {
+        var GetReservationByHotelID = async (function (){
+            ReportController.getReservationByHotelID(req,res);
+        });
+        GetReservationByHotelID();
+    });
+
+    router.post('/getBusDailyPassengerByDate', type,function(req, res) {
+        var GetBusDailyPassengerByDate = async (function (){
+            ReportController.getBusDailyPassengerByDate(req,res);
+        });
+        GetBusDailyPassengerByDate();
+    });
+
+    router.post('/getReservationDetailsByHotelID', type,function(req, res) {
+        var GetReservationDetailsByHotelID = async (function (){
+            ReportController.getReservationDetailsByHotelID(req,res);
+        });
+        GetReservationDetailsByHotelID();
     });
     
 module.exports = router;
