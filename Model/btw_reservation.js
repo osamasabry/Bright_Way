@@ -13,6 +13,7 @@ var Btw_ReservationSchema = mongoose.Schema({
 
         Reservation_Room        :[{
             Count           : Number,
+            Nights_Count    : Number,
             View            : Number,
             Type            : Number,
             SNTType         : Number,
@@ -25,6 +26,7 @@ var Btw_ReservationSchema = mongoose.Schema({
             Cost            : Number,
             Cost_Child      : Number,
             Cost_Adult      : Number,
+
 
         },{
             toJSON: { virtuals: true }
@@ -48,7 +50,18 @@ var Btw_ReservationSchema = mongoose.Schema({
 },{
     toJSON: { virtuals: true }
 });
-
+Btw_ReservationSchema.virtual('RoomType',{
+    ref: 'btw_room_type',
+    localField: 'Reservation_Room.Type',
+    foreignField: 'RoomType_Code',
+    justOne: false // for many-to-1 relationships
+});
+Btw_ReservationSchema.virtual('RoomView',{
+    ref: 'btw_room_view',
+    localField: 'Reservation_Room.View',
+    foreignField: 'RoomView_Code',
+    justOne: false // for many-to-1 relationships
+});
 Btw_ReservationSchema.virtual('Office',{
     ref: 'btw_office',
     localField: 'Reservation_Office_ID',

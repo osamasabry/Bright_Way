@@ -110,13 +110,14 @@ module.exports = {
 			newReservation.Reservation_ByEmployee_ID   				= request.body.Reservation_ByEmployee_ID;
 			newReservation.Reservation_Office_ID   	    			= request.body.Reservation_Office_ID;
 			newReservation.Reservation_Grand_Total      			= request.body.Reservation_Grand_Total;
+			newReservation.Reservation_Grand_Total_Cost				= request.body.Reservation_Grand_Total_Cost;
 			newReservation.Reservation_Room 						= request.body.Reservation_Room;
 			newReservation.Reservation_Payment						= [] ;
 			newReservation.Reservation_Number_of_Chair_InPackage  	= request.body.Reservation_Number_of_Chair_InPackage;
 			newReservation.Reservation_Chair_Price_InPackage      	= request.body.Reservation_Chair_Price_InPackage;
 			newReservation.Reservation_Number_of_Chair_OutPackage  	= request.body.Reservation_Number_of_Chair_OutPackage;
 			newReservation.Reservation_Chair_Price_OutPackage      	= request.body.Reservation_Chair_Price_OutPackage;
-			newReservation.Reservation_Discount 					= request.body.Discount;
+			newReservation.Reservation_Discount 					= request.body.Reservation_Discount;
 			newReservation.save(function(error, doneadd){
 				if(error){
 					return response.send({
@@ -305,7 +306,7 @@ module.exports = {
 						message: 'Reservation not exists'
 					});
 	            } else {
-	   				increment();
+	   				increment(PaymantArray);
 				}
 			})
 			
@@ -313,26 +314,28 @@ module.exports = {
 
 			
 
-			function increment(){
+			function increment(AddedPayment){
 				Increment.findOneAndUpdate(
 				   { Increment_Code: 1 },
 				   { $inc: { Increment_sequence: 1} }
 				).exec(function(err,done){
 					if (err) return response.send({message:err})
 					else {
-						return response.send({ message: true});
+						return response.send({ message: true, data:AddedPayment});
 					}
 				})
 			}
 	},
 
 	getReservationByCustomerID:function(request,response){
-		var Search = Number(request.body.Customer_ID);
+		var Search = Number(request.body.Customer_Code);
 		Reservation.find({Reservation_Customer_ID:Search})
 		// .select('Reservation_Customer_ID Reservation_Payment Reservation_Date Reservation_Grand_Total')
 		.populate({ path: 'City', select: 'City_Name' })
 		.populate({ path: 'Customer', select: 'Customer_Name' })
 		.populate({ path: 'Hotel', select: 'Hotel_Name' })
+		.populate({ path: 'RoomType', select: 'RoomType_Name' })
+		.populate({ path: 'RoomView', select: 'RoomView_Name' })
 		.lean()
 		.exec(function(err, hotel) {
 		    if (err){
