@@ -91,7 +91,7 @@ module.exports = {
 			if (reservation) 
 				insetIntoReservation(reservation.Reservation_Code+1);
 			else
-				insetIntoReservation(1);
+				insetIntoReservation(92300);
 		});
 
 		var From  =  new Date(request.body.Reservation_Date_From);
