@@ -180,6 +180,8 @@ module.exports = {
 				$push:{Hotel_Contract:ContractBasic},
 			 }; 
 		}
+
+		console.log(myquery);
 		Hotel.findOneAndUpdate( myquery,newvalues, function(err, field) {
     	    if (err){
     	    	return res.send({
@@ -257,7 +259,6 @@ module.exports = {
 				}
 			})
 		}
-		
 	},
 
 	editHotelContractRoom:function(request,res){

@@ -331,9 +331,9 @@ module.exports = {
 		var Search = Number(request.body.Customer_Code);
 		Reservation.find({Reservation_Customer_ID:Search})
 		// .select('Reservation_Customer_ID Reservation_Payment Reservation_Date Reservation_Grand_Total')
-		.populate({ path: 'City', select: 'City_Name' })
+		// .populate({ path: 'City', select: 'City_Name' })
 		.populate({ path: 'Customer', select: 'Customer_Name' })
-		.populate({ path: 'Hotel', select: 'Hotel_Name' })
+		.populate({ path: 'Hotel', select: 'Hotel_Name Hotel_ChildernPolicy_Hint Hotel_City' })
 		.populate({ path: 'RoomType', select: 'RoomType_Name' })
 		.populate({ path: 'RoomView', select: 'RoomView_Name' })
 		.lean()
