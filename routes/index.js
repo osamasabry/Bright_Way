@@ -299,6 +299,13 @@ router.post('/login', type,function(req, res, next) {
         CheckDate();
     });
 
+    router.post('/editReservation', type,function(req, res) {
+        var EditReservation= async (function (){
+            await (ReservationController.editReservation(req,res));
+        });
+        EditReservation();
+    });
+
     router.post('/addReservation', type,function(req, res) {
         var AddReservation= async (function (){
             await (ReservationController.addReservation(req,res));

@@ -8,16 +8,7 @@ var Btw_RoomBusySchema = mongoose.Schema({
         RoomBusy_Room_View_Code     :Number,
         RoomBusy_Room_Count         :Number,// 8
         //RoomBusy_Room_MaxCount      :Number,// 15
-        RoomBusy_Reservation_Code   :[Number],
-        // RoomBusy_Details 		:[{
-        //     Type            :Number,
-		// 	View            :Number,
-		// 	Count               :Number,
-        //  // ReservationID       :Number,
-
-        // }],
-        //RoomBusy_Count:Number,
-
+        RoomBusy_Reservation_Code   :Number,
 },{
     toJSON: { virtuals: true }
 });
@@ -29,15 +20,12 @@ Btw_RoomBusySchema.virtual('Hotel',{
     justOne: false // for many-to-1 relationships
 });
 
-
 Btw_RoomBusySchema.virtual('RoomType',{
     ref: 'btw_room_type',
     localField: 'RoomBusy_Room_Type_Code',
     foreignField: 'RoomType_Code',
     justOne: false // for many-to-1 relationships
 });
-
-
 
 Btw_RoomBusySchema.virtual('RoomView',{
     ref: 'btw_room_view',
