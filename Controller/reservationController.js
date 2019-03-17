@@ -194,6 +194,8 @@ module.exports = {
 						response.send({
 							message: error
 						});
+					}else{
+						next();
 					}
 				});
 
@@ -437,7 +439,7 @@ module.exports = {
 				Reservation_Chair_Price_InPackage 		: request.body.Reservation_Chair_Price_InPackage,
 				Reservation_Number_of_Chair_OutPackage 	: request.body.Reservation_Number_of_Chair_OutPackage,
 				Reservation_Chair_Price_OutPackage 		: request.body.Reservation_Chair_Price_OutPackage,
-				// Reservation_Payment 					: request.body.Reservation_Payment,
+				Reservation_Discount 					: request.body.Reservation_Discount,
 			} };
 			var myquery = { Reservation_Code: reserv_id }; 
 			Reservation.findOneAndUpdate( myquery,newvalues, function(err, field) {

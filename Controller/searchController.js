@@ -53,23 +53,26 @@ module.exports = {
 			
 			asyncLoop(AllHotels, function (hotel, next)
 			{
-				object = {$and:[
+
+				RoomBusy.aggregate([
+				{$match: { 
+						$and:[
 				    		{RoomBusy_HotelID:hotel.Hotel_Code},
 				    		{RoomBusy_Date:{ $gte: From, $lte: To}},
-				    		{RoomBusy_Room_Type_Code:request.body.Room_Type_Code},
-				    		{RoomBusy_Room_View_Code:request.body.Room_View_Code},
-		    	]}
-				RoomBusy.findOne(object)
-				.sort('-RoomBusy_Room_Count')
-				.limit(1)
+				    		{RoomBusy_Room_Type_Code:Number(request.body.Room_Type_Code)},
+				    		{RoomBusy_Room_View_Code:Number(request.body.Room_View_Code)},
+				    	]
+					}},
+				
+					{ $group: { _id : null, sum : { $sum: "$RoomBusy_Room_Count" } } }
+				])
 				.exec(function(err, roomBusy) {
 				    if (err){
 				    	next(err);
 			            return;
 				    }
 			        if (roomBusy) {
-			        	hotel.ReservationRoom = roomBusy.RoomBusy_Room_Count;
-			        	console.log(AllHotels);
+			        	hotel.ReservationRoom = roomBusy[0].sum;
 						response.send(AllHotels)	 
 			        }else{
 						response.send(AllHotels)	 
