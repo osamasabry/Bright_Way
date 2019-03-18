@@ -143,61 +143,101 @@ module.exports = {
 	},
 
 	editHotelContractBasicInfo:function(request,res){
-		var ContractBasic = [
-			{
-				Title 					: request.body.Title,
-    			Deposit_Amount          : Number(request.body.Deposit_Amount),
-	            Limit_Reservation_For   : Number(request.body.Limit_Reservation_For),
-	            Date                    : request.body.Date,
-	            ByEmployee_Code         : Number(request.body.ByEmployee_Code),
-	            // Bed_only_Price  		: request.body.Bed_only_Price, 
-				Bed_breakfast_Price		: request.body.Bed_breakfast_Price,
-				Half_board_Price		: request.body.Half_board_Price,
-				Full_board_Price		: request.body.Full_board_Price,
-				Soft_allinclusive_Price	: request.body.Soft_allinclusive_Price,
-				Ultra_Price				: request.body.Ultra_Price,
-				// Bed_only_Cost          	: request.body.Bed_only_Cost,
-	            Bed_breakfast_Cost     	: request.body.Bed_breakfast_Cost,
-	            Half_board_Cost        	: request.body.Half_board_Cost,
-	            Full_board_Cost        	: request.body.Full_board_Cost,
-	            Soft_allinclusive_Cost 	: request.body.Soft_allinclusive_Cost,
-	            Ultra_Cost             	: request.body.Ultra_Cost,
-			}
-        ]
 
-        var myquery ='';
-        var newvalues = '';
 		if (request.body.row_id) {
-			 myquery = {Hotel_Code: Number(request.body.Hotel_Code),
-			 	'Hotel_Contract._id': request.body.row_id
-			 }; 
-			 newvalues = { 
-				$set:{'Hotel_Contract.$':ContractBasic},
-			 }; 
+			Hotel.updateOne({ Hotel_Code:request.body.Hotel_Code},
+			{$set: 
+				{
+					"Hotel_Contract.$[con1].Title"								: request.body.RoomType_Code,
+					"Hotel_Contract.$[con1].Deposit_Amount"						: request.body.RoomView_Code,
+					"Hotel_Contract.$[con1].Limit_Reservation_For"				: request.body.Count,
+					"Hotel_Contract.$[con1].Date"								: request.body.Max_Capacity_Single_Room_Adult,
+					"Hotel_Contract.$[con1].ByEmployee_Code"					: request.body.Max_Capacity_Single_Room_Child,
+					"Hotel_Contract.$[con1].Bed_breakfast_Price"				: request.body.Max_Capacity_Double_Room_Adult,
+					"Hotel_Contract.$[con1].Half_board_Price" 					: request.body.Max_Capacity_Double_Room_Child,
+					"Hotel_Contract.$[con1].Full_board_Price"					: request.body.Max_Capacity_Triple_Room_Adult,
+					"Hotel_Contract.$[con1].Soft_allinclusive_Price"			: request.body.Max_Capacity_Triple_Room_Child,
+					"Hotel_Contract.$[con1].Ultra_Price"						: request.body.Price_Single_Room,
+					
+					"Hotel_Contract.$[con1].Bed_breakfast_Cost"					: request.body.Price_Double_Room,
+					"Hotel_Contract.$[con1].Half_board_Cost"					: request.body.Price_Triple_Room,
+					"Hotel_Contract.$[con1].Full_board_Cost"					: request.body.Price_Child,
+					"Hotel_Contract.$[con1].Soft_allinclusive_Cost"				: request.body.Cost_Single_Room,
+					"Hotel_Contract.$[con1].Ultra_Cost"							: request.body.Cost_Double_Room,
+					"Hotel_Contract.$[con1].Addon_Child_Percentage_Price"		: request.body.Cost_Triple_Room,
+					"Hotel_Contract.$[con1].Addon_Child_Percentage_Cost"		: request.body.Cost_Child
+				}	
+			},
+			{ arrayFilters : [ 
+						{"con1._id" : request.body.row_id },
+					],
+			 	multi : true })
+			.exec(function(err, field){
+	    	    if (err){
+	    	    	return res.send({
+						message: err,
+					});
+	    	    }
+	            if (!field) {
+	            	return res.send({
+						message: 'Hotel not exists'
+					});
+	            } else {
+	                return res.send({
+						message: true
+					});
+				}
+			})
 		}else{
-			 myquery = {Hotel_Code: request.body.Hotel_Code};
-			 newvalues = { 
+
+			var ContractBasic = [
+				{
+					Title 							: request.body.Title,
+	    			Deposit_Amount          		: Number(request.body.Deposit_Amount),
+		            Limit_Reservation_For   		: Number(request.body.Limit_Reservation_For),
+		            Date                    		: request.body.Date,
+		            ByEmployee_Code         		: Number(request.body.ByEmployee_Code),
+		            // Bed_only_Price  				: request.body.Bed_only_Price, 
+					Bed_breakfast_Price				: request.body.Bed_breakfast_Price,
+					Half_board_Price				: request.body.Half_board_Price,
+					Full_board_Price				: request.body.Full_board_Price,
+					Soft_allinclusive_Price			: request.body.Soft_allinclusive_Price,
+					Ultra_Price						: request.body.Ultra_Price,
+					// Bed_only_Cost          			: request.body.Bed_only_Cost,
+		            Bed_breakfast_Cost     			: request.body.Bed_breakfast_Cost,
+		            Half_board_Cost        			: request.body.Half_board_Cost,
+		            Full_board_Cost        			: request.body.Full_board_Cost,
+		            Soft_allinclusive_Cost 			: request.body.Soft_allinclusive_Cost,
+		            Ultra_Cost             			: request.body.Ultra_Cost,
+	            	Addon_Child_Percentage_Price    : request.body.Addon_Child_Percentage_Price,
+	            	Addon_Child_Percentage_Cost     : request.body.Addon_Child_Percentage_Cost,
+				}
+	        ]
+
+			var myquery = {Hotel_Code: request.body.Hotel_Code};
+			var newvalues = { 
 				$push:{Hotel_Contract:ContractBasic},
 			 }; 
+
+			 Hotel.findOneAndUpdate( myquery,newvalues, function(err, field) {
+	    	    if (err){
+	    	    	return res.send({
+						message: err
+					});
+	    	    }
+	            if (!field) {
+	            	return res.send({
+						message: 'Hotel not exists'
+					});
+	            } else {
+	                return res.send({
+						message: true
+					});
+				}
+			})
 		}
 
-		console.log(myquery);
-		Hotel.findOneAndUpdate( myquery,newvalues, function(err, field) {
-    	    if (err){
-    	    	return res.send({
-					message: err
-				});
-    	    }
-            if (!field) {
-            	return res.send({
-					message: 'Hotel not exists'
-				});
-            } else {
-                return res.send({
-					message: true
-				});
-			}
-		})
+		
 	},
 
 	addHotelContractRoom:function(request,res){
