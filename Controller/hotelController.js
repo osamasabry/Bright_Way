@@ -148,24 +148,24 @@ module.exports = {
 			Hotel.updateOne({ Hotel_Code:request.body.Hotel_Code},
 			{$set: 
 				{
-					"Hotel_Contract.$[con1].Title"								: request.body.RoomType_Code,
-					"Hotel_Contract.$[con1].Deposit_Amount"						: request.body.RoomView_Code,
-					"Hotel_Contract.$[con1].Limit_Reservation_For"				: request.body.Count,
-					"Hotel_Contract.$[con1].Date"								: request.body.Max_Capacity_Single_Room_Adult,
-					"Hotel_Contract.$[con1].ByEmployee_Code"					: request.body.Max_Capacity_Single_Room_Child,
-					"Hotel_Contract.$[con1].Bed_breakfast_Price"				: request.body.Max_Capacity_Double_Room_Adult,
-					"Hotel_Contract.$[con1].Half_board_Price" 					: request.body.Max_Capacity_Double_Room_Child,
-					"Hotel_Contract.$[con1].Full_board_Price"					: request.body.Max_Capacity_Triple_Room_Adult,
-					"Hotel_Contract.$[con1].Soft_allinclusive_Price"			: request.body.Max_Capacity_Triple_Room_Child,
-					"Hotel_Contract.$[con1].Ultra_Price"						: request.body.Price_Single_Room,
+					"Hotel_Contract.$[con1].Title"								: request.body.Title,
+					"Hotel_Contract.$[con1].Deposit_Amount"						: request.body.Deposit_Amount,
+					"Hotel_Contract.$[con1].Limit_Reservation_For"				: request.body.Limit_Reservation_For,
+					"Hotel_Contract.$[con1].Date"								: request.body.Date,
+					"Hotel_Contract.$[con1].ByEmployee_Code"					: request.body.ByEmployee_Code,
+					"Hotel_Contract.$[con1].Bed_breakfast_Price"				: request.body.Bed_breakfast_Price,
+					"Hotel_Contract.$[con1].Half_board_Price" 					: request.body.Half_board_Price,
+					"Hotel_Contract.$[con1].Full_board_Price"					: request.body.Full_board_Price,
+					"Hotel_Contract.$[con1].Soft_allinclusive_Price"			: request.body.Soft_allinclusive_Price,
+					"Hotel_Contract.$[con1].Ultra_Price"						: request.body.Ultra_Price,
 					
-					"Hotel_Contract.$[con1].Bed_breakfast_Cost"					: request.body.Price_Double_Room,
-					"Hotel_Contract.$[con1].Half_board_Cost"					: request.body.Price_Triple_Room,
-					"Hotel_Contract.$[con1].Full_board_Cost"					: request.body.Price_Child,
-					"Hotel_Contract.$[con1].Soft_allinclusive_Cost"				: request.body.Cost_Single_Room,
-					"Hotel_Contract.$[con1].Ultra_Cost"							: request.body.Cost_Double_Room,
-					"Hotel_Contract.$[con1].Addon_Child_Percentage_Price"		: request.body.Cost_Triple_Room,
-					"Hotel_Contract.$[con1].Addon_Child_Percentage_Cost"		: request.body.Cost_Child
+					"Hotel_Contract.$[con1].Bed_breakfast_Cost"					: request.body.Bed_breakfast_Cost,
+					"Hotel_Contract.$[con1].Half_board_Cost"					: request.body.Half_board_Cost,
+					"Hotel_Contract.$[con1].Full_board_Cost"					: request.body.Full_board_Cost,
+					"Hotel_Contract.$[con1].Soft_allinclusive_Cost"				: request.body.Soft_allinclusive_Cost,
+					"Hotel_Contract.$[con1].Ultra_Cost"							: request.body.Ultra_Cost,
+					"Hotel_Contract.$[con1].Addon_Child_Percentage_Price"		: request.body.Addon_Child_Percentage_Price,
+					"Hotel_Contract.$[con1].Addon_Child_Percentage_Cost"		: request.body.Addon_Child_Percentage_Cost
 				}	
 			},
 			{ arrayFilters : [ 
