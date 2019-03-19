@@ -20,27 +20,39 @@ module.exports = {
 		checkDateFromRoomBusy();
 
 		function checkDateFromRoomBusy(){
-		    object = {$and:[
-		    		// {RoomBusy_HotelID:1},
-		    		// {RoomBusy_Date: { $gte: date1, $lte: date2}},
-		    		// {RoomBusy_Room_Type_Code:1},
-		    		// {RoomBusy_Room_View_Code:1},
 
-		    		{RoomBusy_HotelID:request.body.RoomBusy_HotelID},
-		    		{RoomBusy_Date: { $gte: date1, $lte: date2}},
-		    		{RoomBusy_Room_Type_Code:request.body.RoomBusy_Room_Type_Code},
-		    		{RoomBusy_Room_View_Code:request.body.RoomBusy_Room_View_Code},
-		    	]}
-			RoomBusy.findOne(object)
-			.sort('-RoomBusy_Room_Count')
-			.limit(1)
+				RoomBusy.aggregate([
+				{$match: { 
+						$and:[
+				    		{RoomBusy_HotelID:request.body.RoomBusy_HotelID},
+				    		{RoomBusy_Date:{ $gte: date1, $lte: date2}},
+				    		{RoomBusy_Room_Type_Code:Number(request.body.RoomBusy_Room_Type_Code)},
+				    		{RoomBusy_Room_View_Code:Number(request.body.RoomBusy_Room_View_Code)},
+				    	]
+					}},
+				
+					{ $group: { _id : null, sum : { $sum: "$RoomBusy_Room_Count" } } }
+				])
+		 //    object = {$and:[
+		 //    		// {RoomBusy_HotelID:1},
+		 //    		// {RoomBusy_Date: { $gte: date1, $lte: date2}},
+		 //    		// {RoomBusy_Room_Type_Code:1},
+		 //    		// {RoomBusy_Room_View_Code:1},
+
+		 //    		{RoomBusy_HotelID:request.body.RoomBusy_HotelID},
+		 //    		{RoomBusy_Date: { $gte: date1, $lte: date2}},
+		 //    		{RoomBusy_Room_Type_Code:request.body.RoomBusy_Room_Type_Code},
+		 //    		{RoomBusy_Room_View_Code:request.body.RoomBusy_Room_View_Code},
+		 //    	]}
+			// RoomBusy.findOne(object)
+			
 			.exec(function(err, roomBusy) {
 			    if (err){
 			    	response.send({message: err});
 			    }
-		        if (roomBusy) {
+		        if (roomBusy.length > 0) {
 		        	// console.log(roomBusy)
-		            checkDateFromHotel(roomBusy.RoomBusy_Room_Count) ;
+		            checkDateFromHotel(roomBusy[0].sum) ;
 		        }else{
 		        	// console.log('no')
 		        	checkDateFromHotel(0);
