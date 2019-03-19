@@ -20,6 +20,7 @@ var Btw_ReservationSchema = mongoose.Schema({
             Price           : Number,
             Adult           : Number,
             Child           : Number,
+            Free_Child      : Number,
             Addons          : String,
             Price_Child     : Number,
             Price_Adult     : Number,
