@@ -64,7 +64,11 @@ module.exports = {
 				    	]
 					}},
 				
-					{ $group: { _id : null, sum : { $sum: "$RoomBusy_Room_Count" } } }
+					{ $group: { _id : {Room_Type: '$RoomBusy_Room_Type_Code' ,
+									   date: '$RoomBusy_Date',
+									   Room_View_Code: '$RoomBusy_Room_View_Code'}, 
+									   maxcount : { $sum: "$RoomBusy_Room_Count" } } }
+					,{$sort: {maxcount : -1}},{$limit : 1}
 				])
 				.exec(function(err, roomBusy) {
 				    if (err){
@@ -72,7 +76,7 @@ module.exports = {
 			            return;
 				    }
 			        if (roomBusy.length > 0) {
-			        	hotel.ReservationRoom = roomBusy[0].sum;
+			        	hotel.ReservationRoom = roomBusy[0].maxcount;
 						response.send(AllHotels)	 
 			        }else{
 						response.send(AllHotels)	 

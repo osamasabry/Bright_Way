@@ -22,17 +22,23 @@ module.exports = {
 		function checkDateFromRoomBusy(){
 
 				RoomBusy.aggregate([
-				{$match: { 
-						$and:[
-				    		{RoomBusy_HotelID:request.body.RoomBusy_HotelID},
-				    		{RoomBusy_Date:{ $gte: date1, $lte: date2}},
-				    		{RoomBusy_Room_Type_Code:Number(request.body.RoomBusy_Room_Type_Code)},
-				    		{RoomBusy_Room_View_Code:Number(request.body.RoomBusy_Room_View_Code)},
-				    	]
-					}},
 				
-					{ $group: { _id : null, sum : { $sum: "$RoomBusy_Room_Count" } } }
-				])
+
+				{$match: { 
+					$and:[
+							{RoomBusy_HotelID:request.body.RoomBusy_HotelID},
+							{RoomBusy_Date:{ $gte: date1, $lte: date2}},
+							{RoomBusy_Room_Type_Code:Number(request.body.RoomBusy_Room_Type_Code)},
+							{RoomBusy_Room_View_Code:Number(request.body.RoomBusy_Room_View_Code)},
+						]
+				}},
+			
+				{ $group: { _id : {Room_Type: '$RoomBusy_Room_Type_Code' ,
+									 date: '$RoomBusy_Date',
+									 Room_View_Code: '$RoomBusy_Room_View_Code'}, 
+									 maxcount : { $sum: "$RoomBusy_Room_Count" } } }
+				,{$sort: {maxcount : -1}},{$limit : 1}
+			])
 		 //    object = {$and:[
 		 //    		// {RoomBusy_HotelID:1},
 		 //    		// {RoomBusy_Date: { $gte: date1, $lte: date2}},
@@ -49,10 +55,11 @@ module.exports = {
 			.exec(function(err, roomBusy) {
 			    if (err){
 			    	response.send({message: err});
-			    }
+					}
+					console.log(roomBusy);
 		        if (roomBusy.length > 0) {
 		        	// console.log(roomBusy)
-		            checkDateFromHotel(roomBusy[0].sum) ;
+		            checkDateFromHotel(roomBusy[0].maxcount) ;
 		        }else{
 		        	// console.log('no')
 		        	checkDateFromHotel(0);
