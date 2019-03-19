@@ -4,6 +4,11 @@ var Hotel = require('../Model/btw_hotel');
 var BusDailyPassengers = require('../Model/btw_bus_daily_passenger');
 
 var asyncLoop = require('node-async-loop');
+var async = require('asyncawait/async');
+var await = require('asyncawait/await');
+
+var loop = require('wait-loop');
+const delay = require('delay');
 
 
 module.exports = {
@@ -127,5 +132,106 @@ module.exports = {
 		        } 
 	    	})
 	},
+	
+	getBusyRoom:function(request,response){
+		// var date1 = new Date('2019-02-15');
+		// var date2 = new Date('2019-02-18');
 
+		var date1 = new Date(request.body.From);
+		var date2 = new Date(request.body.To);
+		var ArrayData = [];
+
+		function getDates(startDate, endDate) {
+		  	var dates = [],
+		      	currentDate = startDate,
+		      	addDays = function(days) {
+			        var date = new Date(this.valueOf());
+			        date.setDate(date.getDate() + days);
+			        return date;
+			    };
+			  	while (currentDate <= endDate) {
+					   GetData(currentDate);
+					    currentDate = addDays.call(currentDate, 1);
+				}
+		}
+
+		function GetData (day){
+				RoomBusy.aggregate(
+		        [	
+		        	{$match: { 
+						$and:[
+				    		{RoomBusy_HotelID:Number(request.body.RoomBusy_HotelID)},
+				    		{RoomBusy_Date:day},
+				    	]
+					}},
+			        { "$group": {
+			            "_id": '$RoomBusy_Date',
+			            "Standerd": {
+			              	"$sum": { 
+			                	"$cond": [
+			                 	 	{ "$eq": [ "$RoomBusy_Room_Type_Code", 1 ] },
+			                 	 	"$RoomBusy_Room_Count",
+			                 	 	0,
+			                	]
+			              	}
+		            	},
+			            "Suite": {
+			              	"$sum": { 
+			                	"$cond": [
+			                 	 	{ "$eq": [ "$RoomBusy_Room_Type_Code", 2 ] },
+			                 	 	"$RoomBusy_Room_Count",
+			                 	 	0,
+			                	]
+			              	}
+		            	},
+		            	"Garden View": {
+			              	"$sum": { 
+			                	"$cond": [
+			                 	 	{ "$eq": [ "$RoomBusy_Room_View_Code", 1 ] },
+			                 	 	"$RoomBusy_Room_Count",
+			                 	 	0,
+			                	]
+			              	}
+		            	},
+		            	"Pool View": {
+			              	"$sum": { 
+			                	"$cond": [
+			                 	 	{ "$eq": [ "$RoomBusy_Room_View_Code", 2 ] },
+			                 	 	"$RoomBusy_Room_Count",
+			                 	 	0,
+			                	]
+			              	}
+		            	},
+		            	"Sea View": {
+			              	"$sum": { 
+			                	"$cond": [
+			                 	 	{ "$eq": [ "$RoomBusy_Room_View_Code", 3 ] },
+			                 	 	"$RoomBusy_Room_Count",
+			                 	 	0,
+			                	]
+			              	}
+		            	},
+		          	}}
+		        ])
+				.exec(function(err, roomBusy) {
+				    if (err){
+				    	response.send({message: err});
+				    }
+			        if (roomBusy.length > 0) {
+			        	console.log(roomBusy)
+				    	ArrayData.push(roomBusy[0]);
+			        }else{
+			        	console.log('no')
+				    	response.send({message: 'Not Have Room'});
+			        }
+				})
+		}
+
+		 var Result= async (function (){
+           var days =  await (getDates(date1,date2));
+           await (delay(100));
+           response.send(ArrayData)
+        });
+        Result();
+	},
 }
