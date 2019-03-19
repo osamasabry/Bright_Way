@@ -422,5 +422,12 @@ router.post('/login', type,function(req, res, next) {
         });
         GetReservationDetailsByHotelID();
     });
+
+    router.post('/getBusyRoom', type,function(req, res) {
+        var GetBusyRoom = async (function (){
+            ReportController.getBusyRoom(req,res);
+        });
+        GetBusyRoom();
+    });
     
 module.exports = router;

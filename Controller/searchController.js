@@ -6,11 +6,11 @@ var asyncLoop = require('node-async-loop');
 
 module.exports = {
 	searchData:function(request,response){
-		var From = new Date('2019-02-14');
-		var To = new Date('2019-02-28');
+		// var From = new Date('2019-02-14');
+		// var To = new Date('2019-02-28');
 		// console.log(From,To);
-		// var From  =  new Date(request.body.Reservation_Date_From);
-		// var To = new Date(request.body.Reservation_Date_To);
+		var From  =  new Date(request.body.Reservation_Date_From);
+		var To = new Date(request.body.Reservation_Date_To);
 		var AllHotels =[];
 		function getHotelByCityID(){
 			Hotel.aggregate([
