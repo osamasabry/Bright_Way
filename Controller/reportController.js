@@ -86,11 +86,11 @@ module.exports = {
 
 	getReservationDetailsByHotelID:function (request,response){
 		
-		var date1 = new Date('2019-02-9');
-		var date2 = new Date('2019-02-20');
+		// var date1 = new Date('2019-02-15');
+		// var date2 = new Date('2019-02-18');
 
-		// date1 = new Date(request.body.From);
-		// date2 = new Date(request.body.To);
+		date1 = new Date(request.body.From);
+		date2 = new Date(request.body.To);
 
 		Reservation.aggregate([
 			{$match: { $and :[
@@ -106,8 +106,17 @@ module.exports = {
 						},
 						Price : { $sum: "$Reservation_Room.Price" },
 			        	Cost : { $sum: '$Reservation_Room.Cost' },
+			        	// Reservation_Customer_ID : { $push: '$Reservation_Room.View' },
 					}	
 				},
+				{
+		        "$project": {
+			            "Reservation_Room.View": "$_id.view",
+			            "Reservation_Room.Type": "$_id.type",
+			            "Price" : '$Price',
+			        	"Cost" : '$Cost',
+			        }		
+			    },
 
 			])
 			.exec(function(err, reserv) {
@@ -115,12 +124,11 @@ module.exports = {
 			    	response.send({message: err});
 			    }
 		        if (reserv.length > 0) {
-		        	response.send(reserv)
-		        // 	   Reservation.populate(reserv, { path: 'Hotel' , select: 'Hotel_Name'}, function(err, hotel) {
-			    			// Reservation.populate(hotel, { path: 'Customer' , select: 'Customer_Name'}, function(err, customer) {
-				    		// 	response.send(customer);
-					     //    });
-				      //   });
+		        	   Reservation.populate(reserv, { path: 'RoomView' , select: 'RoomView_Name'}, function(err, view) {
+			    			Reservation.populate(view, { path: 'RoomType' , select: 'RoomType_Name'}, function(err, type) {
+				    			response.send(type);
+					        });
+				        });
 		        }else{
 			    	response.send({message: 'This Hotel Not Have Reservation'});
 		        } 
@@ -162,6 +170,5 @@ module.exports = {
 		    		response.send({message: 'Not Busy Room'});
 		        }
 	    	})
-		
 	},
 }
