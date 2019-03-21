@@ -394,6 +394,13 @@ router.post('/login', type,function(req, res, next) {
         });
         GetCustomerByBusNumber();
     });
+    router.post('/getCustomerForGoBus', type,function(req, res) {
+        var GetCustomerForGoBus = async (function (){
+            await (BusDailyPassengersController.getCustomerForGoBus(req,res));
+        });
+        GetCustomerForGoBus();
+    });
+
     router.post('/getCustomerForCustomerConvenience', type,function(req, res) {
         var GetCustomerForCustomerConvenience = async (function (){
             await (BusDailyPassengersController.getCustomerForCustomerConvenience(req,res));
