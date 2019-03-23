@@ -320,11 +320,18 @@ router.post('/login', type,function(req, res, next) {
         AddPayemtnReservation();
     });
 
-     router.post('/getReservationByCustomerID', type,function(req, res) {
+    router.post('/getReservationByCustomerID', type,function(req, res) {
         var GetReservationByCustomerID= async (function (){
             await (ReservationController.getReservationByCustomerID(req,res));
         });
         GetReservationByCustomerID();
+    });
+
+    router.post('/searchReservationByID', type,function(req, res) {
+        var SearchReservationByID= async (function (){
+            await (ReservationController.searchReservationByID(req,res));
+        });
+        SearchReservationByID();
     });
 
 /*****************Resarch Tool************************************/

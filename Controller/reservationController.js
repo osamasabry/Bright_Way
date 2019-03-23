@@ -548,6 +548,23 @@ module.exports = {
 			}
 		}
 	},
+
+	searchReservationByID:function(request,response){
+
+		var object = {Reservation_Code:request.body.Reservation_Code};
+		
+		Reservation.find(object)
+		.exec(function(err, reservation) {
+		    if (err){
+				console.log(err)
+		    	response.send({message: 'Error'});
+		    }
+	        if (reservation) {
+	            response.send(reservation);
+	        } 
+    	})
+	},
+
 }
 
 

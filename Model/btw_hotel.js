@@ -38,7 +38,8 @@ var Btw_HotelSchema = mongoose.Schema({
             Full_board_Cost                 :Number,
             Soft_allinclusive_Cost          :Number,
             Ultra_Cost                      :Number,
-            Addon_Child_Percentage_Cost     : Number,
+            Addon_Child_Percentage_Cost     :Number,
+            Basic_Plan                      :String,
             Date                    :Date,
             ByEmployee_Code         :Number,
             Hotel_Rooms                :[{

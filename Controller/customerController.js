@@ -77,12 +77,10 @@ module.exports = {
 
 	searchCustomer:function(request,response){
 		var object={};
-		if (request.body.Customer_NationalID)
-			object = {Customer_NationalID:request.body.Customer_NationalID};
-		else if(request.body.Customer_Phone )	
+		 if(request.body.Customer_Phone )	
 			object = {Customer_Phone:request.body.Customer_Phone};
 		else
-			object = {Customer_Name:{ $regex: request.body.Customer_Name, $options: 'i' } }	
+			object = {Customer_Name:{ $regex: new RegExp('.*' +request.body.Customer_Name+ '.*', "i") } }	
 
 		Customer.find(object)
 		.exec(function(err, customer) {

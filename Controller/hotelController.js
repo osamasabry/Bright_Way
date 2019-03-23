@@ -169,6 +169,7 @@ module.exports = {
 					"Hotel_Contract.$.Ultra_Cost"						: request.body.Ultra_Cost,
 					"Hotel_Contract.$.Addon_Child_Percentage_Price"		: request.body.Addon_Child_Percentage_Price,
 					"Hotel_Contract.$.Addon_Child_Percentage_Cost"		: request.body.Addon_Child_Percentage_Cost
+					"Hotel_Contract.$.Basic_Plan"						: request.body.Basic_Plan
 				}	
 			},
 			// { arrayFilters : [ 
@@ -216,6 +217,8 @@ module.exports = {
 		            Ultra_Cost             			: request.body.Ultra_Cost,
 	            	Addon_Child_Percentage_Price    : request.body.Addon_Child_Percentage_Price,
 	            	Addon_Child_Percentage_Cost     : request.body.Addon_Child_Percentage_Cost,
+	            	Basic_Plan     					: request.body.Basic_Plan,
+					
 				}
 	        ]
 
