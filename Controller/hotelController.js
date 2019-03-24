@@ -168,7 +168,7 @@ module.exports = {
 					"Hotel_Contract.$.Soft_allinclusive_Cost"			: request.body.Soft_allinclusive_Cost,
 					"Hotel_Contract.$.Ultra_Cost"						: request.body.Ultra_Cost,
 					"Hotel_Contract.$.Addon_Child_Percentage_Price"		: request.body.Addon_Child_Percentage_Price,
-					"Hotel_Contract.$.Addon_Child_Percentage_Cost"		: request.body.Addon_Child_Percentage_Cost
+					"Hotel_Contract.$.Addon_Child_Percentage_Cost"		: request.body.Addon_Child_Percentage_Cost,
 					"Hotel_Contract.$.Basic_Plan"						: request.body.Basic_Plan
 				}	
 			},
