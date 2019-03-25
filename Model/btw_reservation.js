@@ -27,7 +27,7 @@ var Btw_ReservationSchema = mongoose.Schema({
             Cost            : Number,
             Cost_Child      : Number,
             Cost_Adult      : Number,
-
+            Note            : String,
 
         },{
             toJSON: { virtuals: true }
@@ -43,11 +43,16 @@ var Btw_ReservationSchema = mongoose.Schema({
             Ammount             :Number,
             CC_Transaction_Code :String,
         }],
+        Reservation_Place_To_Move              :String,
+        Reservation_Time_To_Move               :String,
+
         Reservation_Discount                    :Number,
         Reservation_Number_of_Chair_InPackage   :Number,
         Reservation_Chair_Price_InPackage       :Number,
-        Reservation_Number_of_Chair_OutPackage   :Number,
-        Reservation_Chair_Price_OutPackage       :Number,
+        Reservation_Number_of_Chair_OutPackage  :Number,
+        Reservation_Chair_Price_OutPackage      :Number,
+        Reservation_Note                        :String,
+
 },{
     toJSON: { virtuals: true }
 });
