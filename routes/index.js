@@ -443,5 +443,19 @@ router.post('/login', type,function(req, res, next) {
         });
         GetBusyRoom();
     });
+
+    router.post('/getBusSituation', type,function(req, res) {
+        var GetBusSituation = async (function (){
+            ReportController.getBusSituation(req,res);
+        });
+        GetBusSituation();
+    });
+
+    router.post('/getRoomingList', type,function(req, res) {
+        var GetRoomingList = async (function (){
+            ReportController.getRoomingList(req,res);
+        });
+        GetRoomingList();
+    });
     
 module.exports = router;

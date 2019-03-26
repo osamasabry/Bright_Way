@@ -171,4 +171,98 @@ module.exports = {
 		        }
 	    	})
 	},
+
+	getBusSituation:function (request,response){
+
+		// var date = new Date('2019-02-15');
+
+		var date = new Date(request.body.Date);
+
+		BusDailyPassengers.aggregate([
+			{$match: 
+		    		{
+		    			BusDailyPassengers_Date	 	   : date ,
+		    			BusDailyPassengers_Place_From  : Number(request.body.BusDailyPassengers_Place_From) ,
+		    			BusDailyPassengers_Place_To	   : Number(request.body.BusDailyPassengers_Place_To) ,
+		    		},
+			},
+				{$group: 
+					{ 	
+						_id : { 
+								busNumber:'$BusDailyPassengers_Bus_Number',
+								hotel: '$BusDailyPassengers_Hotel_Code' ,
+								customer:'$BusDailyPassengers_Customer_Code',
+								reservation_id:'$BusDailyPassengers_Reservation_Code',
+								
+								},
+						BusDailyPassengers_Count : { $first: "$BusDailyPassengers_Count" },
+						BusDailyPassengers_Hotel_Code : { $first: "$BusDailyPassengers_Hotel_Code" },
+						BusDailyPassengers_Customer_Code : { $first: "$BusDailyPassengers_Customer_Code" },
+						BusDailyPassengers_Reservation_Code : { $first: "$BusDailyPassengers_Reservation_Code" }
+					}	
+				},
+			])
+			.exec(function(err, bus) {
+			    if (err){
+			    	response.send({message: err});
+			    }
+		        if (bus.length > 0) {
+		        	// response.send(bus)
+		        	   BusDailyPassengers.populate(bus, { path: 'Hotel' , select: 'Hotel_Name'}, function(err, hotel) {
+			    			BusDailyPassengers.populate(hotel, { path: 'Customer' , select: 'Customer_Name Customer_Phone'}, function(err, customer) {
+			    				BusDailyPassengers.populate(customer, { path: 'Reservation' , select :'Reservation_Number_of_Child Reservation_Room Reservation_Payment Reservation_Grand_Total' }, function(err, reservation) {
+				    				response.send(reservation);
+				    			});
+					        });
+				        });
+		        }else{
+			    	response.send({message: 'This Date Not Have Reservation'});
+		        } 
+	    	})
+	},
+
+	getRoomingList:function (request,response){
+		// var date1 = new Date('2019-02-15');
+		// var date2 = new Date('2019-02-18');
+
+		var date1 = new Date(request.body.From);
+		var date2 = new Date(request.body.To);
+
+		RoomBusy.aggregate([
+				{$match: { 
+					$and:[
+							{RoomBusy_HotelID:Number(request.body.RoomBusy_HotelID)},
+							{RoomBusy_Date:{ $gte: date1, $lte: date2}},
+						]
+				}},
+				{ $group: { _id : 
+							{	 	
+									 RoomBusy_Room_View_Code: '$RoomBusy_Room_View_Code', 
+									 RoomBusy_Room_Type_Code: '$RoomBusy_Room_Type_Code', 
+									 RoomBusy_Room_Count: '$RoomBusy_Room_Count', 
+									 RoomBusy_Reservation_Code: '$RoomBusy_Reservation_Code', 
+							 },
+							 RoomBusy_Room_Type_Code: {$first : '$RoomBusy_Room_Type_Code'}, 
+							 RoomBusy_Room_View_Code: {$first:'$RoomBusy_Room_View_Code'}, 
+							 RoomBusy_Reservation_Code :{$first:'$RoomBusy_Reservation_Code' }
+						}
+				}
+			])
+			.exec(function(err, roomBusy) {
+			    if (err){
+		    		response.send({message: err});
+				}
+		        if (roomBusy.length > 0) {
+		        	RoomBusy.populate(roomBusy, { path: 'Reservation'}, function(err, reserv) {
+		        		RoomBusy.populate(reserv, { path: 'RoomType'}, function(err, type) {
+		        			RoomBusy.populate(type, { path: 'RoomView'}, function(err, view) {
+		    					response.send(view);
+			        		});
+			        	});
+			        });
+		        }else{
+		    		response.send({message: 'Not Busy Room'});
+		        }
+	    	})
+	},
 }

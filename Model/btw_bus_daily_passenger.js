@@ -34,6 +34,13 @@ Btw_BusDailyPassengersSchema.virtual('Customer',{
     justOne: false // for many-to-1 relationships
 });
 
+Btw_BusDailyPassengersSchema.virtual('Reservation',{
+    ref: 'btw_reservation',
+    localField: 'BusDailyPassengers_Reservation_Code',
+    foreignField: 'Reservation_Code',
+    justOne: false // for many-to-1 relationships
+});
+
 
 Btw_BusDailyPassengersSchema.virtual('CityFrom',{
     ref: 'btw_city',
