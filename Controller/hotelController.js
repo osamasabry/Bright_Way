@@ -244,8 +244,6 @@ module.exports = {
 				}
 			})
 		}
-
-		
 	},
 
 	addHotelContractRoom:function(request,res){
