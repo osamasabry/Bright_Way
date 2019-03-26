@@ -136,11 +136,16 @@ module.exports = {
 			newReservation.Reservation_Grand_Total_Cost				= request.body.Reservation_Grand_Total_Cost;
 			newReservation.Reservation_Room 						= request.body.Reservation_Room;
 			newReservation.Reservation_Payment						= [] ;
+			newReservation.Reservation_Place_To_Move                = request.body.Reservation_Place_To_Move;
+			newReservation.Reservation_Time_To_Move 				= request.body.Reservation_Time_To_Move;
 			newReservation.Reservation_Number_of_Chair_InPackage  	= request.body.Reservation_Number_of_Chair_InPackage;
 			newReservation.Reservation_Chair_Price_InPackage      	= request.body.Reservation_Chair_Price_InPackage;
 			newReservation.Reservation_Number_of_Chair_OutPackage  	= request.body.Reservation_Number_of_Chair_OutPackage;
 			newReservation.Reservation_Chair_Price_OutPackage      	= request.body.Reservation_Chair_Price_OutPackage;
 			newReservation.Reservation_Discount 					= request.body.Reservation_Discount;
+			newReservation.Reservation_Note 						= request.body.Reservation_Note;
+			
+
 			newReservation.save(function(error, doneadd){
 				if(error){
 					return response.send({
@@ -188,7 +193,9 @@ module.exports = {
 				newRoomBusy.RoomBusy_Room_Type_Code   	= room.Type;
 				newRoomBusy.RoomBusy_Room_View_Code 	= room.View;
 				newRoomBusy.RoomBusy_Room_Count 		= room.Count;
+				newRoomBusy.RoomBusy_Note  				= room.Note;
 				newRoomBusy.RoomBusy_Reservation_Code   = GetNextId;
+				
 				newRoomBusy.save(function(error, doneadd){
 					if(error){
 						response.send({
@@ -439,7 +446,10 @@ module.exports = {
 				Reservation_Chair_Price_InPackage 		: request.body.Reservation_Chair_Price_InPackage,
 				Reservation_Number_of_Chair_OutPackage 	: request.body.Reservation_Number_of_Chair_OutPackage,
 				Reservation_Chair_Price_OutPackage 		: request.body.Reservation_Chair_Price_OutPackage,
+				Reservation_Place_To_Move               : request.body.Reservation_Place_To_Move,
+       			Reservation_Time_To_Move                : request.body.Reservation_Time_To_Move,
 				Reservation_Discount 					: request.body.Reservation_Discount,
+				Reservation_Note 						: request.body.Reservation_Note,
 			} };
 			var myquery = { Reservation_Code: reserv_id }; 
 			Reservation.findOneAndUpdate( myquery,newvalues, function(err, field) {
@@ -491,6 +501,7 @@ module.exports = {
 				newRoomBusy.RoomBusy_Room_Type_Code   	= room.Type;
 				newRoomBusy.RoomBusy_Room_View_Code 	= room.View;
 				newRoomBusy.RoomBusy_Room_Count 		= room.Count;
+				newRoomBusy.RoomBusy_Note 				= room.Note;
 				newRoomBusy.RoomBusy_Reservation_Code   = GetNextId;
 				newRoomBusy.save(function(error, doneadd){
 					if(error){
