@@ -565,6 +565,7 @@ module.exports = {
 		var object = {Reservation_Code:request.body.Reservation_Code};
 		
 		Reservation.find(object)
+		.populate({ path: 'Customer'})
 		.exec(function(err, reservation) {
 		    if (err){
 				console.log(err)
