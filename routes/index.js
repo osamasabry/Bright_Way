@@ -209,7 +209,13 @@ router.post('/login', type,function(req, res, next) {
         SearchEmployee();
     });
 
-
+    router.post('/editEmployeePermissions', type,function(req, res) {
+        var EditEmployeePermissions= async (function (){
+            await (EmployeeController.editEmployeePermissions(req,res));
+        });
+        EditEmployeePermissions();
+    });
+    
 /****************Hotel****************/
 
     router.post('/addHotel', type,function(req, res) {

@@ -51,7 +51,7 @@ module.exports = {
 				// Employee_Password 		: request.body.Employee_Password,
 				Employee_NationalID 	: request.body.Employee_NationalID,
 				Employee_Job_Title 		: request.body.Employee_Job_Title,
-				Employee_Permissions 	: request.body.Employee_Permissions,
+				// Employee_Permissions 	: request.body.Employee_Permissions,
 				Employee_Office_Code 	: request.body.Employee_Office_Code,
 				Employee_IsActive 		: request.body.Employee_IsActive,
 				
@@ -109,6 +109,29 @@ module.exports = {
 	            response.send(employee);
 	        } 
     	})
+	},
+
+	editEmployeePermissions:function(request,response){
+		var newvalues = { $set: {
+				Employee_Permissions 	: request.body.Employee_Permissions,
+			} };
+		var myquery = { Employee_Code: request.body.Employee_Code }; 
+		Employee.findOneAndUpdate( myquery,newvalues, function(err, field) {
+    	    if (err){
+    	    	return response.send({
+					message: 'Error'
+				});
+    	    }
+            if (!field) {
+            	return response.send({
+					message: 'Employee not exists'
+				});
+            } else {
+                return response.send({
+					message: true
+				});
+			}
+		})
 	},
 
 }
