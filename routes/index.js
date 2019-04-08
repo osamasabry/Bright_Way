@@ -10,6 +10,7 @@ var ReservationController = require('../Controller/reservationController');
 var SearchController = require('../Controller/searchController');
 var BusController = require('../Controller/busController');
 var BusDailyPassengersController = require('../Controller/busDailyPassengerController');
+var SystemSettingsController = require('../Controller/systemSettingController');
 var ReportController = require('../Controller/reportController');
 
 
@@ -421,6 +422,14 @@ router.post('/login', type,function(req, res, next) {
         GetCustomerForCustomerConvenience();
     });
    
+//************** System Setting **********************************
+router.get('/getMasterPermisions', function(req, res) {
+    var GetMasterPermisions = async (function (){
+        await (SystemSettingsController.getMasterPermisions(req,res));
+    });
+    GetMasterPermisions();
+});
+
 /*************************Reports*************************************/
     router.post('/getReservationByHotelID', type,function(req, res) {
         var GetReservationByHotelID = async (function (){
