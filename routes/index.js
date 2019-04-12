@@ -471,5 +471,12 @@ router.get('/getMasterPermisions', function(req, res) {
         });
         GetRoomingList();
     });
+
+    router.post('/getReservationDetails', type,function(req, res) {
+        var GetReservationDetails = async (function (){
+            ReportController.getReservationDetails(req,res);
+        });
+        GetReservationDetails();
+    });
     
 module.exports = router;
