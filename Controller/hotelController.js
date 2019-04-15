@@ -98,6 +98,18 @@ module.exports = {
     	})
 	},
 
+	getAllHotelsMinData:function(request,response){
+		Hotel.find({}, { Hotel_Contact: 0, Hotel_Contract: 0} )
+		.sort({Hotel_Code: -1})
+		.exec(function(err, hotel) {
+		    if (err){
+		    	response.send({message: 'Error'});
+		    }
+	        if (hotel) {
+	            response.send(hotel);
+	        } 
+    	})
+	},
 	getHotelByID:function(request,response){
 		var Search = Number(request.body.Hotel_Code);
 		Hotel.findOne({Hotel_Code:Search})

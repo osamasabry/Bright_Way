@@ -7,6 +7,7 @@ var Btw_BusesSchema = mongoose.Schema({
         Bus_To                      :Number,
         Bus_PriceIncludePackage     :Number,
         Bus_PriceOutPackage         :Number,
+        Bus_cost                    :Number,
 },{
     toJSON: { virtuals: true }
 });

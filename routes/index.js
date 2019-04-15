@@ -280,6 +280,12 @@ router.post('/login', type,function(req, res, next) {
         });
         GetAllHotels();
     });
+    router.get('/getAllHotelsMinData', type,function(req, res) {
+        var GetAllHotelsMinData= async (function (){
+            await (HotelController.getAllHotelsMinData(req,res));
+        });
+        GetAllHotelsMinData();
+    });
 
     router.post('/getHotelByID', type,function(req, res) {
         var GetHotelByID= async (function (){

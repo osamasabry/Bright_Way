@@ -43,6 +43,7 @@ var Btw_ReservationSchema = mongoose.Schema({
             Ammount             :Number,
             CC_Transaction_Code :String,
         }],
+        Reservation_TransportationFrom_City_ID :Number,
         Reservation_Place_To_Move              :String,
         Reservation_Time_To_Move               :String,
 
@@ -55,6 +56,12 @@ var Btw_ReservationSchema = mongoose.Schema({
 
 },{
     toJSON: { virtuals: true }
+});
+Btw_ReservationSchema.virtual('TransportationFromCity',{
+    ref: 'btw_city',
+    localField: 'Reservation_TransportationFrom_City_ID',
+    foreignField: 'City_Code',
+    justOne: false // for many-to-1 relationships
 });
 Btw_ReservationSchema.virtual('RoomType',{
     ref: 'btw_room_type',

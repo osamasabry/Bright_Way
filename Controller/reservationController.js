@@ -136,6 +136,7 @@ module.exports = {
 			newReservation.Reservation_Grand_Total_Cost				= request.body.Reservation_Grand_Total_Cost;
 			newReservation.Reservation_Room 						= request.body.Reservation_Room;
 			newReservation.Reservation_Payment						= [] ;
+			newReservation.Reservation_TransportationFrom_City_ID   = request.body.Reservation_TransportationFrom_City_ID;
 			newReservation.Reservation_Place_To_Move                = request.body.Reservation_Place_To_Move;
 			newReservation.Reservation_Time_To_Move 				= request.body.Reservation_Time_To_Move;
 			newReservation.Reservation_Number_of_Chair_InPackage  	= request.body.Reservation_Number_of_Chair_InPackage;
@@ -447,6 +448,7 @@ module.exports = {
 				Reservation_Chair_Price_InPackage 		: request.body.Reservation_Chair_Price_InPackage,
 				Reservation_Number_of_Chair_OutPackage 	: request.body.Reservation_Number_of_Chair_OutPackage,
 				Reservation_Chair_Price_OutPackage 		: request.body.Reservation_Chair_Price_OutPackage,
+				Reservation_TransportationFrom_City_ID  : request.body.Reservation_TransportationFrom_City_ID,
 				Reservation_Place_To_Move               : request.body.Reservation_Place_To_Move,
        			Reservation_Time_To_Move                : request.body.Reservation_Time_To_Move,
 				Reservation_Discount 					: request.body.Reservation_Discount,

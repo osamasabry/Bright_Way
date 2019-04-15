@@ -18,6 +18,7 @@ module.exports = {
 			newBus.Bus_To   	 				= request.body.Bus_To;
 			newBus.Bus_PriceOutPackage	 		= request.body.Bus_PriceOutPackage;
 			newBus.Bus_PriceIncludePackage   	= request.body.Bus_PriceIncludePackage;
+			newBus.Bus_cost   					= request.body.Bus_cost;
 			
 			newBus.save(function(error, doneadd){
 				if(error){
@@ -40,6 +41,7 @@ module.exports = {
 				Bus_To 						: request.body.Bus_To,
 				Bus_PriceOutPackage 		: request.body.Bus_PriceOutPackage,
 				Bus_PriceIncludePackage 	: request.body.Bus_PriceIncludePackage,
+				Bus_cost					: request.body.Bus_cost,
 			} };
 		var myquery = { Bus_Code: request.body.Bus_Code }; 
 		Bus.findOneAndUpdate( myquery,newvalues, function(err, field) {
