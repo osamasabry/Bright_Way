@@ -265,4 +265,65 @@ module.exports = {
 		        }
 	    	})
 	},
+
+	getReservationDetails:function (request,response){
+		// var date1 = new Date('2019-02-15');
+		// var date2 = new Date('2019-02-18');
+
+		var date1 = new Date(request.body.From);
+		var date2 = new Date(request.body.To);
+
+		Reservation.aggregate([
+				{$match: { 
+					$and:[
+							{Reservation_Hotel_ID:Number(request.body.Reservation_Hotel_ID)},
+							{Reservation_Date_From:{ $gte: date1, $lte: date2}},
+							{Reservation_Date_To:{ $gte: date1, $lte: date2}},
+
+						]
+				}},
+				{ "$unwind": "$Reservation_Room" },
+
+				{ $group: { _id : 
+							{	 	
+									 View: '$Reservation_Room.View', 
+									 Type: '$Reservation_Room.Type', 
+									 Reservation_Office_ID: '$Reservation_Office_ID', 
+							 },
+							 // View: {$first : '$Reservation_Room.View'}, 
+							 // Type: {$first:'$Reservation_Room.Type'}, 
+							 Count :{$sum:'$Reservation_Room.Count' },
+							 Reservation_Office_ID:{$first:'$Reservation_Office_ID' }, 
+						}
+				},
+				{
+		        "$project": {
+			            "Reservation_Room.View": "$_id.View",
+			            "Reservation_Room.Type": "$_id.Type",
+			            "Count" : '$Count',
+			        	"Reservation_Office_ID" : '$Reservation_Office_ID',
+			        }		
+			    },
+			])
+			.exec(function(err, reserv) {
+			    if (err){
+		    		response.send({message: err});
+				}
+		        if (reserv.length > 0) {
+		        	// response.send(reserv);
+		        	Reservation.populate(reserv, { path: 'Office'}, function(err, office) {
+		        		Reservation.populate(office, { path: 'RoomType'}, function(err, type) {
+		        			Reservation.populate(type, { path: 'RoomView'}, function(err, view) {
+		    					response.send(view);
+			        		});
+			        	});
+		        		// response.send(office);
+
+			        });
+		        }else{
+		    		response.send({message: 'Not Reservation Room'});
+		        }
+	    	})
+	},
+
 }
