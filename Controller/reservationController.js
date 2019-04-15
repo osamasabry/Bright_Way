@@ -322,7 +322,13 @@ module.exports = {
 
 	addPayemtnReservation:function(request,response){
 		var NextPaymentCode;
-		Increment.findOne({Increment_Code: 1}).exec(function(err,inc){
+		var object = {};
+		if (request.body.Ammount < 0 ) 
+			object = {Increment_Code: 2};
+		else 
+			object = {Increment_Code: 1};
+
+		Increment.findOne(object).exec(function(err,inc){
 			NextPaymentCode = inc.Increment_sequence + 1;
 			PaymantArray = {
 				Receipt_Number : NextPaymentCode,
