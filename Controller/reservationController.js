@@ -590,6 +590,66 @@ module.exports = {
     	})
 	},
 
+	deleteReservation:function(request,response){
+
+		var reserv_id = Number(request.body.Reservation_Code);
+
+		var object = {RoomBusy_Reservation_Code:reserv_id};
+		RoomBusy.remove(object)
+		.exec(function(err, done) {
+		    if (err){
+		    	response.send({message: err});
+		    }
+	        if (done) {
+	        	if (request.body.Reservation_Chair == 1) {
+	        		RemoveFromBusDailyPassenger();
+	        	}else{
+	        		EditReservation();
+	        	}
+	        }else{
+		    	response.send({message: "This Reservation Not Have Rooms"});
+	        }
+    	})
+
+    	function RemoveFromBusDailyPassenger(){
+    		var object = {BusDailyPassengers_Reservation_Code:reserv_id};
+			BusDailyPassengers.remove(object)
+			.exec(function(err, done) {
+			    if (err){
+			    	response.send({message: err});
+			    }
+		        if (done) {
+		        	EditReservation();
+		        }
+	    	})
+    	}
+
+    	function EditReservation(){
+
+    		var newvalues = { $set: {
+				Reservation_Status 						: 0,
+			} };
+			var myquery = { Reservation_Code: reserv_id }; 
+			Reservation.findOneAndUpdate( myquery,newvalues, function(err, field) {
+	    	    if (err){
+	    	    	return response.send({
+						message: 'Error'
+					});
+	    	    }
+	            if (!field) {
+	            	return response.send({
+						message: 'Reservation not exists'
+					});
+	            } else {
+					
+					return response.send({
+						message: true
+					});
+				}
+			})
+    	}
+	},
+
 }
 
 

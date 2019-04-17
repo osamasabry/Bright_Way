@@ -53,6 +53,7 @@ var Btw_ReservationSchema = mongoose.Schema({
         Reservation_Number_of_Chair_OutPackage  :Number,
         Reservation_Chair_Price_OutPackage      :Number,
         Reservation_Note                        :String,
+        Reservation_Status                      :Number,
 
 },{
     toJSON: { virtuals: true }

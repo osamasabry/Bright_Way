@@ -346,6 +346,12 @@ router.post('/login', type,function(req, res, next) {
         SearchReservationByID();
     });
 
+    router.post('/deleteReservation', type,function(req, res) {
+        var DeleteReservation= async (function (){
+            await (ReservationController.deleteReservation(req,res));
+        });
+        DeleteReservation();
+    });
 /*****************Resarch Tool************************************/
 
     router.post('/searchData', type,function(req, res) {
