@@ -362,8 +362,12 @@ module.exports = {
 
 
 		function increment(AddedPayment){
+			if (request.body.Ammount < 0 ) 
+				object = {Increment_Code: 2};
+			else 
+				object = {Increment_Code: 1};
 			Increment.findOneAndUpdate(
-			   { Increment_Code: 1 },
+				object,
 			   { $inc: { Increment_sequence: 1} }
 			).exec(function(err,done){
 				if (err) return response.send({message:err})
