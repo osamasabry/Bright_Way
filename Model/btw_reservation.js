@@ -8,6 +8,7 @@ var Btw_ReservationSchema = mongoose.Schema({
         Reservation_Hotel_ID                    :Number,
         Reservation_Date_From                   :Date,
         Reservation_Date_To                     :Date, 
+        Reservation_Nationality                 :String,
         Reservation_Number_of_Adult             :Number,
         Reservation_Number_of_Child             :Number,
 

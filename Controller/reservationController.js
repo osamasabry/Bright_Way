@@ -128,6 +128,7 @@ module.exports = {
 			newReservation.Reservation_Hotel_ID	 					= request.body.Reservation_Hotel_ID;
 			newReservation.Reservation_Date_From   	    			= From;
 			newReservation.Reservation_Date_To   	    			= To;
+			newReservation.Reservation_Nationality  				= request.body.Reservation_Nationality;
 			newReservation.Reservation_Number_of_Adult  			= request.body.Reservation_Number_of_Adult;
 			newReservation.Reservation_Number_of_Child  			= request.body.Reservation_Number_of_Child;
 			newReservation.Reservation_ByEmployee_ID   				= request.body.Reservation_ByEmployee_ID;
@@ -447,6 +448,7 @@ module.exports = {
 				Reservation_Hotel_ID 					: request.body.Reservation_Hotel_ID,
 				Reservation_Date_From 					: From,
 				Reservation_Date_To 					: To,
+				Reservation_Nationality  				: request.body.Reservation_Nationality,
 				Reservation_Number_of_Adult 			: request.body.Reservation_Number_of_Adult,
 				Reservation_Number_of_Child 			: request.body.Reservation_Number_of_Child,
 				Reservation_ByEmployee_ID 				: request.body.Reservation_ByEmployee_ID,
