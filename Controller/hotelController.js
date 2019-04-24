@@ -5,6 +5,7 @@ var RoomView = require('../Model/lut_btw_room_view');
 var Employee = require('../Model/btw_employee');
 
 var mongoose = require('mongoose');
+// mongoose.set('debug', true);
 
 module.exports = {
 
@@ -259,7 +260,10 @@ module.exports = {
 	},
 
 	addHotelContractRoom:function(request,res){
-		
+		// var From = new Date('2019-09-18');
+		// var To = new Date('2019-10-15');
+
+
 		var From = request.body.Room_From; 
 		var To = request.body.Room_To;
 		var arrayhotel={
@@ -309,20 +313,39 @@ module.exports = {
 
 		var Hotel_ContractID = mongoose.Types.ObjectId(request.body.Hotel_ContractID);
 
-		object = {	
-					$and :[
-						{Hotel_Code:Number(request.body.Hotel_Code)},
-						// {'Hotel_Contract._id':Hotel_ContractID},
-						{ $or:[ {'Hotel_Contract.Hotel_Rooms.Room_From': { $gte: From, $lte: To}},
-						{'Hotel_Contract.Hotel_Rooms.Room_To': { $gte: From, $lte: To}}]}
+			// object = {	
+			// 		$and :[
+			// 			{Hotel_Code:Number(request.body.Hotel_Code)},
+			// 			// {'Hotel_Contract._id':Hotel_ContractID},
+			// 			 {'Hotel_Contract.Hotel_Rooms.Room_From': { $gt: From, $lt: To}},
+			// 			// {'Hotel_Contract.Hotel_Rooms.Room_To': { $gte: From, $lte: To}}]}
 
-				]}
-			Hotel.findOne(object)
+			// 	]}
+			// console.log(object);
+			// Hotel.findOne(object)
+
+
+			Hotel.aggregate([
+			{$match: { Hotel_Code: Number(request.body.Hotel_Code),
+					}},
+			{$unwind: "$Hotel_Contract" },
+			{$unwind: "$Hotel_Contract.Hotel_Rooms" },
+			{$group: { _id: { 	to: "$Hotel_Contract.Hotel_Rooms.Room_To",
+							  	from: "$Hotel_Contract.Hotel_Rooms.Room_From",
+							},
+			 	Data: { $push: "$Hotel_Contract.Hotel_Rooms" } } },
+				{$unwind: "$Data" },
+					{$match: {
+							 "_id.from":{$lte:From,$lte:To} ,
+							 "_id.to":{$gte:To,$gte:From},
+					}
+				},
+			])
 			.exec(function(err, busy) {
 			    if (err){
 			    	res.send({message: err});
 			    }
-		        if (busy) {
+		        if (busy.length > 0) {
 		            res.send({message: 'This Date has been Reserved'});
 		        }else{
 		            addDateContract();
