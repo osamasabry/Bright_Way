@@ -25,7 +25,7 @@ module.exports = {
 				{$match: { 
 					$and:[
 							{RoomBusy_HotelID:request.body.RoomBusy_HotelID},
-							{RoomBusy_Date:{ $gte: date1, $lte: date2}},
+							{RoomBusy_Date:{ $gt: date1, $lt: date2}},
 							{RoomBusy_Room_Type_Code:Number(request.body.RoomBusy_Room_Type_Code)},
 							{RoomBusy_Room_View_Code:Number(request.body.RoomBusy_Room_View_Code)},
 						]
@@ -61,7 +61,7 @@ module.exports = {
 				{$unwind: "$Data" },
 				{$unwind: "$Data.Room_Details" },
 				{$match: {
-						 "_id.from":{$lte:date1} ,"_id.to":{$gte:date2},
+						 "_id.from":{$lt:date1} ,"_id.to":{$gt:date2},
 						 "Data.Room_Details.RoomType_Code":{$eq:request.body.RoomBusy_Room_Type_Code} ,
 						 "Data.Room_Details.RoomView_Code":{$eq:request.body.RoomBusy_Room_View_Code} ,
 				}},
