@@ -580,14 +580,24 @@ module.exports = {
 	},
 
 	getHotelContractByID:function(request,response){
+		Hotel.aggregate([
+			{$match: { Hotel_Code: Number(request.body.Hotel_Code)
+				}},
+		  {$unwind: "$Hotel_Contract"}, 
+		  {$unwind: "$Hotel_Contract.Hotel_Rooms"}, 
+		  
+		  {$sort: {"Hotel_Contract.Hotel_Rooms.Room_From":-1}}, 
+		  {$group: {_id:"$_id", data: {$push:"$Hotel_Contract"}}}
+		])
 
-		var Search = Number(request.body.Hotel_Code);
-		Hotel.findOne({Hotel_Code:Search})
-		.populate({ path: 'City', select: 'City_Name' })
-		.populate({ path: 'Employee', select: 'Employee_Name' })
-		.populate({ path: 'RoomType', select: 'RoomType_Name' })
-		.populate({ path: 'RoomView', select: 'RoomView_Name' })
-		.lean()
+		// var Search = Number(request.body.Hotel_Code);
+		// Hotel.findOne({Hotel_Code:Search})
+		// .sort({'Hotel_Contract.Date'})
+		// .populate({ path: 'City', select: 'City_Name' })
+		// .populate({ path: 'Employee', select: 'Employee_Name' })
+		// .populate({ path: 'RoomType', select: 'RoomType_Name' })
+		// .populate({ path: 'RoomView', select: 'RoomView_Name' })
+		// .lean()
 		.exec(function(err, hotel) {
 		    if (err){
 		    	response.send({message: err});
