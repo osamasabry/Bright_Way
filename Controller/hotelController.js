@@ -111,6 +111,7 @@ module.exports = {
 	        } 
     	})
 	},
+
 	getHotelByID:function(request,response){
 		var Search = Number(request.body.Hotel_Code);
 		Hotel.findOne({Hotel_Code:Search})
@@ -579,20 +580,32 @@ module.exports = {
 	},
 
 	getHotelContractByID:function(request,response){
-		var Search = Number(request.body.Hotel_Code);
-		Hotel.findOne({Hotel_Code:Search})
-		.populate({ path: 'City', select: 'City_Name' })
-		.populate({ path: 'Employee', select: 'Employee_Name' })
-		.populate({ path: 'RoomType', select: 'RoomType_Name' })
-		.populate({ path: 'RoomView', select: 'RoomView_Name' })
-		.lean()
+
+		Hotel.aggregate([
+			{$match: { Hotel_Code: Number(request.body.Hotel_Code),
+					}},
+			{$unwind: "$Hotel_Contract" },
+			{$unwind: "$Hotel_Contract.Hotel_Rooms"},
+			{
+				$sort: {
+				 "Hotel_Contract.Hotel_Rooms.Room_From":-1
+				}
+			},
+		])
 		.exec(function(err, hotel) {
 		    if (err){
 		    	response.send({message: err});
 		    }
 	        if (hotel) {
-	        	console.log(hotel);
-	            response.send(hotel.Hotel_Contract);
+	        	Hotel.populate(hotel, { path: 'Employee' , select: 'Employee_Name'}, function(err, employee) {
+	    			Hotel.populate(employee, { path: 'City' , select: 'City_Name'}, function(err, city) {
+		    			Hotel.populate(city, { path: 'RoomType' , select: 'RoomType_Name'}, function(err, roomType) {
+		    				Hotel.populate(roomType, { path: 'RoomView' , select: 'RoomView_Name'}, function(err, roomView) {
+			    				response.send(roomView);
+				        	});
+			        	});
+			        });
+		        });
 	        } 
     	})
 	},
