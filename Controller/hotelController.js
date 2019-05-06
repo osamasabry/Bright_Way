@@ -88,7 +88,7 @@ module.exports = {
 
 	getAllHotels:function(request,response){
 		Hotel.find({})
-		.sort({Hotel_Code: -1})
+		.sort({Hotel_Code: 1})
 		.exec(function(err, hotel) {
 		    if (err){
 		    	response.send({message: 'Error'});
