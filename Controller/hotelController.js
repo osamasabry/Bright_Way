@@ -587,7 +587,7 @@ module.exports = {
 		  // {$unwind: "$Hotel_Contract.Hotel_Rooms"}, 
 		  
 		  {$sort: {"Hotel_Contract.Hotel_Rooms.Room_From":1}}, 
-		  {$group: {_id:"$_id", data: {$push:"$Hotel_Contract"}}}
+		  {$group: {_id:"$_id", Hotel_Contract: {$push:"$Hotel_Contract"}}}
 		])
 
 
