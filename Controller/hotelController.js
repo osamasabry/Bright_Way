@@ -597,7 +597,7 @@ module.exports = {
 		    	response.send({message: err});
 		    }
 	        if (hotel) {
-	        	Hotel.populate(hotel[0], { path: 'Employee' , select: 'Employee_Name'}, function(err, employee) {
+	        	Hotel.populate(hotel, { path: 'Employee' , select: 'Employee_Name'}, function(err, employee) {
 	    			Hotel.populate(employee, { path: 'City' , select: 'City_Name'}, function(err, city) {
 		    			Hotel.populate(city, { path: 'RoomType' , select: 'RoomType_Name'}, function(err, roomType) {
 		    				Hotel.populate(roomType, { path: 'RoomView' , select: 'RoomView_Name'}, function(err, roomView) {
