@@ -584,11 +584,19 @@ module.exports = {
 			{$match: { Hotel_Code: Number(request.body.Hotel_Code)
 				}},
 		  {$unwind: "$Hotel_Contract"}, 
-		  {$unwind: "$Hotel_Contract.Hotel_Rooms"}, 
+		  // {$unwind: "$Hotel_Contract.Hotel_Rooms"}, 
 		  
 		  {$sort: {"Hotel_Contract.Hotel_Rooms.Room_From":1}}, 
 		  {$group: {_id:"$_id", data: {$push:"$Hotel_Contract"}}}
 		])
+
+
+		// Hotel.aggregate([
+		//   {$match: { Hotel_Code: 1}},
+		//   {$unwind: "$Hotel_Contract"}, 
+		//   {$sort: {"Hotel_Contract.Hotel_Rooms.Room_From":1}}, 
+		//   {$group: {_id:"$_id", Hotel_Contract: {$push:"$Hotel_Contract"}}}
+		// ])
 
 		// var Search = Number(request.body.Hotel_Code);
 		// Hotel.findOne({Hotel_Code:Search})
