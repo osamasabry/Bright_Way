@@ -80,14 +80,14 @@ module.exports = {
 		            	roombusy:count_room,
 		            });
 		        } else{
-		        	getDates(date1,date2);
+		        	getDates(date1,date2,count_room);
 		        	// console.log('Date Is Not Vaild');
 			    	// response.send({message: "Date Is Not Vaild"});
 		        }
 	    	})
 		}
 
-		var getDates = async function(startDate,endDate) {
+		var getDates = async function(startDate,endDate,count_room) {
 		  	var dates = [],
 		      currentDate = startDate,
 		      addDays = function(days) {
@@ -101,7 +101,7 @@ module.exports = {
 			    currentDate = addDays.call(currentDate, 1);
 	  		}
 	  		if (ArrayOfDays.length > 0) {
-	  			GetAverage(ArrayOfDays);
+	  			GetAverage(ArrayOfDays,count_room);
 	  		}	
 	  	}
 
@@ -138,7 +138,7 @@ module.exports = {
 		 	})
 		}
 		
-		function GetAverage (data){
+		function GetAverage (data,count_room){
 			var ReturnObject = {};
 			AddonChildPrice = AddonChildCost = SingleBedPrice = SingleHalfPrice = 
 			SingleFullPrice = SingleAllinclusivePrice = SingleUltraPrice = SingleFullCost =
@@ -150,7 +150,9 @@ module.exports = {
 			CostDoubleRoom = CostTripleRoom = CostChild = DoubleBedCost =DoubleBedPrice =
 			DoubleHalfCost = DoubleHalfPrice = SingleBedCost = SingleHalfCost = 
 			TripleBedCost = TripleBedPrice = TripleHalfCost = TripleHalfPrice = 0 ;
+			var BasicPlan = '';
 			for( var i = 0; i < data.length; i++ ){
+				BasicPlan = data[i].Data.Basic_Plan;
 			    AddonChildPrice += parseInt( data[i].Data.Addon_Child_Percentage_Price, 10 ); 
 			    AddonChildCost += parseInt( data[i].Data.Addon_Child_Percentage_Cost, 10 ); 
 			    SingleBedPrice += parseInt( data[i].Data.Single_Bed_breakfast_Price, 10 ); 
@@ -196,6 +198,8 @@ module.exports = {
 			    TripleHalfPrice += parseInt( data[i].Data.Triple_Half_board_Price, 10 ); 
 				
 			}
+
+			ReturnObject.Basic_Plan = BasicPlan;
 			ReturnObject.Addon_Child_Percentage_Price = AddonChildPrice/data.length;
 			ReturnObject.Addon_Child_Percentage_Cost = AddonChildCost/data.length;
 			ReturnObject.Single_Bed_breakfast_Price = SingleBedPrice/data.length;
@@ -218,12 +222,21 @@ module.exports = {
 			ReturnObject.Triple_Full_board_Cost = TripleFullCost/data.length;
 			ReturnObject.Triple_Soft_allinclusive_Cost = TripleAllinclusiveCost/data.length;
 			ReturnObject.Triple_Ultra_Cost = TripleUltraCost/data.length;
+			// **********************************************************
+			ReturnObject.Room_Details = {};
+			ReturnObject.Room_Details.Count = Math.min.apply(null, data.map(function(a){return a.Data.Room_Details.Count;}))
+			ReturnObject.Room_Details.Price_Child = PriceChild/data.length;
+			ReturnObject.Room_Details.Cost_Single_Room = CostSingleRoom/data.length;
+			ReturnObject.Room_Details.Cost_Double_Room = CostDoubleRoom/data.length;
+			ReturnObject.Room_Details.Cost_Triple_Room = CostTripleRoom/data.length;
+			ReturnObject.Room_Details.Cost_Child = CostChild/data.length;
+			ReturnObject.Room_Details.Max_Capacity_Single_Room_Adult = Math.min.apply(null, data.map(function(a){return a.Data.Room_Details.Max_Capacity_Single_Room_Adult;}))
+			ReturnObject.Room_Details.Max_Capacity_Double_Room_Adult = Math.min.apply(null, data.map(function(a){return a.Data.Room_Details.Max_Capacity_Double_Room_Adult;}))
+			ReturnObject.Room_Details.Max_Capacity_Triple_Room_Adult = Math.min.apply(null, data.map(function(a){return a.Data.Room_Details.Max_Capacity_Triple_Room_Adult;}))
+			ReturnObject.Room_Details.Max_Capacity_Single_Room_Child = Math.min.apply(null, data.map(function(a){return a.Data.Room_Details.Max_Capacity_Single_Room_Child;}))
+			ReturnObject.Room_Details.Max_Capacity_Double_Room_Child = Math.min.apply(null, data.map(function(a){return a.Data.Room_Details.Max_Capacity_Double_Room_Child;}))
+			ReturnObject.Room_Details.Max_Capacity_Triple_Room_Child = Math.min.apply(null, data.map(function(a){return a.Data.Room_Details.Max_Capacity_Triple_Room_Child;}))
 
-			ReturnObject.Price_Child = PriceChild/data.length;
-			ReturnObject.Cost_Single_Room = CostSingleRoom/data.length;
-			ReturnObject.Cost_Double_Room = CostDoubleRoom/data.length;
-			ReturnObject.Cost_Triple_Room = CostTripleRoom/data.length;
-			ReturnObject.Cost_Child = CostChild/data.length;
 			// ***********************************************************************
 			ReturnObject.Double_Bed_breakfast_Cost = DoubleBedCost/data.length;
 			ReturnObject.Double_Bed_breakfast_Price = DoubleBedPrice/data.length;
@@ -241,6 +254,8 @@ module.exports = {
 			ReturnObject.Price_Double_Room = PriceDoubleRoom/data.length;
 			ReturnObject.Price_Triple_Room = PriceTripleRoom/data.length;
 			
+			ReturnObject.count_room = count_room;
+
 
 			// console.log(sum);
 			// console.log(avg);
