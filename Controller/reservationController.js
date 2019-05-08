@@ -5,15 +5,16 @@ var Increment = require('../Model/btw_increment');
 var BusDailyPassengers = require('../Model/btw_bus_daily_passenger');
 
 var async = require('asyncawait/async');
-// var await = require('asyncawait/await');
+var await = require('asyncawait/await');
 var asyncLoop = require('node-async-loop');
 
 
 module.exports = {
 	checkDate:function(request,response){
-		// var date1 = new Date('2019-02-09');
-		// var date2 = new Date('2019-02-12');
+		// var date1 = new Date('2019-06-06');
+		// var date2 = new Date('2019-06-10');
 
+		ArrayOfDays= [];
 		var date1 = new Date(request.body.From);
 		var date2 = new Date(request.body.To);
 
@@ -24,7 +25,7 @@ module.exports = {
 				RoomBusy.aggregate([
 				{$match: { 
 					$and:[
-							{RoomBusy_HotelID:request.body.RoomBusy_HotelID},
+							{RoomBusy_HotelID:Number(request.body.RoomBusy_HotelID)},
 							{RoomBusy_Date:{ $gte: date1, $lte: date2}},
 							{RoomBusy_Room_Type_Code:Number(request.body.RoomBusy_Room_Type_Code)},
 							{RoomBusy_Room_View_Code:Number(request.body.RoomBusy_Room_View_Code)},
@@ -50,8 +51,9 @@ module.exports = {
 		}
 
 		function checkDateFromHotel(count_room){
+			console.log(count_room);
 			Hotel.aggregate([
-			{$match: { Hotel_Code: request.body.RoomBusy_HotelID }},
+			{$match: { Hotel_Code: Number(request.body.RoomBusy_HotelID) }},
 			{$unwind: "$Hotel_Contract" },
 			{$unwind: "$Hotel_Contract.Hotel_Rooms" },
 			{$group: { _id: { 	to: "$Hotel_Contract.Hotel_Rooms.Room_To",
@@ -62,8 +64,8 @@ module.exports = {
 				{$unwind: "$Data.Room_Details" },
 				{$match: {
 						 "_id.from":{$lte:date1} ,"_id.to":{$gte:date2},
-						 "Data.Room_Details.RoomType_Code":{$eq:request.body.RoomBusy_Room_Type_Code} ,
-						 "Data.Room_Details.RoomView_Code":{$eq:request.body.RoomBusy_Room_View_Code} ,
+						 "Data.Room_Details.RoomType_Code":{$eq:Number(request.body.RoomBusy_Room_Type_Code)} ,
+						 "Data.Room_Details.RoomView_Code":{$eq:Number(request.body.RoomBusy_Room_View_Code)} ,
 				}},
 			])
 			.exec(function(err, hotel) {
@@ -78,10 +80,171 @@ module.exports = {
 		            	roombusy:count_room,
 		            });
 		        } else{
+		        	getDates(date1,date2);
 		        	// console.log('Date Is Not Vaild');
-			    	response.send({message: "Date Is Not Vaild"});
+			    	// response.send({message: "Date Is Not Vaild"});
 		        }
 	    	})
+		}
+
+		var getDates = async function(startDate,endDate) {
+		  	var dates = [],
+		      currentDate = startDate,
+		      addDays = function(days) {
+		        var date = new Date(this.valueOf());
+		        date.setDate(date.getDate() + days);
+		        return date;
+		      };
+		  	while (currentDate <= endDate) {
+		  		var result = await getalldays(currentDate);
+	        	ArrayOfDays = ArrayOfDays.concat(result);
+			    currentDate = addDays.call(currentDate, 1);
+	  		}
+	  		if (ArrayOfDays.length > 0) {
+	  			GetAverage(ArrayOfDays);
+	  		}	
+	  	}
+
+		function getalldays (currentDate){
+		 	return new Promise((resolve, reject) => {
+
+	 	 		Hotel.aggregate([
+				{$match: { Hotel_Code: Number(request.body.RoomBusy_HotelID) }},
+				{$unwind: "$Hotel_Contract" },
+				{$unwind: "$Hotel_Contract.Hotel_Rooms" },
+				{$group: { _id: { 
+								  	from: "$Hotel_Contract.Hotel_Rooms.Room_From",
+								  	to: "$Hotel_Contract.Hotel_Rooms.Room_To",
+								},
+				 	Data: { $push: "$Hotel_Contract.Hotel_Rooms" } } },
+					{$unwind: "$Data" },
+					{$unwind: "$Data.Room_Details" },
+					{$match: {
+							 "_id.from":{$lte:currentDate} ,"_id.to":{$gte:currentDate},
+							 "Data.Room_Details.RoomType_Code":{$eq:Number(request.body.RoomBusy_Room_Type_Code)} ,
+							 "Data.Room_Details.RoomView_Code":{$eq:Number(request.body.RoomBusy_Room_View_Code)} ,
+					}},
+				])
+				.exec(function(err, hotel) {
+				    if (err){
+				    	response.send({message: err});
+				    }
+			        if (hotel.length > 0) {
+			        	resolve(hotel)
+			        } else{
+			        	reject('Date Is Not Vaild');
+			        }
+		    	})
+		 	})
+		}
+		
+		function GetAverage (data){
+			var ReturnObject = {};
+			AddonChildPrice = AddonChildCost = SingleBedPrice = SingleHalfPrice = 
+			SingleFullPrice = SingleAllinclusivePrice = SingleUltraPrice = SingleFullCost =
+			SingleAllinclusiveCost = SingleUltraCost = DoubleFullPrice = 
+			DoubleAllinclusivePrice = DoubleUltraPrice = DoubleFullCost = DoubleAllinclusiveCost = 
+			DoubleUltraCost = TripleFullPrice = TripleAllinclusivePrice = TripleUltraPrice = 
+			TripleFullCost = TripleAllinclusiveCost = TripleUltraCost = 
+			PriceDoubleRoom = PriceTripleRoom = PriceSingleRoom = PriceChild = CostSingleRoom =
+			CostDoubleRoom = CostTripleRoom = CostChild = DoubleBedCost =DoubleBedPrice =
+			DoubleHalfCost = DoubleHalfPrice = SingleBedCost = SingleHalfCost = 
+			TripleBedCost = TripleBedPrice = TripleHalfCost = TripleHalfPrice = 0 ;
+			for( var i = 0; i < data.length; i++ ){
+			    AddonChildPrice += parseInt( data[i].Data.Addon_Child_Percentage_Price, 10 ); 
+			    AddonChildCost += parseInt( data[i].Data.Addon_Child_Percentage_Cost, 10 ); 
+			    SingleBedPrice += parseInt( data[i].Data.Single_Bed_breakfast_Price, 10 ); 
+			    SingleHalfPrice += parseInt( data[i].Data.Single_Half_board_Price, 10 ); 
+			    SingleFullPrice += parseInt( data[i].Data.Single_Full_board_Price, 10 ); 
+			    SingleAllinclusivePrice += parseInt( data[i].Data.Single_Soft_allinclusive_Price, 10 ); 
+			    SingleUltraPrice += parseInt( data[i].Data.Single_Ultra_Price, 10 ); 
+			    SingleFullCost += parseInt( data[i].Data.Single_Full_board_Cost, 10 ); 
+			    SingleAllinclusiveCost += parseInt( data[i].Data.Single_Soft_allinclusive_Cost, 10 ); 
+			    SingleUltraCost += parseInt( data[i].Data.Single_Ultra_Cost, 10 ); 
+			    DoubleFullPrice += parseInt( data[i].Data.Double_Full_board_Price, 10 ); 
+			    DoubleAllinclusivePrice += parseInt( data[i].Data.Double_Soft_allinclusive_Price, 10 ); 
+			    DoubleUltraPrice += parseInt( data[i].Data.Double_Ultra_Price, 10 ); 
+			    DoubleFullCost += parseInt( data[i].Data.Double_Full_board_Cost, 10 ); 
+			    DoubleAllinclusiveCost += parseInt( data[i].Data.Double_Soft_allinclusive_Cost, 10 ); 
+			    DoubleUltraCost += parseInt( data[i].Data.Double_Ultra_Cost, 10 ); 
+			    TripleFullPrice += parseInt( data[i].Data.Triple_Full_board_Price, 10 ); 
+			    TripleAllinclusivePrice += parseInt( data[i].Data.Triple_Soft_allinclusive_Price, 10 ); 
+			    TripleUltraPrice += parseInt( data[i].Data.Triple_Ultra_Price, 10 ); 
+			    TripleFullCost += parseInt( data[i].Data.Triple_Full_board_Cost, 10 ); 
+			    TripleAllinclusiveCost += parseInt( data[i].Data.Triple_Soft_allinclusive_Cost, 10 ); 
+			    TripleUltraCost += parseInt( data[i].Data.Triple_Ultra_Cost, 10 ); 
+			   
+			    PriceSingleRoom += parseInt( data[i].Data.Room_Details.Price_Single_Room, 10 ); 
+			    PriceDoubleRoom += parseInt( data[i].Data.Room_Details.Price_Double_Room, 10 ); 
+			    PriceTripleRoom += parseInt( data[i].Data.Room_Details.Price_Triple_Room, 10 ); 
+			    
+			    PriceChild += parseInt( data[i].Data.Room_Details.Price_Child, 10 ); 
+			    CostSingleRoom += parseInt( data[i].Data.Room_Details.Cost_Single_Room, 10 ); 
+			    CostDoubleRoom += parseInt( data[i].Data.Room_Details.Cost_Double_Room, 10 ); 
+			    CostTripleRoom += parseInt( data[i].Data.Room_Details.Cost_Triple_Room, 10 ); 
+			    CostChild += parseInt( data[i].Data.Room_Details.Cost_Child, 10 ); 
+			    
+			    DoubleBedCost += parseInt( data[i].Data.Double_Bed_breakfast_Cost, 10 ); 
+			    DoubleBedPrice += parseInt( data[i].Data.Double_Bed_breakfast_Price, 10 ); 
+			    DoubleHalfCost += parseInt( data[i].Data.Double_Half_board_Cost, 10 ); 
+			    DoubleHalfPrice += parseInt( data[i].Data.Double_Half_board_Price, 10 ); 
+			    SingleBedCost += parseInt( data[i].Data.Single_Bed_breakfast_Cost, 10 ); 
+			    SingleHalfCost += parseInt( data[i].Data.Single_Half_board_Cost, 10 ); 
+			    TripleBedCost += parseInt( data[i].Data.Triple_Bed_breakfast_Cost, 10 ); 
+			    TripleBedPrice += parseInt( data[i].Data.Triple_Bed_breakfast_Price, 10 ); 
+			    TripleHalfCost += parseInt( data[i].Data.Triple_Half_board_Cost, 10 ); 
+			    TripleHalfPrice += parseInt( data[i].Data.Triple_Half_board_Price, 10 ); 
+				
+			}
+			ReturnObject.Addon_Child_Percentage_Price = AddonChildPrice/data.length;
+			ReturnObject.Addon_Child_Percentage_Cost = AddonChildCost/data.length;
+			ReturnObject.Single_Bed_breakfast_Price = SingleBedPrice/data.length;
+			ReturnObject.Single_Half_board_Price = SingleHalfPrice/data.length;
+			ReturnObject.Single_Full_board_Price = SingleFullPrice/data.length;
+			ReturnObject.Single_Soft_allinclusive_Price = SingleAllinclusivePrice/data.length;
+			ReturnObject.Single_Ultra_Price = SingleUltraPrice/data.length;
+			ReturnObject.Single_Full_board_Cost = SingleFullCost/data.length;
+			ReturnObject.Single_Soft_allinclusive_Cost = SingleAllinclusiveCost/data.length;
+			ReturnObject.Single_Ultra_Cost = SingleUltraCost/data.length;
+			ReturnObject.Double_Full_board_Price = DoubleFullPrice/data.length;
+			ReturnObject.Double_Soft_allinclusive_Price = DoubleAllinclusivePrice/data.length;
+			ReturnObject.Double_Ultra_Price = DoubleUltraPrice/data.length;
+			ReturnObject.Double_Full_board_Cost = DoubleFullCost/data.length;
+			ReturnObject.Double_Soft_allinclusive_Cost = DoubleAllinclusiveCost/data.length;
+			ReturnObject.Double_Ultra_Cost = DoubleUltraCost/data.length;
+			ReturnObject.Triple_Full_board_Price = TripleFullPrice/data.length;
+			ReturnObject.Triple_Soft_allinclusive_Price = TripleAllinclusivePrice/data.length;
+			ReturnObject.Triple_Ultra_Price = TripleUltraPrice/data.length;
+			ReturnObject.Triple_Full_board_Cost = TripleFullCost/data.length;
+			ReturnObject.Triple_Soft_allinclusive_Cost = TripleAllinclusiveCost/data.length;
+			ReturnObject.Triple_Ultra_Cost = TripleUltraCost/data.length;
+
+			ReturnObject.Price_Child = PriceChild/data.length;
+			ReturnObject.Cost_Single_Room = CostSingleRoom/data.length;
+			ReturnObject.Cost_Double_Room = CostDoubleRoom/data.length;
+			ReturnObject.Cost_Triple_Room = CostTripleRoom/data.length;
+			ReturnObject.Cost_Child = CostChild/data.length;
+			// ***********************************************************************
+			ReturnObject.Double_Bed_breakfast_Cost = DoubleBedCost/data.length;
+			ReturnObject.Double_Bed_breakfast_Price = DoubleBedPrice/data.length;
+			ReturnObject.Double_Half_board_Cost = DoubleHalfCost/data.length;
+			ReturnObject.Double_Half_board_Price = DoubleHalfPrice/data.length;
+			ReturnObject.Single_Bed_breakfast_Cost = SingleBedCost/data.length;
+			ReturnObject.Single_Half_board_Cost = SingleHalfCost/data.length;
+			ReturnObject.Triple_Bed_breakfast_Cost = TripleBedCost/data.length;
+			ReturnObject.Triple_Bed_breakfast_Price = TripleBedPrice/data.length;
+			ReturnObject.Triple_Half_board_Cost = TripleHalfCost/data.length;
+			ReturnObject.Triple_Half_board_Price = TripleHalfPrice/data.length;
+			
+
+			ReturnObject.Price_Single_Room = PriceSingleRoom/data.length;
+			ReturnObject.Price_Double_Room = PriceDoubleRoom/data.length;
+			ReturnObject.Price_Triple_Room = PriceTripleRoom/data.length;
+			
+
+			// console.log(sum);
+			// console.log(avg);
+			response.send(ReturnObject);
 		}
 	},
 
