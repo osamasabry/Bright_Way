@@ -132,7 +132,7 @@ module.exports = {
 			        if (hotel.length > 0) {
 			        	resolve(hotel)
 			        } else{
-			        	reject('Date Is Not Vaild');
+			        	response.send({message: 'Date Is Not Vaild'});
 			        }
 		    	})
 		 	})
@@ -236,7 +236,9 @@ module.exports = {
 			ReturnObject.Room_Details.Max_Capacity_Single_Room_Child = Math.min.apply(null, data.map(function(a){return a.Data.Room_Details.Max_Capacity_Single_Room_Child;}))
 			ReturnObject.Room_Details.Max_Capacity_Double_Room_Child = Math.min.apply(null, data.map(function(a){return a.Data.Room_Details.Max_Capacity_Double_Room_Child;}))
 			ReturnObject.Room_Details.Max_Capacity_Triple_Room_Child = Math.min.apply(null, data.map(function(a){return a.Data.Room_Details.Max_Capacity_Triple_Room_Child;}))
-
+			ReturnObject.Room_Details.Price_Single_Room = PriceSingleRoom/data.length;
+			ReturnObject.Room_Details.Price_Double_Room = PriceDoubleRoom/data.length;
+			ReturnObject.Room_Details.Price_Triple_Room = PriceTripleRoom/data.length;
 			// ***********************************************************************
 			ReturnObject.Double_Bed_breakfast_Cost = DoubleBedCost/data.length;
 			ReturnObject.Double_Bed_breakfast_Price = DoubleBedPrice/data.length;
@@ -250,16 +252,20 @@ module.exports = {
 			ReturnObject.Triple_Half_board_Price = TripleHalfPrice/data.length;
 			
 
-			ReturnObject.Price_Single_Room = PriceSingleRoom/data.length;
-			ReturnObject.Price_Double_Room = PriceDoubleRoom/data.length;
-			ReturnObject.Price_Triple_Room = PriceTripleRoom/data.length;
+			// ReturnObject.Price_Single_Room = PriceSingleRoom/data.length;
+			// ReturnObject.Price_Double_Room = PriceDoubleRoom/data.length;
+			// ReturnObject.Price_Triple_Room = PriceTripleRoom/data.length;
 			
 			ReturnObject.count_room = count_room;
 
-
+			var data ={};
+			data.roombusy = count_room;
+			data.data ={};
+			data.data.Data={};
+			data.data.Data = ReturnObject;
 			// console.log(sum);
 			// console.log(avg);
-			response.send(ReturnObject);
+			response.send(data);
 		}
 	},
 
