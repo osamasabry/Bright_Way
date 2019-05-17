@@ -26,6 +26,7 @@ module.exports = {
 				{$match: { 
 					$and:[
 							{RoomBusy_HotelID:Number(request.body.RoomBusy_HotelID)},
+							{RoomBusy_OfficeID:Number(request.body.RoomBusy_OfficeID)},
 							{RoomBusy_Date:{ $gte: date1, $lte: date2}},
 							{RoomBusy_Room_Type_Code:Number(request.body.RoomBusy_Room_Type_Code)},
 							{RoomBusy_Room_View_Code:Number(request.body.RoomBusy_Room_View_Code)},
@@ -379,6 +380,8 @@ module.exports = {
 				newRoomBusy.RoomBusy_Room_Type_Code   	= room.Type;
 				newRoomBusy.RoomBusy_Room_View_Code 	= room.View;
 				newRoomBusy.RoomBusy_Room_Count 		= room.Count;
+        		newRoomBusy.RoomBusy_OfficeID           = request.body.Reservation_Office_ID,
+				
 				newRoomBusy.RoomBusy_Note  				= room.Note;
 				newRoomBusy.RoomBusy_Reservation_Code   = GetNextId;
 				
@@ -702,6 +705,8 @@ module.exports = {
 				newRoomBusy.RoomBusy_Room_Count 		= room.Count;
 				newRoomBusy.RoomBusy_Note 				= room.Note;
 				newRoomBusy.RoomBusy_Reservation_Code   = GetNextId;
+        		newRoomBusy.RoomBusy_OfficeID           = request.body.Reservation_Office_ID;
+
 				newRoomBusy.save(function(error, doneadd){
 					if(error){
 						response.send({

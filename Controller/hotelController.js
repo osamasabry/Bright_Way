@@ -539,6 +539,13 @@ module.exports = {
 					"Hotel_Contract.$[con1].Hotel_Rooms.$[con2].Room_Details.$[con3].RoomType_Code"					: request.body.RoomType_Code,
 					"Hotel_Contract.$[con1].Hotel_Rooms.$[con2].Room_Details.$[con3].RoomView_Code"					: request.body.RoomView_Code,
 					"Hotel_Contract.$[con1].Hotel_Rooms.$[con2].Room_Details.$[con3].Count"							: request.body.Count,
+					
+					"Hotel_Contract.$[con1].Hotel_Rooms.$[con2].Room_Details.$[con3].Cairo_Office" 					: request.body.Cairo_Office,
+					"Hotel_Contract.$[con1].Hotel_Rooms.$[con2].Room_Details.$[con3].Mansoura_Office"				: request.body.Mansoura_Office,
+					"Hotel_Contract.$[con1].Hotel_Rooms.$[con2].Room_Details.$[con3].Alexandira_Office" 			: request.body.Alexandira_Office,
+					"Hotel_Contract.$[con1].Hotel_Rooms.$[con2].Room_Details.$[con3].Mahalla_Office"				: request.body.Mahalla_Office,
+					"Hotel_Contract.$[con1].Hotel_Rooms.$[con2].Room_Details.$[con3].Shobra_Office"					: request.body.Shobra_Office,
+					
 					"Hotel_Contract.$[con1].Hotel_Rooms.$[con2].Room_Details.$[con3].Max_Capacity_Single_Room_Adult": request.body.Max_Capacity_Single_Room_Adult,
 					"Hotel_Contract.$[con1].Hotel_Rooms.$[con2].Room_Details.$[con3].Max_Capacity_Single_Room_Child": request.body.Max_Capacity_Single_Room_Child,
 					"Hotel_Contract.$[con1].Hotel_Rooms.$[con2].Room_Details.$[con3].Max_Capacity_Double_Room_Adult": request.body.Max_Capacity_Double_Room_Adult,

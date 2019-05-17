@@ -7,6 +7,7 @@ var Btw_RoomBusySchema = mongoose.Schema({
         RoomBusy_Room_Type_Code     :Number,
         RoomBusy_Room_View_Code     :Number,
         RoomBusy_Room_Count         :Number,// 8
+        RoomBusy_OfficeID           :Number,
         RoomBusy_Note               :String,
         
         //RoomBusy_Room_MaxCount      :Number,// 15
