@@ -11,12 +11,12 @@ var asyncLoop = require('node-async-loop');
 
 module.exports = {
 	checkDate:function(request,response){
-		// var date1 = new Date('2019-06-06');
-		// var date2 = new Date('2019-06-10');
+		var date1 = new Date('2019-06-06');
+		var date2 = new Date('2019-06-10');
 
 		ArrayOfDays= [];
-		var date1 = new Date(request.body.From);
-		var date2 = new Date(request.body.To);
+		// var date1 = new Date(request.body.From);
+		// var date2 = new Date(request.body.To);
 
 		checkDateFromRoomBusy();
 
@@ -107,6 +107,7 @@ module.exports = {
 	  	}
 
 		function getalldays (currentDate){
+			console.log(currentDate)
 		 	return new Promise((resolve, reject) => {
 
 	 	 		Hotel.aggregate([
@@ -131,8 +132,11 @@ module.exports = {
 				    	response.send({message: err});
 				    }
 			        if (hotel.length > 0) {
+			        	console.log('ooooo');
+			        	console.log(hotel);
 			        	resolve(hotel)
 			        } else{
+			        	console.log('kkkk')
 			        	response.send({message: 'Date Is Not Vaild'});
 			        }
 		    	})
@@ -141,6 +145,7 @@ module.exports = {
 		
 		function GetAverage (data,count_room){
 			var ReturnObject = {};
+			Cairo_Office = Mansoura_Office = Alexandira_Office = Mahalla_Office = Shobra_Office =
 			AddonChildPrice = AddonChildCost = SingleBedPrice = SingleHalfPrice = 
 			SingleFullPrice = SingleAllinclusivePrice = SingleUltraPrice = SingleFullCost =
 			SingleAllinclusiveCost = SingleUltraCost = DoubleFullPrice = 
@@ -187,6 +192,12 @@ module.exports = {
 			    CostTripleRoom += parseInt( data[i].Data.Room_Details.Cost_Triple_Room, 10 ); 
 			    CostChild += parseInt( data[i].Data.Room_Details.Cost_Child, 10 ); 
 			    
+			    Cairo_Office += parseInt( data[i].Data.Room_Details.Cairo_Office, 10 ); 
+			    Mansoura_Office += parseInt( data[i].Data.Room_Details.Mansoura_Office, 10 ); 
+			    Alexandira_Office += parseInt( data[i].Data.Room_Details.Alexandira_Office, 10 ); 
+			    Mahalla_Office += parseInt( data[i].Data.Room_Details.Mahalla_Office, 10 ); 
+			    Shobra_Office += parseInt( data[i].Data.Room_Details.Shobra_Office, 10 ); 
+
 			    DoubleBedCost += parseInt( data[i].Data.Double_Bed_breakfast_Cost, 10 ); 
 			    DoubleBedPrice += parseInt( data[i].Data.Double_Bed_breakfast_Price, 10 ); 
 			    DoubleHalfCost += parseInt( data[i].Data.Double_Half_board_Cost, 10 ); 
