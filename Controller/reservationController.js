@@ -236,6 +236,13 @@ module.exports = {
 			ReturnObject.Triple_Ultra_Cost = TripleUltraCost/data.length;
 			// **********************************************************
 			ReturnObject.Room_Details = {};
+			
+			ReturnObject.Room_Details.Cairo_Office = Math.min.apply(null, data.map(function(a){return a.Data.Room_Details.Cairo_Office;}))
+			ReturnObject.Room_Details.Mansoura_Office = Math.min.apply(null, data.map(function(a){return a.Data.Room_Details.Mansoura_Office;}))
+			ReturnObject.Room_Details.Alexandira_Office = Math.min.apply(null, data.map(function(a){return a.Data.Room_Details.Alexandira_Office;}))
+			ReturnObject.Room_Details.Mahalla_Office = Math.min.apply(null, data.map(function(a){return a.Data.Room_Details.Mahalla_Office;}))
+			ReturnObject.Room_Details.Shobra_Office = Math.min.apply(null, data.map(function(a){return a.Data.Room_Details.Shobra_Office;}))
+			
 			ReturnObject.Room_Details.Count = Math.min.apply(null, data.map(function(a){return a.Data.Room_Details.Count;}))
 			ReturnObject.Room_Details.Price_Child = PriceChild/data.length;
 			ReturnObject.Room_Details.Cost_Single_Room = CostSingleRoom/data.length;
