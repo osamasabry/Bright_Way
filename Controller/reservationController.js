@@ -370,7 +370,7 @@ module.exports = {
 		        date.setDate(date.getDate() + days);
 		        return date;
 		      };
-		  while (currentDate <= endDate) {
+		  while (currentDate < endDate) {
 		   	InsertBusyRoom(currentDate,GetNextId);
 		    currentDate = addDays.call(currentDate, 1);
 		  }
