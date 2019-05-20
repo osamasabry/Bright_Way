@@ -655,7 +655,7 @@ module.exports = {
 				Reservation_Nationality  				: request.body.Reservation_Nationality,
 				Reservation_Number_of_Adult 			: request.body.Reservation_Number_of_Adult,
 				Reservation_Number_of_Child 			: request.body.Reservation_Number_of_Child,
-				Reservation_ByEmployee_ID 				: request.body.Reservation_ByEmployee_ID,
+				//Reservation_ByEmployee_ID 				: request.body.Reservation_ByEmployee_ID,
 				Reservation_Office_ID 					: request.body.Reservation_Office_ID,
 				Reservation_Grand_Total 				: request.body.Reservation_Grand_Total,
 				Reservation_Grand_Total_Cost 			: request.body.Reservation_Grand_Total_Cost,
