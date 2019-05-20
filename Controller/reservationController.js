@@ -11,12 +11,12 @@ var asyncLoop = require('node-async-loop');
 
 module.exports = {
 	checkDate:function(request,response){
-		var date1 = new Date('2019-06-06');
-		var date2 = new Date('2019-06-10');
+		// var date1 = new Date('2019-06-06');
+		// var date2 = new Date('2019-06-10');
 
 		ArrayOfDays= [];
-		// var date1 = new Date(request.body.From);
-		// var date2 = new Date(request.body.To);
+		var date1 = new Date(request.body.From);
+		var date2 = new Date(request.body.To);
 
 		checkDateFromRoomBusy();
 
