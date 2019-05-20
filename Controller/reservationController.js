@@ -11,12 +11,12 @@ var asyncLoop = require('node-async-loop');
 
 module.exports = {
 	checkDate:function(request,response){
-		var date1 = new Date('2019-06-06');
-		var date2 = new Date('2019-06-10');
+		// var date1 = new Date('2019-06-06');
+		// var date2 = new Date('2019-06-10');
 
 		ArrayOfDays= [];
-		// var date1 = new Date(request.body.From);
-		// var date2 = new Date(request.body.To);
+		var date1 = new Date(request.body.From);
+		var date2 = new Date(request.body.To);
 
 		checkDateFromRoomBusy();
 
@@ -52,7 +52,7 @@ module.exports = {
 		}
 
 		function checkDateFromHotel(count_room){
-			console.log(count_room);
+			// console.log(count_room);
 			Hotel.aggregate([
 			{$match: { Hotel_Code: Number(request.body.RoomBusy_HotelID) }},
 			{$unwind: "$Hotel_Contract" },
@@ -102,7 +102,8 @@ module.exports = {
 				    currentDate = addDays.call(currentDate, 1);
 	  		}
 	  		if (ArrayOfDays.length > 0) {
-	  			ArrayOfDays =ArrayOfDays.slice(-1,1)
+	  			ArrayOfDays =ArrayOfDays.slice(0,(ArrayOfDays.length-1));
+	  			//console.log(ArrayOfDays)
 	  			GetAverage(ArrayOfDays,count_room);
 
 	  		}	
