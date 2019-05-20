@@ -201,7 +201,7 @@ module.exports = {
 		};
 		BusDailyPassengers.find(object)
 		.populate({ path: 'Hotel', select: 'Hotel_Name' })
-		.populate({ path: 'Customer', select: 'Customer_Name' })
+		.populate({ path: 'Customer', select: 'Customer_Name Customer_Phone' })
 		.populate({ path: 'CityFrom', select: 'City_Name' })
 		.populate({ path: 'CityTo', select: 'City_Name' })
 		.populate({ path: 'Reservation', select: 'Reservation_Number_of_Chair_InPackage Reservation_Number_of_Chair_OutPackage Reservation_Grand_Total Reservation_Payment Reservation_Room Reservation_Place_To_Move Reservation_Note' })
