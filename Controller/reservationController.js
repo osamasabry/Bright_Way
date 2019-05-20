@@ -97,14 +97,14 @@ module.exports = {
 		        return date;
 		      };
 		  	while (currentDate <= endDate) {
-		  		if (endDate != currentDate) {
 			  		var result = await getalldays(currentDate);
 		        	ArrayOfDays = ArrayOfDays.concat(result);
 				    currentDate = addDays.call(currentDate, 1);
-				}
 	  		}
 	  		if (ArrayOfDays.length > 0) {
+	  			ArrayOfDays =ArrayOfDays.slice(-1,1)
 	  			GetAverage(ArrayOfDays,count_room);
+
 	  		}	
 	  	}
 
