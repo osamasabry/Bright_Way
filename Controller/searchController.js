@@ -58,6 +58,8 @@ module.exports = {
 				{$match: { 
 						$and:[
 				    		{RoomBusy_HotelID:hotel.Hotel_Code},
+				    		{RoomBusy_OfficeID:request.body.OfficeID},
+				    		
 				    		{RoomBusy_Date:{ $gte: From, $lte: To}},
 				    		{RoomBusy_Room_Type_Code:Number(request.body.Room_Type_Code)},
 				    		{RoomBusy_Room_View_Code:Number(request.body.Room_View_Code)},
