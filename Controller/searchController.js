@@ -6,15 +6,15 @@ var asyncLoop = require('node-async-loop');
 
 module.exports = {
 	searchData:function(request,response){
-		// var From = new Date('2019-02-14');
-		// var To = new Date('2019-02-28');
+		// var From = new Date('2019-06-11');
+		// var To = new Date('2019-06-13');
 		// console.log(From,To);
 		var From  =  new Date(request.body.Reservation_Date_From);
 		var To = new Date(request.body.Reservation_Date_To);
 		var AllHotels =[];
 		function getHotelByCityID(){
 			Hotel.aggregate([
-			{$match: { Hotel_City: Number(request.body.City_Code) }},
+			{$match: { Hotel_City:Number(request.body.City_Code) }},
 			{$unwind: "$Hotel_Contract" },
 			{$unwind: "$Hotel_Contract.Hotel_Rooms" },
 			{$group: { _id: { 	to: "$Hotel_Contract.Hotel_Rooms.Room_To",
@@ -42,7 +42,6 @@ module.exports = {
 		        	// console.log(hotel);
 		        	AllHotels =hotel;
 					 GetBusyRoom();
-					 // response.send(hotel)
 		        }else{
 			    	response.send({message: "This City Doesn't have any Hotel"});
 		        }
@@ -53,12 +52,11 @@ module.exports = {
 			
 			asyncLoop(AllHotels, function (hotel, next)
 			{
-
 				RoomBusy.aggregate([
 				{$match: { 
 						$and:[
 				    		{RoomBusy_HotelID:hotel.Hotel_Code},
-				    		{RoomBusy_OfficeID:request.body.OfficeID},
+				    		{RoomBusy_OfficeID:Number(request.body.OfficeID)},
 				    		
 				    		{RoomBusy_Date:{ $gte: From, $lte: To}},
 				    		{RoomBusy_Room_Type_Code:Number(request.body.Room_Type_Code)},
@@ -79,9 +77,10 @@ module.exports = {
 				    }
 			        if (roomBusy.length > 0) {
 			        	hotel.ReservationRoom = roomBusy[0].maxcount;
-						response.send(AllHotels)	 
+			        	next();
+
 			        }else{
-						response.send(AllHotels)	 
+			        	next();
 			        }
 		    	})
 			}, function (err)
@@ -91,9 +90,12 @@ module.exports = {
 			        console.error('Error: ' + err.message);
 			        return;
 			    }
-			 
+				response.send(AllHotels)	 
 			    console.log('Finished!');
 			});
+
+			// console.log('finish')
+
 		}
 
 		getHotelByCityID();
