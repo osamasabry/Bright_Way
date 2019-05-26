@@ -23,7 +23,7 @@ module.exports = {
 			newEmployee.Employee_Password   	    = passwordHash.generate(request.body.Employee_Password);
 			newEmployee.Employee_NationalID   	    = request.body.Employee_NationalID;
 			newEmployee.Employee_Job_Title   	    = request.body.Employee_Job_Title;
-			newEmployee.Employee_Permissions   	    = request.body.Employee_Permissions;
+			newEmployee.Employee_Permissions   	    = ["brightwaysUser"];
 			newEmployee.Employee_Office_Code   	    = request.body.Employee_Office_Code;
 			newEmployee.Employee_IsActive   	    = 1;
 			
