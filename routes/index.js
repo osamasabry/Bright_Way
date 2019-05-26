@@ -215,6 +215,20 @@ router.post('/login', type,function(req, res, next) {
         });
         EditEmployeePermissions();
     });
+
+    router.post('/resetPassword', type,function(req, res) {
+        var ResetPassword= async (function (){
+            await (EmployeeController.resetPassword(req,res));
+        });
+        ResetPassword();
+    });
+
+    router.post('/changePassword', type,function(req, res) {
+        var ChangePassword= async (function (){
+            await (EmployeeController.changePassword(req,res));
+        });
+        ChangePassword();
+    });
     
 /****************Hotel****************/
 

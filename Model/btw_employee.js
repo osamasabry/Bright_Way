@@ -27,7 +27,7 @@ Btw_EmployeeSchema.virtual('Office',{
 });
 
 Btw_EmployeeSchema.methods.verifyPassword = function(password) {
-    console.log(passwordHash.verify(password,this.Employee_Password))
+    // console.log(passwordHash.verify(password,this.Employee_Password))
     if(passwordHash.verify(password,this.Employee_Password) == 1)
         return 1;
     else

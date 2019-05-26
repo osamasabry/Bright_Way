@@ -134,6 +134,43 @@ module.exports = {
 		})
 	},
 
+	resetPassword:function(request,response){
+		var newvalues = { $set: {
+				Employee_Password 	: passwordHash.generate(request.body.Employee_Password),
+			} };
+		var myquery = { Employee_Code: request.body.Employee_Code }; 
+		Employee.findOneAndUpdate( myquery,newvalues, function(err, field) {
+    	    if (err){
+    	    	return response.send({
+					message: 'Error'
+				});
+    	    }
+            if (!field) {
+            	return response.send({
+					message: 'Employee not exists'
+				});
+            } else {
+                return response.send({
+					message: true
+				});
+			}
+		})
+	},
+
+	changePassword:function(request,response){
+		Employee.findOne({ 'Employee_Code' :  request.body.Employee_Code })
+        .exec(function(err, user) {
+            if (err){ return done(err);}
+            if (!user)
+             	response.send({message:'user is not exist'});
+            if (!user.verifyPassword(request.body.oldPassword))
+                response.send({message:'Enter correct password'});
+           else{
+                user.Employee_Password = passwordHash.generate(request.body.newPassword) ;
+                response.send(true);
+           }
+        });
+	},
 }
 
 
