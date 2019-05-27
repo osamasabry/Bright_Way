@@ -166,8 +166,14 @@ module.exports = {
             if (!user.verifyPassword(request.body.oldPassword))
                 response.send({message:'Enter correct password'});
            else{
-                user.Employee_Password = passwordHash.generate(request.body.newPassword) ;
-                response.send(true);
+				user.Employee_Password = passwordHash.generate(request.body.newPassword) ;
+				user.save((err) => {
+					if (err)
+						response.send(false);
+					else
+						response.send(true);
+				   });
+                
            }
         });
 	},
