@@ -78,7 +78,7 @@ module.exports = {
 	searchCustomer:function(request,response){
 		var object={};
 		 if(request.body.Customer_Phone )	
-			object = {Customer_Phone:request.body.Customer_Phone};
+			object = {Customer_Phone: { $regex: new RegExp('.*' + request.body.Customer_Phone+ '.*', "i") }};
 		else
 			object = {Customer_Name:{ $regex: new RegExp('.*' +request.body.Customer_Name+ '.*', "i") } }	
 
