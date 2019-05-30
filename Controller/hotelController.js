@@ -265,8 +265,8 @@ module.exports = {
 		// var To = new Date('2019-10-15');
 
 
-		var From = request.body.Room_From; 
-		var To = request.body.Room_To;
+		var From = new Date(request.body.Room_From); 
+		var To = new Date(request.body.Room_To);
 		var arrayhotel={
 			Room_From 							 :From,
 			Room_To 							 :To,
