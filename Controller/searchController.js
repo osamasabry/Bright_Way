@@ -6,8 +6,8 @@ var asyncLoop = require('node-async-loop');
 
 module.exports = {
 	searchData:function(request,response){
-		// var From = new Date('2019-06-11');
-		// var To = new Date('2019-06-13');
+		// var From = new Date('2019-06-04');
+		// var To = new Date('2019-06-08');
 		// console.log(From,To);
 		var From  =  new Date(request.body.Reservation_Date_From);
 		var To = new Date(request.body.Reservation_Date_To);
@@ -19,10 +19,13 @@ module.exports = {
 			{$unwind: "$Hotel_Contract.Hotel_Rooms" },
 			{$group: { _id: { 	to: "$Hotel_Contract.Hotel_Rooms.Room_To",
 							  	from: "$Hotel_Contract.Hotel_Rooms.Room_From",
+			        			HotelName : '$Hotel_Name' ,
+			        			HotelStars : '$Hotel_Stars',
+			        			Hotel_Code : '$Hotel_Code'
 							},
-			        	HotelStars : { $first: '$Hotel_Stars' },
-			        	HotelName : { $first: '$Hotel_Name' },
-			        	Hotel_Code : { $first: '$Hotel_Code' },
+			        	// HotelStars : { $first: '$Hotel_Stars' },
+			        	// HotelName : { $: '$Hotel_Name' },
+			        	// Hotel_Code : { $push: '$Hotel_Code' },
 			        	
 			 	Data: { $push: "$Hotel_Contract" } } },
 				{$unwind: "$Data" },
@@ -33,13 +36,15 @@ module.exports = {
 						 "Data.Hotel_Rooms.Room_Details.RoomType_Code":{$eq:Number(request.body.Room_Type_Code)} ,
 						 "Data.Hotel_Rooms.Room_Details.RoomView_Code":{$eq:Number(request.body.Room_View_Code)} ,
 				}},
+
+				
 			])
 			.exec(function(err, hotel) {
 			    if (err){
 			    	response.send({message: err});
 			    }
 		        if (hotel.length > 0) {
-		        	// console.log(hotel);
+		        	console.log(hotel);
 		        	AllHotels =hotel;
 					 GetBusyRoom();
 		        }else{

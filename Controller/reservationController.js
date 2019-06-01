@@ -585,9 +585,13 @@ module.exports = {
 
 	getReservationByCustomerID:function(request,response){
 		var Search = Number(request.body.Customer_Code);
-		Reservation.find({Reservation_Customer_ID:Search})
-		// .select('Reservation_Customer_ID Reservation_Payment Reservation_Date Reservation_Grand_Total')
-		// .populate({ path: 'City', select: 'City_Name' })
+		var object = {Reservation_Customer_ID:Search};
+
+		if (request.body.Reservation_Office_ID != 1 )
+			object = {Reservation_Customer_ID:Search,Reservation_Office_ID:Number(request.body.Reservation_Office_ID)};
+		
+		Reservation.find(object)
+		.populate({ path: 'Office', select: 'Office_Name' })
 		.populate({ path: 'Customer', select: 'Customer_Name' })
 		.populate({ path: 'Hotel', select: 'Hotel_Name Hotel_ChildernPolicy_Hint Hotel_City Hotel_Stars' })
 		.populate({ path: 'Employee', select: 'Employee_Name' })
