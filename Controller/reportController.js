@@ -240,7 +240,8 @@ module.exports = {
 									 RoomBusy_Room_View_Code: '$RoomBusy_Room_View_Code', 
 									 RoomBusy_Room_Type_Code: '$RoomBusy_Room_Type_Code', 
 									 RoomBusy_Room_Count: '$RoomBusy_Room_Count', 
-									 RoomBusy_Reservation_Code: '$RoomBusy_Reservation_Code', 
+									 RoomBusy_Reservation_Code: '$RoomBusy_Reservation_Code',
+									 RoomBusy_Note: '$RoomBusy_Note' 
 							 },
 							 RoomBusy_Room_Type_Code: {$first : '$RoomBusy_Room_Type_Code'}, 
 							 RoomBusy_Room_View_Code: {$first:'$RoomBusy_Room_View_Code'}, 
