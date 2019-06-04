@@ -14,7 +14,8 @@ module.exports = {
 		// var date1 = new Date('2019-06-06');
 		// var date2 = new Date('2019-06-10');
 
-		ArrayOfDays= [];
+		ArrayOfHotels= [];
+		AarrayOfDays = [];
 		var date1 = new Date(request.body.From);
 		var date2 = new Date(request.body.To);
 
@@ -81,14 +82,14 @@ module.exports = {
 		            	roombusy:count_room,
 		            });
 		        } else{
-		        	getDates(date1,date2,count_room);
+		        	getDates(date1,date2);
 		        	// console.log('Date Is Not Vaild');
 			    	// response.send({message: "Date Is Not Vaild"});
 		        }
 	    	})
 		}
 
-		var getDates = async function(startDate,endDate,count_room) {
+		var getDates = async function(startDate,endDate) {
 		  	var dates = [],
 		      currentDate = startDate,
 		      addDays = function(days) {
@@ -97,19 +98,21 @@ module.exports = {
 		        return date;
 		      };
 		  	while (currentDate <= endDate) {
-			  		var result = await getalldays(currentDate);
-		        	ArrayOfDays = ArrayOfDays.concat(result);
+			  		var hotel = await getHotelByDay(currentDate);
+			  		var roombusy = await getRoomBusyByDay(currentDate);
+			  		var availableCount = Getavailable(hotel[0].Data.Room_Details,roombusy)
+			  		AarrayOfDays.push(availableCount);
+		        	ArrayOfHotels = ArrayOfHotels.concat(hotel);
 				    currentDate = addDays.call(currentDate, 1);
 	  		}
-	  		if (ArrayOfDays.length > 0) {
-	  			ArrayOfDays =ArrayOfDays.slice(0,(ArrayOfDays.length-1));
-	  			//console.log(ArrayOfDays)
-	  			GetAverage(ArrayOfDays,count_room);
-
+	  		if (ArrayOfHotels.length > 0) {
+	  			ArrayOfHotels =ArrayOfHotels.slice(0,(ArrayOfHotels.length-1));
+	  			var count_room = Math.min.apply(Math, AarrayOfDays) ;
+	  			GetAverage(ArrayOfHotels,count_room);
 	  		}	
 	  	}
 
-		function getalldays (currentDate){
+		function getHotelByDay (currentDate){
 		 	return new Promise((resolve, reject) => {
 
 	 	 		Hotel.aggregate([
@@ -142,6 +145,54 @@ module.exports = {
 		 	})
 		}
 		
+		function getRoomBusyByDay(currentDate){
+		 	return new Promise((resolve, reject) => {
+
+				RoomBusy.aggregate([
+					{$match: { 
+						$and:[
+								{RoomBusy_HotelID:Number(request.body.RoomBusy_HotelID)},
+								{RoomBusy_OfficeID:Number(request.body.RoomBusy_OfficeID)},
+								{RoomBusy_Date:currentDate},
+								{RoomBusy_Room_Type_Code:Number(request.body.RoomBusy_Room_Type_Code)},
+								{RoomBusy_Room_View_Code:Number(request.body.RoomBusy_Room_View_Code)},
+							]
+					}},
+					{ $group: { _id : {Room_Type: '$RoomBusy_Room_Type_Code' ,
+										 date: '$RoomBusy_Date',
+										 Room_View_Code: '$RoomBusy_Room_View_Code'}, 
+										 maxcount : { $sum: "$RoomBusy_Room_Count" } } }
+					,{$sort: {maxcount : -1}},{$limit : 1}
+				])
+					.exec(function(err, roomBusy) {
+				    if (err){
+				    	response.send({message: err});
+						}
+			        if (roomBusy.length > 0) {
+			            resolve(roomBusy[0].maxcount) ;
+			        }else{
+			        	resolve(0);
+			        }
+		    	})
+			})
+		}
+
+		function Getavailable(hotel,roombusy){
+			var available= 0;
+			if (Number(request.body.RoomBusy_OfficeID) == 1 ) 
+				available = hotel.Cairo_Office - roombusy;
+			if (Number(request.body.RoomBusy_OfficeID) == 2 ) 
+				available = hotel.Alexandira_Office - roombusy;
+			if (Number(request.body.RoomBusy_OfficeID) == 3 ) 
+				available = hotel.Mansoura_Office - roombusy;
+			if (Number(request.body.RoomBusy_OfficeID) == 4 ) 
+				available = hotel.Mahalla_Office - roombusy;
+			if (Number(request.body.RoomBusy_OfficeID) == 5 ) 
+				available = hotel.Shobra_Office - roombusy;
+
+			return  available;
+		}
+
 		function GetAverage (data,count_room){
 			var ReturnObject = {};
 			Cairo_Office = Mansoura_Office = Alexandira_Office = Mahalla_Office = Shobra_Office =
