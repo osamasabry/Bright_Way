@@ -106,9 +106,11 @@ module.exports = {
 				    currentDate = addDays.call(currentDate, 1);
 	  		}
 	  		if (ArrayOfHotels.length > 0) {
-	  			ArrayOfHotels =ArrayOfHotels.slice(0,(ArrayOfHotels.length-1));
+				ArrayOfHotels =ArrayOfHotels.slice(0,(ArrayOfHotels.length-1));
+				AarrayOfDays =AarrayOfDays.slice(0,(AarrayOfDays.length-1));
 	  			var count_room = Math.min.apply(Math, AarrayOfDays) ;
-	  			GetAverage(ArrayOfHotels,count_room);
+				console.log(count_room) ;  
+				GetAverage(ArrayOfHotels,count_room);
 	  		}	
 	  	}
 
