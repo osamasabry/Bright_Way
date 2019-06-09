@@ -274,6 +274,8 @@ module.exports = {
 		var date1 = new Date(request.body.From);
 		var date2 = new Date(request.body.To);
 
+
+
 		Reservation.aggregate([
 				{$match: { 
 					$and:[
@@ -334,50 +336,72 @@ module.exports = {
 		var date1 = new Date(request.body.From);
 		var date2 = new Date(request.body.To);
 
-		Reservation.aggregate([
-				{$match: { 
-					$and:[
-							{Reservation_Hotel_ID:Number(request.body.Reservation_Hotel_ID)},
-							{Reservation_Date_From:{ $gte: date1},Reservation_Date_To: {$lte: date2}},
-						]
-				}},
-				{$unwind: "$Reservation_Room" },
-				{ $group: { _id : 
-							{	 	
-									 Reservation_View_Code: '$Reservation_Room.View', 
-									 Reservation_Type_Code: '$Reservation_Room.Type', 
-									 RoomBusy_Room_Count: '$Reservation_Room.Count', 
-									 Reservation_Customer_ID: '$Reservation_Customer_ID',
-									 Reservation_Note: '$Reservation_Note' 
-							 },
-							 // RoomBusy_Room_Type_Code: {$first : '$RoomBusy_Room_Type_Code'}, 
-							 // RoomBusy_Room_View_Code: {$first:'$RoomBusy_Room_View_Code'}, 
-						}
-				},
-				{
-		        "$project": {
-			            "Reservation_Room.View": "$_id.Reservation_View_Code",
-			            "Reservation_Room.Type": "$_id.Reservation_Type_Code",
-			            "Reservation_Customer_ID":"$_id.Reservation_Customer_ID",
-			        }		
-			    },
-			])
-			.exec(function(err, reserve) {
-			    if (err){
-		    		response.send({message: err});
-				}
-		        if (reserve.length > 0) {
-		        		Reservation.populate(reserve, { path: 'RoomType'}, function(err, type) {
-		        			Reservation.populate(type, { path: 'RoomView'}, function(err, view) {
-		    					Reservation.populate(view, { path: 'Customer'}, function(err, customer) {
-		    						response.send(customer);
-			        			});
-			        		});
-			        	});
-		        }else{
-		    		response.send({message: 'Not Reserve Room In This Date'});
-		        }
-	    	})
+		object = {
+			$and:[
+					{Reservation_Hotel_ID:Number(request.body.Reservation_Hotel_ID)},
+					{Reservation_Date_From:{ $gte: date1},Reservation_Date_From: {$lte: date2}},
+				]
+		};
+		
+		Reservation.find(object)
+		.select('Reservation_Room Reservation_Date_From Reservation_Date_To Reservation_Customer_ID')
+		.populate({ path: 'Customer', select: 'Customer_Name' })
+		.populate({ path: 'RoomType', select: 'RoomType_Name' })
+		.populate({ path: 'RoomView', select: 'RoomView_Name' })
+		.lean()
+		.exec(function(err, hotel) {
+		    if (err){
+		    	response.send(err);
+		    }
+	        if (hotel) {
+	            response.send(hotel);
+	        } 
+    	})
+
+	// 	Reservation.aggregate([
+	// 			{$match: { 
+	// 				$and:[
+	// 						{Reservation_Hotel_ID:Number(request.body.Reservation_Hotel_ID)},
+	// 						{Reservation_Date_From:{ $gte: date1},Reservation_Date_To: {$lte: date2}},
+	// 					]
+	// 			}},
+	// 			{$unwind: "$Reservation_Room" },
+	// 			{ $group: { _id : 
+	// 						{	 	
+	// 								 Reservation_View_Code: '$Reservation_Room.View', 
+	// 								 Reservation_Type_Code: '$Reservation_Room.Type', 
+	// 								 RoomBusy_Room_Count: '$Reservation_Room.Count', 
+	// 								 Reservation_Customer_ID: '$Reservation_Customer_ID',
+	// 								 Reservation_Note: '$Reservation_Note' 
+	// 						 },
+	// 						 // RoomBusy_Room_Type_Code: {$first : '$RoomBusy_Room_Type_Code'}, 
+	// 						 // RoomBusy_Room_View_Code: {$first:'$RoomBusy_Room_View_Code'}, 
+	// 					}
+	// 			},
+	// 			{
+	// 	        "$project": {
+	// 		            "Reservation_Room.View": "$_id.Reservation_View_Code",
+	// 		            "Reservation_Room.Type": "$_id.Reservation_Type_Code",
+	// 		            "Reservation_Customer_ID":"$_id.Reservation_Customer_ID",
+	// 		        }		
+	// 		    },
+	// 		])
+	// 		.exec(function(err, reserve) {
+	// 		    if (err){
+	// 	    		response.send({message: err});
+	// 			}
+	// 	        if (reserve.length > 0) {
+	// 	        		Reservation.populate(reserve, { path: 'RoomType'}, function(err, type) {
+	// 	        			Reservation.populate(type, { path: 'RoomView'}, function(err, view) {
+	// 	    					Reservation.populate(view, { path: 'Customer'}, function(err, customer) {
+	// 	    						response.send(customer);
+	// 		        			});
+	// 		        		});
+	// 		        	});
+	// 	        }else{
+	// 	    		response.send({message: 'Not Reserve Room In This Date'});
+	// 	        }
+	//     	})
 	},
 
 }
