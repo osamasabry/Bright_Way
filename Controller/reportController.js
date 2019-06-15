@@ -339,7 +339,8 @@ module.exports = {
 		object = {
 			$and:[
 					{Reservation_Hotel_ID:Number(request.body.Reservation_Hotel_ID)},
-					{Reservation_Date_From:{ $gte: date1},Reservation_Date_From: {$lte: date2}},
+					//{Reservation_Date_From:{ $gte: date1},Reservation_Date_From: {$lte: date2}},
+					{Reservation_Date_From:{ $gte: date1, $lte: date2}},
 				]
 		};
 		
