@@ -221,6 +221,8 @@ module.exports = {
 	    	})
 	},
 
+
+
 	getReservationDetails:function (request,response){
 		// var date1 = new Date('2019-02-15');
 		// var date2 = new Date('2019-02-18');
@@ -312,8 +314,81 @@ module.exports = {
 	            response.send(hotel);
 	        } 
     	})
-
-	
 	},
 
+	getDailyOfficeReservation(request,response){
+		var date1 = new Date(request.body.PaymentsDate);
+		var date2 = request.body.PaymentsDate +'T23:59:59.248+0000';
+		date2 = new Date(date2);
+		Reservation.aggregate([
+			{$match: 
+				{Reservation_Office_ID:Number(request.body.Office_ID)},
+
+			},
+			{$unwind: "$Reservation_Payment" },
+
+			{$match:
+				{'Reservation_Payment.Date':{ $gte: date1, $lte: date2}},
+			},
+			{ $group: { _id : 
+							{	 	
+								Customer_ID: '$Reservation_Customer_ID', 
+								Hotel_ID: '$Reservation_Hotel_ID', 
+							 },
+							Amount :{$sum:'$Reservation_Payment.Ammount' }, 
+							Grand_Total:{$first:'$Reservation_Grand_Total' }, 
+							Payment:{$push:'$Reservation_Payment' }, 
+						}
+			},
+			{
+	        "$project": {
+		            "Reservation_Customer_ID" : "$_id.Customer_ID",
+		            "Reservation_Hotel_ID"    : "$_id.Hotel_ID",
+		            "Reservation_Grand_Total" : "$Grand_Total",
+		            "Ammount" 				  : "$Amount",
+		            "Payment" 				  : "$Payment",
+
+		        }		
+		    },
+		])
+		.exec(function(err, reserv) {
+		    if (err){
+	    		response.send({message: err});
+			}
+	        if (reserv.length > 0) {
+	        	response.send(reserv);
+	        	Reservation.populate(reserv, { path: 'Customer' , select: 'Customer_Name'}, function(err, customer) {
+	        		Reservation.populate(customer, { path: 'Hotel' , select: 'Customer_Name'}, function(err, hotel) {
+	    					response.send(hotel);
+		        	});
+		        });
+	        }else{
+	    		response.send({message: 'Not Reservation Room'});
+	        }
+    	})
+
+	}
+
 }
+
+
+// { $group: { _id : 
+// 							{	 	
+// 									 View: '$Reservation_Room.View', 
+// 									 Type: '$Reservation_Room.Type', 
+// 									 Reservation_Office_ID: '$Reservation_Office_ID', 
+// 							 },
+// 							 // View: {$first : '$Reservation_Room.View'}, 
+// 							 // Type: {$first:'$Reservation_Room.Type'}, 
+// 							 Count :{$sum:'$Reservation_Room.Count' },
+// 							 Reservation_Office_ID:{$first:'$Reservation_Office_ID' }, 
+// 						}
+// 				},
+// 				{
+// 		        "$project": {
+// 			            "Reservation_Room.View": "$_id.View",
+// 			            "Reservation_Room.Type": "$_id.Type",
+// 			            "Count" : '$Count',
+// 			        	"Reservation_Office_ID" : '$Reservation_Office_ID',
+// 			        }		
+// 			    },

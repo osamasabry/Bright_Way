@@ -504,5 +504,12 @@ router.get('/getMasterPermisions', function(req, res) {
         });
         GetReservationDetails();
     });
+
+     router.post('/getDailyOfficeReservation', type,function(req, res) {
+        var GetDailyOfficeReservation = async (function (){
+            ReportController.getDailyOfficeReservation(req,res);
+        });
+        GetDailyOfficeReservation();
+    });
     
 module.exports = router;
