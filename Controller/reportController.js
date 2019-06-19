@@ -221,51 +221,7 @@ module.exports = {
 	    	})
 	},
 
-	// RoomingList:function (request,response){
-	// 	// var date1 = new Date('2019-02-15');
-	// 	// var date2 = new Date('2019-02-18');
 
-	// 	var date1 = new Date(request.body.From);
-	// 	var date2 = new Date(request.body.To);
-
-	// 	RoomBusy.aggregate([
-	// 			{$match: { 
-	// 				$and:[
-	// 						{RoomBusy_HotelID:Number(request.body.RoomBusy_HotelID)},
-	// 						{RoomBusy_Date:{ $gte: date1, $lte: date2}},
-	// 					]
-	// 			}},
-	// 			{ $group: { _id : 
-	// 						{	 	
-	// 								 RoomBusy_Room_View_Code: '$RoomBusy_Room_View_Code', 
-	// 								 RoomBusy_Room_Type_Code: '$RoomBusy_Room_Type_Code', 
-	// 								 RoomBusy_Room_Count: '$RoomBusy_Room_Count', 
-	// 								 RoomBusy_Reservation_Code: '$RoomBusy_Reservation_Code',
-	// 								 RoomBusy_Note: '$RoomBusy_Note' 
-	// 						 },
-	// 						 RoomBusy_Room_Type_Code: {$first : '$RoomBusy_Room_Type_Code'}, 
-	// 						 RoomBusy_Room_View_Code: {$first:'$RoomBusy_Room_View_Code'}, 
-	// 						 RoomBusy_Reservation_Code :{$first:'$RoomBusy_Reservation_Code' }
-	// 					}
-	// 			}
-	// 		])
-	// 		.exec(function(err, roomBusy) {
-	// 		    if (err){
-	// 	    		response.send({message: err});
-	// 			}
-	// 	        if (roomBusy.length > 0) {
-	// 	        	RoomBusy.populate(roomBusy, { path: 'Reservation'}, function(err, reserv) {
-	// 	        		RoomBusy.populate(reserv, { path: 'RoomType'}, function(err, type) {
-	// 	        			RoomBusy.populate(type, { path: 'RoomView'}, function(err, view) {
-	// 	    					response.send(view);
-	// 		        		});
-	// 		        	});
-	// 		        });
-	// 	        }else{
-	// 	    		response.send({message: 'Not Busy Room'});
-	// 	        }
-	//     	})
-	// },
 
 	getReservationDetails:function (request,response){
 		// var date1 = new Date('2019-02-15');
@@ -358,51 +314,81 @@ module.exports = {
 	            response.send(hotel);
 	        } 
     	})
-
-	// 	Reservation.aggregate([
-	// 			{$match: { 
-	// 				$and:[
-	// 						{Reservation_Hotel_ID:Number(request.body.Reservation_Hotel_ID)},
-	// 						{Reservation_Date_From:{ $gte: date1},Reservation_Date_To: {$lte: date2}},
-	// 					]
-	// 			}},
-	// 			{$unwind: "$Reservation_Room" },
-	// 			{ $group: { _id : 
-	// 						{	 	
-	// 								 Reservation_View_Code: '$Reservation_Room.View', 
-	// 								 Reservation_Type_Code: '$Reservation_Room.Type', 
-	// 								 RoomBusy_Room_Count: '$Reservation_Room.Count', 
-	// 								 Reservation_Customer_ID: '$Reservation_Customer_ID',
-	// 								 Reservation_Note: '$Reservation_Note' 
-	// 						 },
-	// 						 // RoomBusy_Room_Type_Code: {$first : '$RoomBusy_Room_Type_Code'}, 
-	// 						 // RoomBusy_Room_View_Code: {$first:'$RoomBusy_Room_View_Code'}, 
-	// 					}
-	// 			},
-	// 			{
-	// 	        "$project": {
-	// 		            "Reservation_Room.View": "$_id.Reservation_View_Code",
-	// 		            "Reservation_Room.Type": "$_id.Reservation_Type_Code",
-	// 		            "Reservation_Customer_ID":"$_id.Reservation_Customer_ID",
-	// 		        }		
-	// 		    },
-	// 		])
-	// 		.exec(function(err, reserve) {
-	// 		    if (err){
-	// 	    		response.send({message: err});
-	// 			}
-	// 	        if (reserve.length > 0) {
-	// 	        		Reservation.populate(reserve, { path: 'RoomType'}, function(err, type) {
-	// 	        			Reservation.populate(type, { path: 'RoomView'}, function(err, view) {
-	// 	    					Reservation.populate(view, { path: 'Customer'}, function(err, customer) {
-	// 	    						response.send(customer);
-	// 		        			});
-	// 		        		});
-	// 		        	});
-	// 	        }else{
-	// 	    		response.send({message: 'Not Reserve Room In This Date'});
-	// 	        }
-	//     	})
 	},
 
+	getDailyOfficeReservation(request,response){
+		var date1 = new Date(request.body.PaymentsDate);
+		var date2 = request.body.PaymentsDate +'T23:59:59.248+0000';
+		date2 = new Date(date2);
+		Reservation.aggregate([
+			{$match: 
+				{Reservation_Office_ID:Number(request.body.Office_ID)},
+
+			},
+			{$unwind: "$Reservation_Payment" },
+
+			{$match:
+				{'Reservation_Payment.Date':{ $gte: date1, $lte: date2}},
+			},
+			{ $group: { _id : 
+							{	 	
+								Customer_ID: '$Reservation_Customer_ID', 
+								Hotel_ID: '$Reservation_Hotel_ID', 
+							 },
+							Amount :{$sum:'$Reservation_Payment.Ammount' }, 
+							Grand_Total:{$first:'$Reservation_Grand_Total' }, 
+							Payment:{$push:'$Reservation_Payment' }, 
+						}
+			},
+			{
+	        "$project": {
+		            "Reservation_Customer_ID" : "$_id.Customer_ID",
+		            "Reservation_Hotel_ID"    : "$_id.Hotel_ID",
+		            "Reservation_Grand_Total" : "$Grand_Total",
+		            "Ammount" 				  : "$Amount",
+		            "Payment" 				  : "$Payment",
+
+		        }		
+		    },
+		])
+		.exec(function(err, reserv) {
+		    if (err){
+	    		response.send({message: err});
+			}
+	        if (reserv.length > 0) {
+	        	response.send(reserv);
+	        	Reservation.populate(reserv, { path: 'Customer' , select: 'Customer_Name'}, function(err, customer) {
+	        		Reservation.populate(customer, { path: 'Hotel' , select: 'Customer_Name'}, function(err, hotel) {
+	    					response.send(hotel);
+		        	});
+		        });
+	        }else{
+	    		response.send({message: 'Not Reservation Room'});
+	        }
+    	})
+
+	}
+
 }
+
+
+// { $group: { _id : 
+// 							{	 	
+// 									 View: '$Reservation_Room.View', 
+// 									 Type: '$Reservation_Room.Type', 
+// 									 Reservation_Office_ID: '$Reservation_Office_ID', 
+// 							 },
+// 							 // View: {$first : '$Reservation_Room.View'}, 
+// 							 // Type: {$first:'$Reservation_Room.Type'}, 
+// 							 Count :{$sum:'$Reservation_Room.Count' },
+// 							 Reservation_Office_ID:{$first:'$Reservation_Office_ID' }, 
+// 						}
+// 				},
+// 				{
+// 		        "$project": {
+// 			            "Reservation_Room.View": "$_id.View",
+// 			            "Reservation_Room.Type": "$_id.Type",
+// 			            "Count" : '$Count',
+// 			        	"Reservation_Office_ID" : '$Reservation_Office_ID',
+// 			        }		
+// 			    },
