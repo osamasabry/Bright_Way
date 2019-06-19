@@ -318,6 +318,7 @@ module.exports = {
 		var date1 = new Date(request.body.PaymentsDate);
 		var date2string = request.body.PaymentsDate +'T23:59:59.000Z';
 		var date2 = new Date(date2string);
+		
 		Reservation.aggregate([
 			{$match: 
 				{Reservation_Office_ID:Number(request.body.Office_ID)},
@@ -354,7 +355,6 @@ module.exports = {
 	    		response.send({message: err});
 			}
 	        if (reserv.length > 0) {
-	        	response.send(reserv);
 	        	Reservation.populate(reserv, { path: 'Customer' , select: 'Customer_Name'}, function(err, customer) {
 	        		Reservation.populate(customer, { path: 'Hotel' , select: 'Hotel_Name'}, function(err, hotel) {
 	    					response.send(hotel);
