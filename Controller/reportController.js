@@ -230,8 +230,6 @@ module.exports = {
 		var date1 = new Date(request.body.From);
 		var date2 = new Date(request.body.To);
 
-
-
 		Reservation.aggregate([
 				{$match: { 
 					$and:[
@@ -318,8 +316,11 @@ module.exports = {
 
 	getDailyOfficeReservation(request,response){
 		var date1 = new Date(request.body.PaymentsDate);
-		var date2 = request.body.PaymentsDate +'T23:59:59.248+0000';
-		date2 = new Date(date2);
+		var date2string = request.body.PaymentsDate +'T23:59:59.000Z';
+		console.log(date2string)
+		var date2 = new Date(date2string);
+		console.log(date1);
+		console.log(date2);
 		Reservation.aggregate([
 			{$match: 
 				{Reservation_Office_ID:Number(request.body.Office_ID)},
@@ -358,7 +359,7 @@ module.exports = {
 	        if (reserv.length > 0) {
 	        	response.send(reserv);
 	        	Reservation.populate(reserv, { path: 'Customer' , select: 'Customer_Name'}, function(err, customer) {
-	        		Reservation.populate(customer, { path: 'Hotel' , select: 'Customer_Name'}, function(err, hotel) {
+	        		Reservation.populate(customer, { path: 'Hotel' , select: 'Hotel_Name'}, function(err, hotel) {
 	    					response.send(hotel);
 		        	});
 		        });
@@ -370,25 +371,3 @@ module.exports = {
 	}
 
 }
-
-
-// { $group: { _id : 
-// 							{	 	
-// 									 View: '$Reservation_Room.View', 
-// 									 Type: '$Reservation_Room.Type', 
-// 									 Reservation_Office_ID: '$Reservation_Office_ID', 
-// 							 },
-// 							 // View: {$first : '$Reservation_Room.View'}, 
-// 							 // Type: {$first:'$Reservation_Room.Type'}, 
-// 							 Count :{$sum:'$Reservation_Room.Count' },
-// 							 Reservation_Office_ID:{$first:'$Reservation_Office_ID' }, 
-// 						}
-// 				},
-// 				{
-// 		        "$project": {
-// 			            "Reservation_Room.View": "$_id.View",
-// 			            "Reservation_Room.Type": "$_id.Type",
-// 			            "Count" : '$Count',
-// 			        	"Reservation_Office_ID" : '$Reservation_Office_ID',
-// 			        }		
-// 			    },
