@@ -505,11 +505,17 @@ router.get('/getMasterPermisions', function(req, res) {
         GetReservationDetails();
     });
 
-     router.post('/getDailyOfficeReservation', type,function(req, res) {
+    router.post('/getDailyOfficeReservation', type,function(req, res) {
         var GetDailyOfficeReservation = async (function (){
             ReportController.getDailyOfficeReservation(req,res);
         });
         GetDailyOfficeReservation();
+    });
+    router.post('/getDailyOfficePayments', type,function(req, res) {
+        var GetDailyOfficePayments = async (function (){
+            ReportController.getDailyOfficePayments(req,res);
+        });
+        GetDailyOfficePayments();
     });
     
 module.exports = router;

@@ -365,6 +365,51 @@ module.exports = {
 	        }
     	})
 
+	},
+	getDailyOfficePayments(request,response){
+		var date1 = new Date(request.body.PaymentsDate);
+		var date2string = request.body.PaymentsDate +'T23:59:59.000Z';
+		var date2 = new Date(date2string);
+
+		Reservation.aggregate([
+			{$match: {'Reservation_Office_ID':Number(request.body.Office_ID), 
+					  'Reservation_Payment.Date':{ $gte: date1, $lte:  date2}}
+			},
+			{
+			"$project": {
+				"Reservation_Customer_ID" : "$Reservation_Customer_ID",
+		        "Reservation_Hotel_ID"    : "$Reservation_Hotel_ID",
+				"Reservation_Payment" : "$Reservation_Payment",
+				"Reservation_Grand_Total": "$Reservation_Grand_Total",
+				"Reservation_TodayPayment" : {
+					'$filter': {
+						input: '$Reservation_Payment',
+						as: 'reservation_payment',
+						cond: { $and: [
+									{$gte: ['$$reservation_payment.Date', date1]},
+									{$lte: ['$$reservation_payment.Date', date2]}
+						]} 
+						
+					}
+				}
+						
+			}		
+		}])
+		.exec(function(err, reserv) {
+		    if (err){
+	    		response.send({message: err});
+			}
+	        if (reserv.length > 0) {
+	        	Reservation.populate(reserv, { path: 'Customer' , select: 'Customer_Name'}, function(err, customer) {
+	        		Reservation.populate(customer, { path: 'Hotel' , select: 'Hotel_Name'}, function(err, hotel) {
+	    					response.send(hotel);
+		        	});
+		        });
+	        }else{
+	    		response.send({message: 'Not Reservation Room'});
+	        }
+    	})
+
 	}
 
 }
