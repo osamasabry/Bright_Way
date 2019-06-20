@@ -517,5 +517,12 @@ router.get('/getMasterPermisions', function(req, res) {
         });
         GetDailyOfficePayments();
     });
+    router.post('/getDailyReservationList', type,function(req, res) {
+        var GetDailyReservationList = async (function (){
+            ReportController.getDailyReservationList(req,res);
+        });
+        GetDailyReservationList();
+    });
+    
     
 module.exports = router;

@@ -314,6 +314,45 @@ module.exports = {
     	})
 	},
 
+	getDailyReservationList:function (request,response){
+		// var date1 = new Date('2019-06-05');
+		// var date2 = new Date('2019-06-08');
+		var date1 = new Date(request.body.ReservationsDate);
+		var date2string = request.body.ReservationsDate +'T23:59:59.000Z';
+		var date2 = new Date(date2string);
+
+		object = {
+			$and:[
+					{Reservation_Date:{ $gte: date1, $lte: date2}},
+				]
+		};
+		
+		Reservation.find(object)
+		.select('Reservation_Date_From Reservation_Date_To Reservation_Customer_ID Reservation_Hotel_ID Reservation_Grand_Total Reservation_Grand_Total_Cost Reservation_Discount Reservation_ByEmployee_ID')
+		.populate({ path: 'Customer', select: 'Customer_Name Customer_Phone' })
+		.populate({ path: 'Hotel', select: 'Hotel_Name' })
+		.populate({ path: 'Employee', select: 'Employee_Name' })
+
+		// Btw_ReservationSchema.virtual('Hotel',{
+		// 	ref: 'btw_hotel',
+		// 	localField: 'Reservation_Hotel_ID',
+		// 	foreignField: 'Hotel_Code',
+		// 	justOne: false // for many-to-1 relationships
+		// });
+		.lean()
+		.exec(function(err, hotel) {
+		    if (err){
+		    	response.send(err);
+		    }
+	        if (hotel) {
+	            response.send(hotel);
+			} 
+			else{
+	    		response.send({message: 'Not Reservation Room'});
+	        }
+    	})
+	},
+
 	getDailyOfficeReservation(request,response){
 		var date1 = new Date(request.body.PaymentsDate);
 		var date2string = request.body.PaymentsDate +'T23:59:59.000Z';
@@ -377,10 +416,13 @@ module.exports = {
 			},
 			{
 			"$project": {
+
 				"Reservation_Customer_ID" : "$Reservation_Customer_ID",
 		        "Reservation_Hotel_ID"    : "$Reservation_Hotel_ID",
 				"Reservation_Payment" : "$Reservation_Payment",
 				"Reservation_Grand_Total": "$Reservation_Grand_Total",
+				"Reservation_Discount" : "$Reservation_Discount",
+				"SumAllPayments" :{$sum:'$Reservation_Payment.Ammount'},
 				"Reservation_TodayPayment" : {
 					'$filter': {
 						input: '$Reservation_Payment',
@@ -391,6 +433,45 @@ module.exports = {
 						]} 
 						
 					}
+				},
+				"Reservation_TodayPaymentCash" : {
+						'$filter': {
+						input: '$Reservation_Payment',
+						as: 'reservation_payment',
+						cond: { $and: [
+										{$gte: ['$$reservation_payment.Date', date1]},
+										{$lte: ['$$reservation_payment.Date', date2]},
+										{$eq: ['$$reservation_payment.Type_Code', 1]}
+								]} 
+						
+					}
+					
+				},
+				"Reservation_TodayPaymentCC" : {
+					
+						'$filter': {
+						input: '$Reservation_Payment',
+						as: 'reservation_payment',
+						cond: { $and: [
+										{$gte: ['$$reservation_payment.Date', date1]},
+										{$lte: ['$$reservation_payment.Date', date2]},
+										{$eq: ['$$reservation_payment.Type_Code', 2]}
+								]} 
+						
+					}
+				},
+				"Reservation_TodayPaymentBankTrans" : {
+						'$filter': {
+						input: '$Reservation_Payment',
+						as: 'reservation_payment',
+						cond: { $and: [
+										{$gte: ['$$reservation_payment.Date', date1]},
+										{$lte: ['$$reservation_payment.Date', date2]},
+										{$eq: ['$$reservation_payment.Type_Code', 3]}
+								]} 
+						
+					}
+					
 				}
 						
 			}		
