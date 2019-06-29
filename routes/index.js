@@ -200,7 +200,12 @@ router.post('/login', type,function(req, res, next) {
         });
         GetAllEmployee();
     });
-
+    router.get('/getActivelEmployeesMiniData', type,function(req, res) {
+        var GetActivelEmployeesMiniData= async (function (){
+            await (EmployeeController.getActivelEmployeesMiniData(req,res));
+        });
+        GetActivelEmployeesMiniData();
+    });
 
     router.post('/searchEmployee', type,function(req, res) {
         var SearchEmployee= async (function (){
@@ -522,6 +527,12 @@ router.get('/getMasterPermisions', function(req, res) {
             ReportController.getDailyReservationList(req,res);
         });
         GetDailyReservationList();
+    });
+    router.post('/getDailyEmployeeReservationList', type,function(req, res) {
+        var GetDailyEmployeeReservationList = async (function (){
+            ReportController.getDailyEmployeeReservationList(req,res);
+        });
+        GetDailyEmployeeReservationList();
     });
     
     

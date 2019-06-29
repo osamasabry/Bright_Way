@@ -87,8 +87,26 @@ module.exports = {
 	        	
 	            response.send(employee);
 	        } 
-    	}).sort({Employee_Code:-1}).limit(20)
+    	}).sort({Employee_Code:-1})
 	},
+
+	getActivelEmployeesMiniData:function(request,response){
+		Employee.find({Employee_Code: { $ne: Number(1) }})
+		.select('Employee_Code Employee_Name')
+		.populate({ path: 'Office', select: 'Office_Code Office_Name' })
+		.lean()
+		.collation({ locale: "en" }).sort({Employee_Name:1})
+		.exec(function(err, employee) {
+		    if (err){
+		    	response.send({message: 'Error'});
+		    }
+	        if (employee) {
+	        	
+	            response.send(employee);
+	        } 
+    	})
+	},
+
 
 	searchEmployee:function(request,response){
 		var object={};

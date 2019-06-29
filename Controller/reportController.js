@@ -318,7 +318,7 @@ module.exports = {
 		// var date1 = new Date('2019-06-05');
 		// var date2 = new Date('2019-06-08');
 		var date1 = new Date(request.body.ReservationsDate);
-		var date2string = request.body.ReservationsDate +'T23:59:59.000Z';
+		var date2string = request.body.ReservationsDateTo +'T23:59:59.000Z';
 		var date2 = new Date(date2string);
 
 		object = {
@@ -340,6 +340,46 @@ module.exports = {
 		// 	justOne: false // for many-to-1 relationships
 		// });
 		.lean()
+		.exec(function(err, hotel) {
+		    if (err){
+		    	response.send(err);
+		    }
+	        if (hotel) {
+	            response.send(hotel);
+			} 
+			else{
+	    		response.send({message: 'Not Reservation Room'});
+	        }
+    	})
+	},
+
+	getDailyEmployeeReservationList:function (request,response){
+		// var date1 = new Date('2019-06-05');
+		// var date2 = new Date('2019-06-08');
+		var date1 = new Date(request.body.ReservationsDate);
+		var date2string = request.body.ReservationsDateTo +'T23:59:59.000Z';
+		var date2 = new Date(date2string);
+
+		object = {
+			$and:[
+					{Reservation_Date:{ $gte: date1, $lte: date2}},
+					{Reservation_ByEmployee_ID:Number(request.body.Reservation_ByEmployee_ID)},
+				]
+		};
+		
+		Reservation.find(object)
+		.select('Reservation_Date Reservation_Date_From Reservation_Date_To Reservation_Customer_ID Reservation_Hotel_ID Reservation_Grand_Total Reservation_Grand_Total_Cost Reservation_Discount Reservation_ByEmployee_ID')
+		.populate({ path: 'Customer', select: 'Customer_Name Customer_Phone' })
+		.populate({ path: 'Hotel', select: 'Hotel_Name' })
+		.populate({ path: 'Employee', select: 'Employee_Name' })
+
+		// Btw_ReservationSchema.virtual('Hotel',{
+		// 	ref: 'btw_hotel',
+		// 	localField: 'Reservation_Hotel_ID',
+		// 	foreignField: 'Hotel_Code',
+		// 	justOne: false // for many-to-1 relationships
+		// });
+		.lean().sort({Reservation_Date:1})
 		.exec(function(err, hotel) {
 		    if (err){
 		    	response.send(err);
@@ -407,7 +447,7 @@ module.exports = {
 	},
 	getDailyOfficePayments(request,response){
 		var date1 = new Date(request.body.PaymentsDate);
-		var date2string = request.body.PaymentsDate +'T23:59:59.000Z';
+		var date2string = request.body.PaymentsDateTo +'T23:59:59.000Z';
 		var date2 = new Date(date2string);
 
 		Reservation.aggregate([
